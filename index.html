@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Presse</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #F5F5F7;
+            --card-bg: #FFFFFF;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --accent: #0071E3;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --font-main: 'Inter', sans-serif;
+            --tag-bg: #F2F2F7;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-width: 1200px;
+            padding-bottom: 60px;
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(245, 245, 247, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .brand i { color: var(--accent); }
+
+        /* CONTROLS */
+        .controls { display: flex; gap: 12px; align-items: center; }
+
+        .control-input, .loc-input {
+            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 8px;
+            font-family: var(--font-main); font-size: 13px; color: var(--text-primary);
+            background: #FFF; outline: none; height: 32px; transition: border 0.2s;
+        }
+        .control-input:focus, .loc-input:focus { border-color: var(--accent); }
+        select.control-input { padding-right: 25px; cursor: pointer; }
+
+        /* MODIFICATION DEMANDÉE : Placeholder disparaît au clic */
+        .loc-input::placeholder {
+            transition: opacity 0.2s ease; 
+            opacity: 1;
+        }
+        .loc-input:focus::placeholder {
+            opacity: 0; /* Devient invisible au focus */
+        }
+
+        /* GROUPE LOCALISATION */
+        .location-group { display: flex; gap: 4px; }
+        .loc-input { width: 180px; }
+        .icon-btn {
+            width: 32px; height: 32px; border: 1px solid var(--border-color); border-radius: 8px;
+            background: #FFF; color: var(--text-secondary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .icon-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        .filters { display: flex; gap: 8px; background: #E8E8ED; padding: 3px; border-radius: 10px; }
+        
+        .filter-btn { 
+            border: none; background: transparent; padding: 6px 14px; 
+            font-family: var(--font-main); font-size: 13px; font-weight: 500; 
+            color: var(--text-secondary); border-radius: 7px; cursor: pointer; 
+            transition: all 0.2s ease; 
+        }
+        .filter-btn:hover { color: var(--text-primary); }
+        .filter-btn.active { background: #FFFFFF; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+        /* GRID */
+        .container { max-width: 1800px; margin: 30px auto; padding: 0 40px; }
+        .matches-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+
+        /* CARTE */
+        .card { 
+            background: var(--card-bg); border-radius: var(--radius); padding: 16px;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); 
+            display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s; 
+        }
+        .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+        .match-header { display: flex; justify-content: space-between; align-items: center; }
+        .team { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 42%; text-align: center; }
+        .team-logo { width: 40px; height: 40px; object-fit: contain; } 
+        .team-name { font-weight: 600; font-size: 13px; line-height: 1.1; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; height: 28px; }
+        .vs { font-size: 10px; color: var(--text-secondary); font-weight: 700; margin-top: -15px; }
+
+        .match-meta { 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-top: 1px solid var(--border-color); padding-top: 10px; 
+        }
+        .badge { 
+            padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; 
+            text-transform: uppercase; background: var(--tag-bg); color: var(--text-secondary); 
+            letter-spacing: 0.5px;
+        }
+        .date-time { font-size: 12px; color: var(--text-primary); font-weight: 500; }
+
+        .transport-block { 
+            background: #FAFAFA; border-radius: 8px; padding: 8px 10px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            text-decoration: none; color: inherit; cursor: pointer; transition: background 0.2s;
+        }
+        .transport-block:hover { background: #F0F0F5; }
+        .distance { font-weight: 700; font-size: 12px; }
+        .modes { display: flex; gap: 10px; }
+        .mode { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary); }
+        .mode i { color: var(--accent); font-size: 10px; }
+
+        .accred-footer { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border-color); font-size: 11px; display: flex; justify-content: space-between; align-items: center;}
+        .accred-status { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .accred-available { color: #34C759; }
+        .accred-unavailable { color: var(--text-secondary); opacity: 0.7; }
+        .accred-email { color: var(--text-primary); text-decoration: none; word-break: break-all; }
+        .accred-email:hover { color: var(--accent); text-decoration: underline; }
+
+        .error-msg { grid-column: 1 / -1; text-align: center; color: #ef4444; background: #fee2e2; padding: 20px; border-radius: 12px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <i class="fa-solid fa-map-location-dot"></i>
+           Dashboard Presse
+        </div>
+
+        <div class="controls">
+            <div class="location-group">
+                <button class="icon-btn" id="gpsBtn" title="Ma position actuelle"><i class="fa-solid fa-location-crosshairs"></i></button>
+                <input type="text" id="cityInput" class="loc-input" placeholder="Ville ou adresse...">
+                <button class="icon-btn" id="searchLocBtn" title="Chercher"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+
+            <select id="compFilter" class="control-input">
+                <option value="all">Toutes compétitions</option>
+            </select>
+
+            <input type="week" id="weekFilter" class="control-input" title="Filtrer par semaine">
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Tous</button>
+                <button class="filter-btn" data-filter="Foot">Foot</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="matches-grid" id="grid"></div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const GEOAPIFY_KEY = "61ca90447ebd483ab2f002050433fa42"; 
+        const LOGO_TOKEN = "pk_ZMm3eD-YScqxE9anYdSV8g";
+        
+const ACCRED_LIST = {
+            // --- FOOTBALL ---
+            "AFC COMPIEGNE": "https://www.instagram.com/999constantpl/",
+            "COMPIEGNE": "https://www.instagram.com/999constantpl/",
+            "FC VERSAILLES": "louis.desloge@fcversailles.com",
+            "VERSAILLES": "louis.desloge@fcversailles.com",
+            "US CHANTILLY": "https://www.instagram.com/uschantilly/",
+            "CHANTILLY": "https://www.instagram.com/uschantilly/",
+            "MONTREUIL": "560296@lpiff.fr",
+            "US ORLEANS": "https://orleansloiretfoot.com/contact/",
+            "ORLEANS": "https://orleansloiretfoot.com/contact/",
+
+            // --- BASKETBALL ---
+            "NANTERRE": "https://www.nanterre92.com/club/acces/accreditations-journalistes/",
+            "C'CHARTRES BASKET": "communication@ccmbf.fr",
+            "CHARTRES BASKET": "communication@ccmbf.fr",
+
+            // --- HANDBALL ---
+            "PARIS 92": "julia@paris92.fr",
+            "C'CHARTRES MHB": "manon.bougard@ccmhb.fr",
+            "CHARTRES MHB": "manon.bougard@ccmhb.fr",
+            "US CRETEIL": "https://share.google/OPDHysg9m2QDNBXQ6",
+            "CRETEIL": "https://share.google/OPDHysg9m2QDNBXQ6",
+            "FFHANDBALL": "h.gueriau@ffhandball.net",
+            "FEDERATION FRANCAISE DE HANDBALL": "h.gueriau@ffhandball.net",
+            "IVRY": "neiville.fon@hand-ivry.org",
+
+            // --- HOCKEY ---
+            "FRANCAIS VOLANTS": "contact.hockey@francais-volants.org"
+        };
+        const CUSTOM_LOGOS = {
+            "NEUILLY MARNE": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFBGU236FyfoBrHk_y1Xn5bxmTvrMsWQ7tpQ&s",
+            "CROIX FIC": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE2xTi43iwGH1QVEjocItKEjCuRFhrm6_GiQ&s",
+            "RACING CLUB FRANCE" : "https://upload.wikimedia.org/wikipedia/fr/f/f4/RacingCFFootball-logoann%C3%A9es2010.svg",
+            "AMIENS" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwpW1SpvIkzL4CVjU1oEaCcFw2AsEoHgHC4Q&s",
+            "BASTIA" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLJDN4RtJGnmnJGs8bPXKgliHhF6QLsDNl5g&s",
+            "COMPIEGNE" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReN2j3PlYxw-Sl0jYVapIGctyYdNPNgj1Hqw&s",
+            "SARCELLES" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhxAaLbimUIiTJXgBeVQbJ6FbiDQuYNO6hpg&s",
+            "CREIL" : "https://upload.wikimedia.org/wikipedia/fr/a/ac/Logo_AFC_Creil.svg",
+            "ST QUENTIN O." : "https://upload.wikimedia.org/wikipedia/fr/5/50/Logo_Olympique_Saint-Quentin_-_ancien.svg",
+            "DRANCY" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2kgsMHgP_88HTqvHJ5UXYwqYxKjfd1v4gkw&s",
+            "CHARTRES" : "https://upload.wikimedia.org/wikipedia/fr/thumb/8/85/Logo_C%27Chartres_Football_2018.svg/960px-Logo_C%27Chartres_Football_2018.svg.png",
+            "LE PAYS DU VALOIS US" : "https://uslpv.fr/wp-content/uploads/2025/01/Design-sans-titre-1.png",
+            "CAEN" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/79/Logo_SM_Caen_2016.svg/1536px-Logo_SM_Caen_2016.svg.png", 
+            "AJACCIO" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/73/Logo_Gaz%C3%A9lec_Football_Club_Ajaccio_2012.svg/1864px-Logo_Gaz%C3%A9lec_Football_Club_Ajaccio_2012.svg.png",
+            "QUEVILLY" : "https://upload.wikimedia.org/wikipedia/fr/c/c3/Logo_US_Quevilly_Rouen_2018.svg",
+            "PAYS DE CASSEL US" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuvfBBLimVU3xKVYrrKEMUwhh8dok-ZZETug&s",
+            "F.C.BALAGNE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/c/c1/Logo_FC_Balagne_-_2022.svg/1402px-Logo_FC_Balagne_-_2022.svg.png",
+            "METZ" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuQDKhDfpfHfD_wFiddBwtl0a8fnDprxnJ8Q&s",
+            "PARIS SAINT-GERMAIN" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcT7rPHMxsie6O_wgqoO1KekpR9tvIP72moA&s",
+            "LOSC LILLE 21" : "https://upload.wikimedia.org/wikipedia/fr/thumb/6/62/Logo_LOSC_Lille_2018.svg/1200px-Logo_LOSC_Lille_2018.svg.png",
+            "PARIS FC" : "https://upload.wikimedia.org/wikipedia/fr/archive/d/db/20190512200040%21Logo_Paris_FC_2011.svg",
+            "OLYMPIQUE LYONNAIS" : "https://upload.wikimedia.org/wikipedia/fr/a/a5/Logo_Olympique_Lyonnais_-_2022.svg",
+            "MANTOIS" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSElOjGquoPUf3VgmaDxRlFwoyQknGeNH5_pA&s",
+            "DUNKERQUE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/72/Logo_USL_Dunkerque_2025.svg/langfr-250px-Logo_USL_Dunkerque_2025.svg.png",
+            "VIMY" : "https://upload.wikimedia.org/wikipedia/en/e/e4/US_Vimy_logo.png",
+            "REIMS" : "https://www.francebleu.fr/pikapi/images/536f2485-f907-459a-92de-1631b8e03f28/1200x680?webp=false",
+            "SAINT MAUR" : "https://upload.wikimedia.org/wikipedia/fr/9/96/VGA_St-Maur_FF_Logo.png",
+            "MOLSHEIM" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7VtYerlhjq0PH6PNQrtevVCC5GfB6j-1bgw&s",
+            "LORIENT" : "https://upload.wikimedia.org/wikipedia/fr/1/1d/Logo_FC_Lorient_Bretagne-Sud.svg",
+            "ORLEANS" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtibTWqBQrmkrVUj49ANE1B64BzY9l0fvO1g&s",
+            "VENDEE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/0/01/Logo_VFCLRSY.png/960px-Logo_VFCLRSY.png",
+            "BREQUIGNY" : "https://tournois.fcgm.fr/wp-content/uploads/2014/10/Logo_CPB_Brequigny-200x200.png"
+            
+        };
+
+        const STADIUM_COORDS = {
+            "PSG": { lat: 48.920, lon: 2.043 }, 
+            "PARIS SAINT-GERMAIN": { lat: 48.920, lon: 2.043 },
+            "AFC COMPIEGNE": { lat: 49.404, lon: 2.808 },
+            "SARCELLES": { lat: 48.996, lon: 2.383 },
+            "AAS SARCELLES": { lat: 48.996, lon: 2.383 },
+            "CREIL": { lat: 49.256, lon: 2.467 },
+            "AFC CREIL": { lat: 49.256, lon: 2.467 },
+            "CHARTRES": { lat: 48.441, lon: 1.503 },
+            "C CHARTRES": { lat: 48.441, lon: 1.503 },
+            "PARIS FC": { lat: 48.736, lon: 2.367 }, 
+            "RACING": { lat: 48.924, lon: 2.251 },
+            "RACING CLUB": { lat: 48.924, lon: 2.251 },
+            "AMIENS": { lat: 49.894, lon: 2.264 },
+            "ST QUENTIN": { lat: 49.863, lon: 3.298 },
+            "PAYS DU VALOIS": { lat: 49.167, lon: 2.923 },
+            "DRANCY": { lat: 48.930, lon: 2.450 },
+            "REIMS": { lat: 49.247, lon: 4.025 },
+            "STADE DE REIMS": { lat: 49.247, lon: 4.025 },
+            "NEUILLY MARNE": { lat: 48.857, lon: 2.545 },
+            "LILLE": { lat: 50.603, lon: 3.128 },
+            "LOSC": { lat: 50.603, lon: 3.128 },
+            "CROIX": { lat: 50.676, lon: 3.149 },
+            "VIMY": { lat: 50.379, lon: 2.804 },
+            "PAYS DE CASSEL": { lat: 50.803, lon: 2.487 },
+            "METZ": { lat: 49.106, lon: 6.160 },
+            "SC.BASTIA": { lat: 42.649, lon: 9.444 },
+            "RED STAR": { lat: 48.916, lon: 2.348 },
+            "DUNKERQUE": { lat: 51.037, lon: 2.400 },
+            "CAEN": { lat: 49.178, lon: -0.400 },
+            "GAZELEC": { lat: 41.936, lon: 8.750 },
+            "QUEVILLY": { lat: 49.418, lon: 1.066 },
+            "BALAGNE": { lat: 42.569, lon: 8.756 }
+        };
+
+        // --- FONCTION DE NORMALISATION DEMANDÉE ---
+        const normalize = (str) => {
+            if (!str) return '';
+            // Majuscule + suppression caractères non-alphanum
+            // Suppression regex des suffixes demandés : FC, SFC, SC, FOOTBALL, JEANNEDARC, et tous les chiffres (\d+)
+            return str.toUpperCase()
+                .replace(/[^A-Z0-9]/g, '') 
+                .replace(/FC$|SFC$|SC$|FOOTBALL$|JEANNEDARC$|\d+$/g, '');
+        };
+
+        // --- OUTILS ---
+        const getLogoUrl = (name) => {
+            const upperName = name.toUpperCase();
+            // 1. Check custom logos
+            const customKey = Object.keys(CUSTOM_LOGOS).find(key => upperName.includes(key));
+            if (customKey) return CUSTOM_LOGOS[customKey];
+
+            // 2. Normalisation pour l'API (utilisation de la fonction demandée)
+            // On nettoie le nom (ex: "C CHARTRES FOOTBALL 23" -> "CCHARTRES") pour maximiser les chances de l'API
+            let cleanName = normalize(name);
+            if (cleanName.length < 3) cleanName = name.replace(/\s+/g, ''); // Fallback si trop court
+
+            const cleanQuery = encodeURIComponent(cleanName.toLowerCase());
+            return `https://img.logo.dev/name/${cleanQuery}?token=${LOGO_TOKEN}`;
+        };
+
+        const getAccreditationHTML = (teamName) => {
+            const key = Object.keys(ACCRED_LIST).find(k => teamName.toUpperCase().includes(k));
+            if (key) {
+                return `<div class="accred-status accred-available"><i class="fa-solid fa-check-circle"></i> <a href="mailto:${ACCRED_LIST[key]}" class="accred-email">${ACCRED_LIST[key]}</a></div>`;
+            }
+            return `<div class="accred-status accred-unavailable"><i class="fa-solid fa-circle-xmark"></i> <span>Inconnu</span></div>`;
+        };
+
+        const getTeamCoords = (name) => {
+            const upperName = name.toUpperCase();
+            const key = Object.keys(STADIUM_COORDS).find(k => upperName.includes(k));
+            return key ? STADIUM_COORDS[key] : null;
+        };
+
+        const formatCompetition = (rawName) => {
+            if (!rawName) return "MATCH";
+            const name = rawName.toUpperCase();
+            let level = "RÉG", age = "SENIOR"; 
+            if (name.includes("N3")) level = "N3";
+            else if (name.includes("N2")) level = "N2";
+            else if (name.includes("NATIONAL")) level = "NAT"; 
+            else if (name.includes("R1")) level = "R1";
+            else if (name.includes("D1")) level = "D1";
+            if (name.includes("U21")) age = "U21";
+            else if (name.includes("U19")) age = "U19";
+            else if (name.includes("U18")) age = "U18";
+            else if (name.includes("U17")) age = "U17";
+            else if (name.includes("U16")) age = "U16";
+            else if (name.includes("U15")) age = "U15";
+            if (name.includes("FÉMININ") || name.includes("FEMININ") || name.includes(" F ")) {
+                if (!age.includes("F")) age += " F";
+            }
+            return `${level} - ${age}`;
+        };
+
+        // --- API GEOAPIFY ---
+        async function fetchTravelData(userLat, userLon, destLat, destLon) {
+            if (!GEOAPIFY_KEY) return null;
+            try {
+                const url = `https://api.geoapify.com/v1/routing?waypoints=${userLat},${userLon}|${destLat},${destLon}&mode=drive&apiKey=${GEOAPIFY_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.features && data.features.length > 0) {
+                    const props = data.features[0].properties;
+                    return { dist: Math.round(props.distance / 1000), car: Math.round(props.time / 60) };
+                }
+            } catch (e) { console.warn("Erreur Routing", e); }
+            return null;
+        }
+
+        async function fetchCoordinates(address) {
+            if (!GEOAPIFY_KEY) return null;
+            try {
+                const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=${GEOAPIFY_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.features && data.features.length > 0) {
+                    const coords = data.features[0].geometry.coordinates;
+                    return { lon: coords[0], lat: coords[1] };
+                }
+            } catch (e) { console.warn("Erreur Geocoding", e); }
+            return null;
+        }
+
+        // --- LOGIQUE PRINCIPALE ---
+        let allMatches = [];
+        let currentFilters = { week: "", comp: "all" };
+        let userPosition = null;
+
+        function sortMatches(matches) {
+            return matches.sort((a, b) => {
+                const dateDiff = a.dateObj - b.dateObj;
+                if (dateDiff !== 0) return dateDiff;
+                return a.distance - b.distance;
+            });
+        }
+
+        async function updateDistances() {
+            if (!userPosition) return;
+            allMatches.forEach(m => m.isCalculating = true);
+            applyFilters(); 
+
+            for (let match of allMatches) {
+                if (match.locationCoords) {
+                    const travel = await fetchTravelData(
+                        userPosition.lat, userPosition.lon,
+                        match.locationCoords.lat, match.locationCoords.lon
+                    );
+                    if (travel) {
+                        match.distance = travel.dist;
+                        match.times.car = travel.car;
+                        match.times.public = Math.round(travel.car * 1.5 + 15);
+                    }
+                } else {
+                    match.distance = 999; 
+                }
+                match.isCalculating = false;
+            }
+            allMatches = sortMatches(allMatches);
+            applyFilters();
+        }
+
+        async function loadMatches() {
+            try {
+                const response = await fetch('./matchs.json');
+                const matchesData = await response.json();
+                
+                allMatches = matchesData.map(m => {
+                    const teamCoords = getTeamCoords(m.home);
+                    return {
+                        sport: 'Foot', 
+                        compFormatted: formatCompetition(m.competition),
+                        home: { name: m.home, searchQuery: m.home }, 
+                        away: { name: m.away, searchQuery: m.away },
+                        dateDisplay: m.date,
+                        dateObj: new Date(m.isoDate), 
+                        locationCoords: teamCoords,
+                        distance: 0,
+                        times: { car: 0, public: 0 },
+                        isCalculating: false
+                    };
+                });
+                
+                allMatches = sortMatches(allMatches);
+
+                populateCompFilter(allMatches);
+                applyFilters();
+                requestUserLocation();
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('grid').innerHTML = `<div class="error-msg">Erreur chargement.</div>`;
+            }
+        }
+
+        function requestUserLocation() {
+            if(navigator.geolocation) {
+                document.getElementById('gpsBtn').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userPosition = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+                        document.getElementById('gpsBtn').innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+                        document.getElementById('gpsBtn').classList.add('active');
+                        
+                        // Gestion UX : on met "Ma position" mais on le vide au focus (voir listener plus bas)
+                        const input = document.getElementById('cityInput');
+                        input.value = "Ma position";
+                        
+                        updateDistances();
+                    },
+                    (err) => {
+                        console.warn("GPS refusé");
+                        document.getElementById('gpsBtn').innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+                    }
+                );
+            }
+        }
+
+        async function searchCityLocation() {
+            const query = document.getElementById('cityInput').value;
+            if(!query || query === "Ma position") return;
+
+            document.getElementById('searchLocBtn').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            
+            const coords = await fetchCoordinates(query);
+            if(coords) {
+                userPosition = coords;
+                document.getElementById('gpsBtn').classList.remove('active');
+                updateDistances();
+            } else {
+                alert("Ville introuvable !");
+            }
+            document.getElementById('searchLocBtn').innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+        }
+
+        // --- GESTION DES FILTRES ---
+        function populateCompFilter(matches) {
+            const select = document.getElementById('compFilter');
+            const uniqueComps = new Set(matches.map(m => m.compFormatted));
+            Array.from(uniqueComps).sort().forEach(comp => {
+                const option = document.createElement('option');
+                option.value = comp;
+                option.textContent = comp;
+                select.appendChild(option);
+            });
+        }
+
+        function getWeekRange(weekValue) {
+            const [yearStr, weekStr] = weekValue.split('-W');
+            const year = parseInt(yearStr, 10);
+            const week = parseInt(weekStr, 10);
+            const simpleDate = new Date(year, 0, 4);
+            const dayOfWeek = simpleDate.getDay() || 7; 
+            const mondayWeek1 = new Date(simpleDate);
+            mondayWeek1.setDate(simpleDate.getDate() - dayOfWeek + 1);
+            const mondayTarget = new Date(mondayWeek1);
+            mondayTarget.setDate(mondayWeek1.getDate() + (week - 1) * 7);
+            mondayTarget.setHours(0, 0, 0, 0);
+            const sundayTarget = new Date(mondayTarget);
+            sundayTarget.setDate(mondayTarget.getDate() + 6);
+            sundayTarget.setHours(23, 59, 59, 999);
+            return { start: mondayTarget, end: sundayTarget };
+        }
+
+        function applyFilters() {
+            let filtered = allMatches;
+
+            if (currentFilters.week) {
+                const range = getWeekRange(currentFilters.week);
+                filtered = filtered.filter(m => m.dateObj >= range.start && m.dateObj <= range.end);
+            }
+
+            if (currentFilters.comp !== "all") {
+                filtered = filtered.filter(m => m.compFormatted === currentFilters.comp);
+            }
+            
+            filtered = sortMatches(filtered);
+
+            renderMatches(filtered);
+        }
+
+        // --- RENDU ---
+        function renderMatches(matchesData) {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            if (matchesData.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:#888;">Aucun match trouvé.</div>';
+                return;
+            }
+
+            matchesData.forEach(match => {
+                const card = document.createElement('article');
+                card.className = 'card';
+                
+                let distanceDisplay = match.isCalculating ? '<i class="fa-solid fa-spinner fa-spin"></i>' : `${match.distance} km`;
+                let carTimeDisplay = match.isCalculating ? '...' : `${match.times.car}'`;
+                let publicTimeDisplay = match.isCalculating ? '...' : `${match.times.public}'`;
+
+                let mapLink = "#";
+                if (match.locationCoords) {
+                    mapLink = `https://www.google.com/maps/dir/?api=1&destination=${match.locationCoords.lat},${match.locationCoords.lon}`;
+                } else {
+                    mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(match.home.name + " stade")}`;
+                }
+
+                card.innerHTML = `
+                    <div class="match-header">
+                        <div class="team">
+                            <img src="${getLogoUrl(match.home.searchQuery)}" class="team-logo" loading="lazy" onerror="this.src='https://placehold.co/40x40/png?text=H'">
+                            <span class="team-name" title="${match.home.name}">${match.home.name}</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <img src="${getLogoUrl(match.away.searchQuery)}" class="team-logo" loading="lazy" onerror="this.src='https://placehold.co/40x40/png?text=A'">
+                            <span class="team-name" title="${match.away.name}">${match.away.name}</span>
+                        </div>
+                    </div>
+                    <div class="match-meta">
+                        <span class="badge">${match.compFormatted}</span>
+                        <span class="date-time">${match.dateDisplay}</span>
+                    </div>
+                    
+                    <a href="${mapLink}" target="_blank" class="transport-block" title="Ouvrir GPS">
+                        <div class="distance">${distanceDisplay}</div>
+                        <div class="modes">
+                            <div class="mode"><i class="fa-solid fa-car"></i> ${carTimeDisplay}</div>
+                            <div class="mode"><i class="fa-solid fa-train-subway"></i> ${publicTimeDisplay}</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="font-size:10px; color:var(--text-secondary);"></i>
+                    </a>
+
+                    <div class="accred-footer">
+                        ${getAccreditationHTML(match.home.name)}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // LISTENERS
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMatches();
+
+            document.getElementById('gpsBtn').addEventListener('click', requestUserLocation);
+            document.getElementById('searchLocBtn').addEventListener('click', searchCityLocation);
+            
+            const cityInput = document.getElementById('cityInput');
+            cityInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchCityLocation();
+            });
+            // Pour nettoyer "Ma position" si l'utilisateur clique pour taper autre chose
+            cityInput.addEventListener('focus', function() {
+                if(this.value === "Ma position") {
+                    this.value = "";
+                }
+            });
+
+            document.getElementById('weekFilter').addEventListener('change', (e) => {
+                currentFilters.week = e.target.value;
+                applyFilters();
+            });
+
+            document.getElementById('compFilter').addEventListener('change', (e) => {
+                currentFilters.comp = e.target.value;
+                applyFilters();
+            });
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
