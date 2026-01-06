@@ -21,7 +21,6 @@ const TEAM_URLS = [
     'https://epreuves.fff.fr/competition/club/508884-neuilly-marne-sfc/equipe/2025_3359_SEM_1/resultat-calendrier',
     'https://epreuves.fff.fr/competition/club/500240-amiens-scf-2/equipe/2025_358_SEM_8/resultat-calendrier',
     'https://epreuves.fff.fr/competition/club/500054-lille-losc-associati-2/equipe/2025_199_SEM_8/resultat-calendrier',
-    'https://epreuves.fff.fr/competition/club/563663-croix-fic/equipe/2025_172695_SEM_1/resultat-calendrier',
     'https://epreuves.fff.fr/competition/club/500942-vimy-us/equipe/2025_773_SEM_1/resultat-calendrier',
     'https://epreuves.fff.fr/competition/club/582585-pays-de-cassel-us/equipe/2025_191820_SEM_1/resultat-calendrier',
     'https://epreuves.fff.fr/competition/club/500650-versailles-78-f-c/equipe/2025_656_U17_4/resultat-calendrier',
