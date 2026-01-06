@@ -326,26 +326,32 @@ const ACCRED_LIST = {
             return key ? STADIUM_COORDS[key] : null;
         };
 
-        const formatCompetition = (rawName) => {
-            if (!rawName) return "MATCH";
-            const name = rawName.toUpperCase();
-            let level = "RÉG", age = "SENIOR"; 
-            if (name.includes("N3")) level = "N3";
-            else if (name.includes("N2")) level = "N2";
-            else if (name.includes("NATIONAL")) level = "NAT"; 
-            else if (name.includes("R1")) level = "R1";
-            else if (name.includes("D1")) level = "D1";
-            if (name.includes("U21")) age = "U21";
-            else if (name.includes("U19")) age = "U19";
-            else if (name.includes("U18")) age = "U18";
-            else if (name.includes("U17")) age = "U17";
-            else if (name.includes("U16")) age = "U16";
-            else if (name.includes("U15")) age = "U15";
-            if (name.includes("FÉMININ") || name.includes("FEMININ") || name.includes(" F ")) {
-                if (!age.includes("F")) age += " F";
-            }
-            return `${level} - ${age}`;
-        };
+    const formatCompetition = (rawName) => {
+        if (!rawName) return "MATCH";
+        
+        const name = rawName.toUpperCase();
+        let level = "REG", age = "SENIOR";
+
+        const isFeminine = name.includes("FÉMININ") || name.includes("FEMININ") || name.includes(" F ");
+
+
+        if (name.includes("N3")) level = "N3";
+        else if (name.includes("N2")) level = "N2";
+        else if (name.includes("NATIONAL")) level = "NAT";
+        else if (name.includes("D3") && isFeminine) level = "N1";
+        else if (name.includes("R1")) level = "R1";
+        else if (name.includes("D1")) level = "D1";
+        if (name.includes("U21")) age = "U21";
+        else if (name.includes("U19")) age = "U19";
+        else if (name.includes("U18")) age = "U18";
+        else if (name.includes("U17")) age = "U17";
+        else if (name.includes("U16")) age = "U16";
+        else if (name.includes("U15")) age = "U15";
+        if (isFeminine) {
+            if (!age.includes("F")) age += " F";
+        }
+        return `${level} - ${age}`;
+    };
 
         // --- API GEOAPIFY ---
         async function fetchTravelData(userLat, userLon, destLat, destLon) {
