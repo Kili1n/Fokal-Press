@@ -1,192 +1,127 @@
-/* =========================================
-   Mobile CSS - Dashboard Presse
-   Breakpoints: < 1024px (Tablette & Mobile)
-   ========================================= */
+/* --- Styles Mobile (max-width 768px) --- */
+@media screen and (max-width: 768px) {
 
-@media screen and (max-width: 1024px) {
-
-    /* --- 1. Reset Global & Container --- */
-    body {
-        min-width: auto; /* Annule le min-width: 1200px */
+    /* 1. CORRECTION DU PROBLÈME DE ZOOM / SCROLL */
+    html, body {
+        min-width: 0 !important; /* Écrase le 1200px du desktop */
+        width: 100% !important;
+        overflow-x: hidden !important; /* Empêche tout dépassement horizontal */
         padding-bottom: 80px;
-        overflow-x: hidden; /* Évite le scroll horizontal involontaire */
     }
 
-    .container {
-        max-width: 100%;
-        margin: 15px auto;
-        padding: 0 16px; /* Marges latérales plus fines sur mobile */
-    }
-
-    /* --- 2. Header & Navigation (Le Menu Hamburger) --- */
+    /* 2. Adaptation du Header */
     header {
-        padding: 12px 20px;
+        position: sticky;
+        top: 0;
+        padding: 10px 15px !important; /* Réduit les marges internes */
         height: auto;
-        max-height: 60px; /* Hauteur fermée (juste la barre du haut) */
+        min-height: 60px;
+        max-height: 60px; /* Fermé par défaut */
         overflow: hidden;
-        transition: max-height 0.4s ease-in-out, background 0.3s;
-        display: block; /* Remplace le flex du desktop pour gérer l'ouverture */
+        transition: max-height 0.3s ease-in-out;
+        width: 100%;
     }
 
-    /* Classe ajoutée via JS (menu-open) pour déplier le menu */
+    /* État OUVERT du menu (activé par JS) */
     header.menu-open {
-        max-height: 100vh; /* Permet d'afficher tout le contenu */
-        background: #FFFFFF; /* Fond blanc uni quand ouvert */
-        overflow-y: auto; /* Scroll si le menu est trop long */
-        box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+        max-height: 100vh; /* Prend tout l'écran */
+        overflow-y: auto;
+        background: #FFFFFF;
     }
 
-    /* La partie haute (Logo + Burger) */
-    .header-top {
-        flex-wrap: wrap;
-        gap: 0;
-        margin-bottom: 0;
-    }
-
+    /* Ajustement du logo et du bouton hamburger */
     .brand {
         width: 100%;
-        justify-content: space-between; /* Logo à gauche, Burger à droite */
+        min-width: 0 !important; /* Enlève la largeur minimale du logo */
+        justify-content: space-between;
         font-size: 18px;
     }
 
-    /* Le bouton Burger (visible uniquement sur mobile) */
     .menu-toggle {
-        display: flex; /* Active le bouton caché en desktop */
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        background: transparent;
-        color: var(--text-primary);
-        font-size: 20px;
-        transition: background 0.2s;
+        display: block !important; /* Affiche le bouton hamburger */
+        font-size: 22px;
+        padding: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
     }
 
-    .menu-toggle:active {
-        background: rgba(0,0,0,0.05);
-    }
-
-    /* --- 3. Contenu du Menu (Caché par défaut) --- */
-    
-    /* Conteneurs principaux à masquer quand fermé */
+    /* 3. Masquer/Afficher le contenu du menu */
     .nav-controls, 
     .header-bottom {
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px);
-        transition: all 0.3s ease;
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
+        display: flex;
+        flex-direction: column; /* Vertical */
+        gap: 15px;
         margin-top: 20px;
+        opacity: 0; /* Caché par défaut */
+        visibility: hidden;
+        transition: opacity 0.2s;
     }
 
-    /* Affichage quand le menu est ouvert */
     header.menu-open .nav-controls,
     header.menu-open .header-bottom {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
-        display: flex; /* Force le flex pour l'alignement vertical */
     }
 
-    /* --- 4. Adaptation des contrôles internes --- */
-
-    /* Groupe Recherche */
-    .search-group {
-        width: 100%;
-    }
-    
-    .search-input {
-        width: 100% !important; /* Force la largeur totale */
-        height: 44px; /* Plus haut pour le tactile */
-        font-size: 16px; /* Évite le zoom auto sur iOS */
+    /* Réorganisation des éléments internes du header */
+    .header-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
     }
 
-    /* Groupe Localisation (GPS + Calcul) */
+    .search-group { width: 100%; }
+    .search-input { width: 100% !important; }
+
     .location-group {
         width: 100%;
         display: grid;
-        grid-template-columns: 50px 1fr; /* Bouton GPS carré, Calcul prend le reste */
+        grid-template-columns: 50px 1fr; /* Bouton GPS petit, Calcul grand */
         gap: 10px;
     }
 
-    .icon-btn, .calc-btn {
-        height: 44px; /* Hauteur tactile */
-    }
+    .calc-btn { width: 100%; justify-content: center; }
 
-    .calc-btn {
-        justify-content: center;
-        width: 100%;
-    }
-
-    /* Filtres Sport (Boutons) */
     .filters {
-        width: 100%;
         display: grid;
-        grid-template-columns: repeat(4, 1fr); /* 4 boutons sur une ligne */
-        padding: 4px;
-        margin-bottom: 10px;
+        grid-template-columns: repeat(4, 1fr); /* 4 colonnes égales */
+        width: 100%;
+        gap: 5px;
     }
+    .filter-btn { padding: 8px 0; justify-content: center; }
 
-    .filter-btn {
-        padding: 8px 0;
-        font-size: 11px;
-        text-align: center;
-    }
-
-    /* Groupe Filtres (Selects, Date, Toggle) */
     .filter-group {
         flex-direction: column;
         align-items: stretch;
         gap: 12px;
-        width: 100%;
-        padding-bottom: 20px; /* Marge en bas du menu ouvert */
-    }
-
-    .control-input, 
-    .ui-group {
-        width: 100%;
-        height: 44px; /* Hauteur tactile */
     }
 
     .ui-group {
-        justify-content: space-between; /* Ecarte label et input */
+        width: 100%;
+        justify-content: space-between;
     }
 
-    /* --- 5. La Grille des Matchs --- */
+    /* 4. Conteneur principal et Cartes */
+    .container {
+        padding: 15px !important; /* Marges réduites sur les côtés */
+        margin: 0 !important;
+        width: 100%;
+        max-width: 100%;
+    }
+
     .matches-grid {
-        grid-template-columns: 1fr; /* Une seule colonne */
-        gap: 16px;
+        display: flex; /* Passe en Flex colonne plutôt que Grid */
+        flex-direction: column;
+        gap: 15px;
     }
 
     .card {
-        padding: 16px;
+        width: 100%; /* La carte prend toute la largeur */
+        margin: 0;
     }
 
-    /* Ajustement des équipes pour éviter les coupures */
-    .match-header {
-        align-items: flex-start;
-    }
-
-    .team-name {
-        font-size: 12px;
-        height: auto; /* Laisse le texte prendre sa place */
-        max-height: 40px;
-    }
-
-    .vs {
-        margin-top: 15px; /* Réalignement vertical */
-    }
-
-    .accred-footer {
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-    
-    .accred-email {
-        font-size: 12px;
-        max-width: 100%;
-    }
+    /* Ajustement interne des cartes pour éviter la coupure */
+    .team { width: 40%; } /* Réduit légèrement la largeur des équipes */
+    .team-name { font-size: 12px; } /* Police un peu plus petite */
 }
