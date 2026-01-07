@@ -402,6 +402,7 @@
                 applyFilters();
             } catch (error) {
                 document.getElementById('grid').innerHTML = `<div class="error-msg">Erreur de chargement.</div>`;
+                console.error("Détail de l'erreur :", error);
             }
         }
 
