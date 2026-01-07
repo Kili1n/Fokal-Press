@@ -386,7 +386,7 @@
 
         async function loadMatches() {
             try {
-                const response = await fetch('./matchs.json');
+                const response = await fetch('matchs.json');
                 const data = await response.json();
                 allMatches = data.map(m => ({
                     sport: m.sport,
