@@ -68,7 +68,7 @@ const HANDBALL_URLS = [
     'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957558/'
 ];
 
-const OUTPUT_FILE = 'matchs.json';
+const OUTPUT_FILE = 'data/matchs.json';
 
 // --- UTILS ---
 const normalize = (str) => {
