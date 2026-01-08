@@ -1,36 +1,6 @@
 [
     {
         "sport": "basketball",
-        "isoDate": "2026-01-07T18:00:00.000Z",
-        "date": "mercredi 7 janvier 2026",
-        "home": "CHARTRES",
-        "away": "CHARNAY",
-        "competition": "LBWL",
-        "round": "J13",
-        "location": "N/A"
-    },
-    {
-        "sport": "handball",
-        "isoDate": "2026-01-07T19:00:00.000Z",
-        "date": "mercredi 7 janvier 2026",
-        "home": "CHAMBRAY TOURAINE HANDBALL",
-        "away": "ES BESANCON FEMININ",
-        "competition": "LIGUE BUTAGAZ ENERGIE 2025-26",
-        "round": "JOURNÉE 11",
-        "location": "N/A"
-    },
-    {
-        "sport": "handball",
-        "isoDate": "2026-01-07T19:30:00.000Z",
-        "date": "mercredi 7 janvier 2026",
-        "home": "STELLA SAINT-MAUR HANDBALL",
-        "away": "TOULON METROPOLE VAR HANDBALL",
-        "competition": "LIGUE BUTAGAZ ENERGIE 2025-26",
-        "round": "JOURNÉE 11",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
         "isoDate": "2026-01-09T19:00:00.000Z",
         "date": "vendredi 9 janvier 2026",
         "home": "ALM EVREUX BASKET",
@@ -604,7 +574,7 @@
         "isoDate": "2026-02-13T19:00:00.000Z",
         "date": "vendredi 13 février 2026",
         "home": "ALM EVREUX BASKET",
-        "away": "JEANNE D’ARC DE VICHY",
+        "away": "JEANNE D'ARC DE VICHY",
         "competition": "ÉLIT2",
         "round": "J23",
         "location": "N/A"
@@ -800,6 +770,16 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "isoDate": "2026-02-22T13:30:00.000Z",
+        "date": "dimanche 22 février 2026",
+        "home": "VGA SAINT MAUR",
+        "away": "CPB BREQUIGNY RENNES",
+        "competition": "D3 FÉMININE - Senior F",
+        "round": "Journée 17",
+        "location": "N/A"
+    },
+    {
         "sport": "handball",
         "isoDate": "2026-02-22T14:00:00.000Z",
         "date": "dimanche 22 février 2026",
@@ -957,6 +937,16 @@
         "away": "MONTBRISON",
         "competition": "LF2",
         "round": "J22",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "isoDate": "2026-03-07T19:00:00.000Z",
+        "date": "samedi 7 mars 2026",
+        "home": "LE MANS SARTHE BASKET",
+        "away": "NANTERRE 92",
+        "competition": "BETCLICE",
+        "round": "J21",
         "location": "N/A"
     }
 ]

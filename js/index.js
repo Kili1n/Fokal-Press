@@ -544,6 +544,7 @@ function renderMatches(data) {
         const card = document.createElement('article');
         card.className = 'card';
         const emoji = SPORT_EMOJIS[m.sport.toLowerCase()] || "🏟️";
+        const coordsArg = m.locationCoords ? JSON.stringify(m.locationCoords) : 'null';
         
         // Affichage propre de la distance (pas de 0km)
         const distText = m.isCalculating ? '<i class="fa-solid fa-spinner fa-spin"></i>' : (m.distance > 0 ? `${m.distance} km` : '-- km');
@@ -575,7 +576,15 @@ function renderMatches(data) {
             </div>
             <div class="match-meta">
                 <span class="badge"><span>${emoji}</span> ${m.compFormatted}</span>
-                <span class="date-time">${m.dateDisplay}</span>
+                <div class="date-group" style="display: flex; align-items: center; gap: 8px;">
+                    <span class="date-time">${m.dateDisplay}</span>
+                    <button class="calendar-btn" 
+                            onclick='exportToGoogleCalendar("${m.home.name.replace(/"/g, "")}", "${m.away.name.replace(/"/g, "")}", new Date("${m.dateObj.toISOString()}"), "${m.compFormatted}", "${m.sport}", ${coordsArg})'
+                            title="Ajouter à Google Agenda"
+                            style="background:none; border:none; cursor:pointer; color: var(--accent); font-size: 14px; padding: 0;">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                    </button>
+                </div>
             </div>
             <div class="transport-block">
                 <div class="transport-info">
@@ -594,6 +603,24 @@ function renderMatches(data) {
         `;
         grid.appendChild(card);
     });
+}
+
+function exportToGoogleCalendar(home, away, dateObj, comp, sport, coords) {
+    const formatDate = (date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
+
+    const startTime = formatDate(dateObj);
+    const endTime = formatDate(new Date(dateObj.getTime() + 2 * 60 * 60 * 1000));
+
+    const title = encodeURIComponent(`${home} vs ${away}`);
+    const details = encodeURIComponent(`Accréditation photographe sur le match ${home} vs ${away} en ${comp} - Généré via Dashboard Presse`);
+    
+    // Modification ici : si coords existe, on met "lat,lon", sinon le nom du club
+    const locationValue = coords ? `${coords.lat},${coords.lon}` : home;
+    const location = encodeURIComponent(locationValue);
+
+    const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startTime}/${endTime}&details=${details}&location=${location}`;
+    
+    window.open(url, '_blank');
 }
 
 function updateFilterSlider() {

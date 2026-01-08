@@ -350,3 +350,19 @@ body.dark-mode .filter-btn.active {
 body.dark-mode .filter-slider {
     background: #48484A; /* Couleur grise pour le thème sombre */
 }
+
+.calendar-btn {
+    transition: transform 0.2s ease, opacity 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.calendar-btn:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+/* En mode sombre, on s'assure que l'icône ressort bien */
+body.dark-mode .calendar-btn {
+    color: var(--accent);
+}
