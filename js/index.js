@@ -1,5 +1,4 @@
 const GEOAPIFY_KEY = "61ca90447ebd483ab2f002050433fa42"; 
-const LOGO_TOKEN = "pk_ZMm3eD-YScqxE9anYdSV8g";
 const SPORT_EMOJIS = { "football": "⚽", "basketball": "🏀", "handball": "🤾"};
 
 // États globaux
@@ -9,14 +8,6 @@ let currentFilters = { week: "", comp: "all", sport: "all", accredOnly: false, s
 let userPosition = null;
 let isCalculating = false;
 const travelCache = new Map();
-
-const normalize = (str) => {
-    if (!str) return '';
-    return str.toUpperCase()
-        .replace(/[^A-Z0-9]/g, '') 
-        .replace(/FC$|SFC$|SC$|FOOTBALL$|JEANNEDARC$|\d+$/g, '');
-};
-
 const logoCache = new Map();
 
 const getLogoUrl = (name) => {
@@ -29,8 +20,7 @@ const getLogoUrl = (name) => {
     if (customKey) {
         finalUrl = CUSTOM_LOGOS[customKey];
     } else {
-        let cleanName = normalize(name);
-        finalUrl = `https://img.logo.dev/name/${encodeURIComponent(cleanName.toLowerCase())}?token=${LOGO_TOKEN}`;
+        finalUrl = ''; 
     }
 
     logoCache.set(name, finalUrl);
@@ -301,14 +291,12 @@ async function updateDistances() {
     btn.disabled = true;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calcul...';
 
+    const targets = currentlyFiltered;
 
-    const targets = currentlyFiltered.slice(0, 100);
-
-    for (let m of targets) {
+    // 1. On traite tous les matchs en parallèle
+    await Promise.all(targets.map(async (m) => {
         if (m.locationCoords && m.distance === 0) {
-            m.isCalculating = true;
-            renderMatches(currentlyFiltered); 
-
+            // fetchTravelData vérifie déjà le localStorage en premier
             const travel = await fetchTravelData(userPosition.lat, userPosition.lon, m.locationCoords.lat, m.locationCoords.lon);
             
             if (m.sport.toLowerCase() === "football") {
@@ -316,23 +304,23 @@ async function updateDistances() {
             }
 
             if (travel) {
+                // Mise à jour de toutes les occurrences du même club
                 allMatches.forEach(match => {
                     if (match.home.name === m.home.name) {
                         match.distance = travel.dist;
                         match.times.car = travel.car;
                         match.times.public = Math.round(travel.car * 1.5 + 15);
-                        match.isCalculating = false;
                     }
                 });
             }
-            m.isCalculating = false;
         }
-    }
+    }));
 
+    // 2. On ne fait qu'UN SEUL rendu à la fin de la boucle
     isCalculating = false;
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-solid fa-route"></i> Calculer les distances';
-    applyFilters(); // Rafraîchit l'affichage final
+    renderMatches(currentlyFiltered); 
 }
 
 async function loadMatches() {
@@ -399,6 +387,8 @@ function requestUserLocation() {
 
             // 2. Mise à jour de la position globale
             userPosition = newPos;
+            localStorage.setItem('userLastPosition', JSON.stringify(newPos)); // Sauvegarde
+            document.getElementById('gpsBtn').classList.add('active');
             
             // 3. Mise à jour de l'interface
             document.getElementById('gpsBtn').classList.add('active');
@@ -546,15 +536,16 @@ function renderMatches(data) {
         const emoji = SPORT_EMOJIS[m.sport.toLowerCase()] || "🏟️";
         const coordsArg = m.locationCoords ? JSON.stringify(m.locationCoords) : 'null';
         
-        // Affichage propre de la distance (pas de 0km)
         const distText = m.isCalculating ? '<i class="fa-solid fa-spinner fa-spin"></i>' : (m.distance > 0 ? `${m.distance} km` : '-- km');
 
+        // --- CORRECTION DES LIENS GOOGLE MAPS ---
         let mapsUrl = "#";
         if (m.locationCoords) {
             if (userPosition) {
-                // Correction de la syntaxe ${ } et de l'URL Google Maps
+                // Lien d'itinéraire (Direction)
                 mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userPosition.lat},${userPosition.lon}&destination=${m.locationCoords.lat},${m.locationCoords.lon}&travelmode=driving`;
             } else {
+                // Lien de localisation simple
                 mapsUrl = `https://www.google.com/maps/search/?api=1&query=${m.locationCoords.lat},${m.locationCoords.lon}`;
             }
         }
@@ -562,7 +553,9 @@ function renderMatches(data) {
         card.innerHTML = `
             <div class="match-header">
                 <div class="team">
-                    <img src="${getLogoUrl(m.home.name)}" class="team-logo" onerror="this.src='https://placehold.co/42x42/png?text=H'">
+                    <img src="${getLogoUrl(m.home.name)}" 
+                         class="team-logo" 
+                         onerror="console.warn('Logo manquant (Home):', '${m.home.name.replace(/'/g, "\\'")}'); this.src='https://placehold.co/42x42/png?text=H'">
                     <span class="team-name">${m.home.name}</span>
                 </div>
                 <div class="match-center">
@@ -570,7 +563,9 @@ function renderMatches(data) {
                     <div class="vs">VS</div>
                 </div>
                 <div class="team">
-                    <img src="${getLogoUrl(m.away.name)}" class="team-logo" onerror="this.src='https://placehold.co/42x42/png?text=A'">
+                    <img src="${getLogoUrl(m.away.name)}" 
+                         class="team-logo" 
+                         onerror="console.warn('Logo manquant (Away):', '${m.away.name.replace(/'/g, "\\'")}'); this.src='https://placehold.co/42x42/png?text=A'">
                     <span class="team-name">${m.away.name}</span>
                 </div>
             </div>
@@ -669,6 +664,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('load', updateFilterSlider);
     window.addEventListener('resize', updateFilterSlider);
+
+    const savedPos = localStorage.getItem('userLastPosition');
+    if (savedPos) {
+        userPosition = JSON.parse(savedPos);
+        document.getElementById('gpsBtn').classList.add('active');
+    }
 
     document.getElementById('menuToggle').addEventListener('click', (e) => {
         e.stopPropagation(); 
