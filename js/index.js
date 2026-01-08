@@ -17,12 +17,24 @@ const normalize = (str) => {
         .replace(/FC$|SFC$|SC$|FOOTBALL$|JEANNEDARC$|\d+$/g, '');
 };
 
+const logoCache = new Map();
+
 const getLogoUrl = (name) => {
+    if (logoCache.has(name)) return logoCache.get(name);
+
     const upperName = name.toUpperCase();
     const customKey = Object.keys(CUSTOM_LOGOS).find(key => upperName.includes(key));
-    if (customKey) return CUSTOM_LOGOS[customKey];
-    let cleanName = normalize(name);
-    return `https://img.logo.dev/name/${encodeURIComponent(cleanName.toLowerCase())}?token=${LOGO_TOKEN}`;
+    
+    let finalUrl;
+    if (customKey) {
+        finalUrl = CUSTOM_LOGOS[customKey];
+    } else {
+        let cleanName = normalize(name);
+        finalUrl = `https://img.logo.dev/name/${encodeURIComponent(cleanName.toLowerCase())}?token=${LOGO_TOKEN}`;
+    }
+
+    logoCache.set(name, finalUrl);
+    return finalUrl;
 };
 
 const formatCompetition = (rawName, sport) => {
@@ -539,10 +551,9 @@ function renderMatches(data) {
         let mapsUrl = "#";
         if (m.locationCoords) {
             if (userPosition) {
-                // Itinéraire de l'utilisateur vers le stade
+                // Correction de la syntaxe ${ } et de l'URL Google Maps
                 mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userPosition.lat},${userPosition.lon}&destination=${m.locationCoords.lat},${m.locationCoords.lon}&travelmode=driving`;
             } else {
-                // Simple recherche du lieu si le GPS n'est pas activé
                 mapsUrl = `https://www.google.com/maps/search/?api=1&query=${m.locationCoords.lat},${m.locationCoords.lon}`;
             }
         }
@@ -585,6 +596,16 @@ function renderMatches(data) {
     });
 }
 
+function updateFilterSlider() {
+    const activeBtn = document.querySelector('.filter-btn.active');
+    const slider = document.querySelector('.filter-slider');
+    
+    if (activeBtn && slider) {
+        slider.style.width = `${activeBtn.offsetWidth}px`;
+        slider.style.left = `${activeBtn.offsetLeft}px`;
+    }
+}
+
 // Listeners
 document.addEventListener('DOMContentLoaded', () => {
     loadMatches();
@@ -602,6 +623,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.filter-btn.active').classList.remove('active');
             btn.classList.add('active');
             currentFilters.sport = btn.dataset.filter;
+            
+            updateFilterSlider();
             applyFilters();
         });
     });
@@ -617,8 +640,39 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 20);
     });
 
+    window.addEventListener('load', updateFilterSlider);
+    window.addEventListener('resize', updateFilterSlider);
+
     document.getElementById('menuToggle').addEventListener('click', (e) => {
         e.stopPropagation(); 
         document.getElementById('mainHeader').classList.toggle('menu-open');
+    });
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const themeIcon = themeToggle.querySelector('i');
+
+    // 1. Vérifier si un thème est déjà sauvegardé ou utiliser la préférence système
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        body.classList.add('dark-mode');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    // 2. Gérer le clic sur le bouton
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        const isDark = body.classList.contains('dark-mode');
+        
+        // Changer l'icône
+        if (isDark) {
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            themeIcon.classList.replace('fa-sun', 'fa-moon');
+            localStorage.setItem('theme', 'light');
+        }
     });
 });

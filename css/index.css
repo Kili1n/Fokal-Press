@@ -128,11 +128,33 @@ header.scrolled {
 input:checked + .slider { background-color: var(--accent); }
 input:checked + .slider:before { transform: translateX(14px); }
 
-.filters { display: flex; gap: 6px; background: #E8E8ED; padding: 3px; border-radius: 10px; }
+.filters { 
+    display: flex; 
+    gap: 6px; 
+    background: #E8E8ED; 
+    padding: 3px; 
+    border-radius: 10px; 
+    position: relative;
+    isolation: isolate;
+}
+
+.filter-slider {
+    position: absolute;
+    height: calc(100% - 6px); /* Prend toute la hauteur moins le padding */
+    top: 3px;
+    left: 3px;
+    background: #FFFFFF;
+    border-radius: 7px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Animation fluide */
+    z-index: 0; /* Se place derrière les textes des boutons */
+}
+
 .filter-btn { 
     border: none; background: transparent; padding: 6px 16px; 
     font-family: var(--font-main); font-size: 13px; font-weight: 600; 
     color: var(--text-secondary); border-radius: 7px; cursor: pointer; 
+    z-index: 1
 }
 .filter-btn.active { background: #FFFFFF; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
@@ -184,7 +206,7 @@ input:checked + .slider:before { transform: translateX(14px); }
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 /* Style de la flèche Google Maps */
@@ -249,4 +271,82 @@ input:checked + .slider:before { transform: translateX(14px); }
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
+}
+
+#sortFilter.control-input {
+    border: none !important;           /* Supprime la bordure double */
+    background: transparent !important; /* Laisse voir le fond du bloc parent */
+    box-shadow: none !important;      /* Enlève toute ombre interne */
+    height: 100% !important;          /* Utilise toute la hauteur du conteneur */
+    flex-grow: 1;                     /* Prend l'espace à droite du mot "TRI" */
+    padding-left: 5px !important;     /* Petit espacement avec le label */
+}
+
+
+
+#themeToggle, #gpsBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.dark-mode {
+    --bg-color: #121212;          /* Fond de page sombre */
+    --card-bg: #1C1C1E;           /* Fond des cartes */
+    --text-primary: #FFFFFF;      /* Texte blanc */
+    --text-secondary: #A1A1A6;    /* Texte gris clair */
+    --border-color: rgba(255, 255, 255, 0.1);
+    --tag-bg: #2C2C2E;            /* Fond des badges */
+}
+
+body.dark-mode header {
+    background: #1C1C1E !important;
+    border-bottom-color: #2C2C2E;
+}
+
+body.dark-mode .menu-toggle {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+body.dark-mode .search-input {
+    background: #2C2C2E !important;
+}
+
+body.dark-mode .control-input, 
+body.dark-mode .loc-input,
+body.dark-mode .icon-btn,
+body.dark-mode #gpsBtn, 
+body.dark-mode .ui-group,
+body.dark-mode .transport-block,
+body.dark-mode .weather-badge {
+    background-color: var(--tag-bg) !important; /* Utilise le gris foncé #2C2C2E */
+    color: var(--text-primary);               /* Texte en blanc */
+    
+    /* On assombrit l'ombre pour qu'elle soit visible sur fond noir */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); 
+    
+    /* Optionnel : ajout d'une fine bordure pour détacher le badge */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* On ajuste aussi l'icône à l'intérieur pour enlever son ombre portée claire */
+body.dark-mode .weather-icon {
+    filter: drop-shadow(0 0 1px rgba(0,0,0,0.5));
+}
+body.dark-mode #themeToggle {
+    background: #2C2C2E !important; /* Le !important assure la priorité, mais cibler l'ID suffit */
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+body.dark-mode .filters {
+    background: #2C2C2E;
+}
+
+body.dark-mode .filter-btn.active {
+    background: #48484A;
+    color: #FFF;
+}
+body.dark-mode .filter-slider {
+    background: #48484A; /* Couleur grise pour le thème sombre */
 }

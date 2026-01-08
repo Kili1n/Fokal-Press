@@ -124,8 +124,12 @@
 
     .filter-btn {
         padding: 8px 0;
-        font-size: 13px;
+        margin-right: 10px;
+        margin-left: 10px;
+        text-align: center;
         border-radius: 8px;
+        font-size: 12px;
+        text-overflow: ellipsis; 
     }
 
     .filter-btn.active {
@@ -188,4 +192,44 @@
     }
 
     .team-name { font-size: 12px; }
+
+    #themeToggle {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    }
+
+    body.dark-mode header {
+        background: #1C1C1E !important;
+        border-bottom-color: #2C2C2E;
+    }
+
+    body.dark-mode .menu-toggle {
+        border-color: var(--text-primary);
+        color: var(--text-primary);
+    }
+    
+    body.dark-mode .search-input {
+        background: #2C2C2E !important;
+    }
+
+    
+    body.dark-mode .control-input, 
+    body.dark-mode .loc-input,
+    body.dark-mode .icon-btn,
+    body.dark-mode #gpsBtn, 
+    body.dark-mode #themeToggle {
+        background: #2C2C2E !important;
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+    body.dark-mode .filters {
+        background: #2C2C2E;
+    }
+
+    body.dark-mode .filter-btn.active {
+        background: #48484A;
+        color: #FFF;
+    }
 }
