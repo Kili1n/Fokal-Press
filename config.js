@@ -156,7 +156,7 @@ const STADIUM_COORDS = {
     "PSG": { lat: 48.836, lon: 2.253 }, 
     "ELITE VAL-D'OISE": { lat: 48.990, lon: 2.221 }, 
     "TREMBLAY": { lat: 48.948, lon: 2.569 }, 
-    "IVRY": { lat: 48.812, lon: 2.392 }, 
+    "IVRY US": { lat: 48.812, lon: 2.392 }, 
     "CRETEIL": { lat: 48.776, lon: 2.450 }, 
     "PONTAULT-COMBAULT": { lat: 48.796, lon: 2.611 }, 
     "MASSY ESSONNE": { lat: 48.730, lon: 2.275 } 
