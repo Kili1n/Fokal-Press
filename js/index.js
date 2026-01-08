@@ -377,6 +377,19 @@ function applyFilters() {
 function renderMatches(data) {
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
+
+    if (data.length === 0) {
+        grid.innerHTML = `
+            <div class="no-results">
+                <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                <p>Aucun match ne correspond à vos critères de recherche.</p>
+                <button onclick="resetFilters()" class="calc-btn" style="margin-top: 1rem; width: auto;">
+                    Réinitialiser les filtres
+                </button>
+            </div>
+        `;
+        return;
+    }
     
     data.forEach(m => {
         const card = document.createElement('article');
