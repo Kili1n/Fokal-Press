@@ -7,12 +7,17 @@ const ACCRED_LIST = {
     "US CHANTILLY": "https://www.instagram.com/uschantilly/",
     "US ORLEANS": "https://orleansloiretfoot.com/contact/",
     "NANTERRE": "https://www.nanterre92.com/club/acces/accreditations-journalistes/",
+    "C'CHARTRES MHB": "manon.bougard@ccmhb.fr",
+    "CHARTRES FOOTBALL" : "https://cchartresfootball.com/about-us/contact/",
     "CHARTRES": "communication@ccmbf.fr",
     "PARIS 92": "julia@paris92.fr",
-    "C'CHARTRES MHB": "manon.bougard@ccmhb.fr",
     "US CRETEIL": "https://uschb.fr/infos-pratiques/presse/",
     "IVRY": "neiville.fon@hand-ivry.org",
-    "FRANCAIS VOLANTS": "contact.hockey@francais-volants.org"
+    "FRANCAIS VOLANTS": "contact.hockey@francais-volants.org",
+    "SAINT QUENTIN" : "https://www.linkedin.com/in/camille-christiaens-6a1839227/",
+    "CHAMBRAY" : "antoine.recher@cthb.fr",
+    "EVREUX" : "secretariat@almevreuxbasket.com",
+    "VIMY" : "contact@usvimy.fr"
 };
 
 const CUSTOM_LOGOS = {
