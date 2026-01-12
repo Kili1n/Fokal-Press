@@ -9,7 +9,7 @@ const ACCRED_LIST = {
     "NANTERRE": "https://www.nanterre92.com/club/acces/accreditations-journalistes/",
     "C'CHARTRES MHB": "manon.bougard@ccmhb.fr",
     "CHARTRES FOOTBALL" : "https://cchartresfootball.com/about-us/contact/",
-    "CHARTRES": "communication@ccmbf.fr",
+    "CHARTRES": "https://tally.so/r/obRDgO",
     "PARIS 92": "julia@paris92.fr",
     "US CRETEIL": "https://uschb.fr/infos-pratiques/presse/",
     "IVRY": "neiville.fon@hand-ivry.org",
