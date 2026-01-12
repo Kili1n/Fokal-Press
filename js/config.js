@@ -18,7 +18,8 @@ const ACCRED_LIST = {
     "CHAMBRAY" : "antoine.recher@cthb.fr",
     "EVREUX" : "secretariat@almevreuxbasket.com",
     "VIMY" : "contact@usvimy.fr",
-    "PARIS FC" : "https://parisfc.fr/presse/"
+    "PARIS FC" : "https://parisfc.fr/presse/",
+    "RACING CLUB FRANCE" : "https://www.instagram.com/racing_cff/"
 };
 
 const CUSTOM_LOGOS = {
