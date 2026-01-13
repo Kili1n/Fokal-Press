@@ -366,3 +366,7 @@ body.dark-mode .filter-slider {
 body.dark-mode .calendar-btn {
     color: var(--accent);
 }
+
+#gpsBtn.active ~ .city-input-wrapper {
+    display: none;
+}

@@ -60,7 +60,7 @@ function openGmailCompose(email, homeTeam, awayTeam, matchDate, sport, compet) {
     
     // Le corps du mail est maintenant dynamique selon le match et la date
     const body = encodeURIComponent(`Bonjour,\n\nJe me permets de vous contacter en tant que photographe, passionné par le ${sport}, afin de solliciter une accréditation pour le match ${homeTeam} vs ${awayTeam} (${compet}) prévu le ${matchDate}.\n
-Cette opportunité me permettra d'enrichir mon portfolio. De votre côté, si vous le souhaitez, je vous fournirai à l'issue de la rencontre les photos pour vos communications.
+Cette opportunité me permettra de mon côté d'enrichir mon portfolio. Et du vôtre, si vous le souhaitez, je vous fournirai à l'issue de la rencontre les photos pour vos communications.
 Vous pouvez avoir un aperçu de mon travail sur mon compte Instagram : @kiksf4
 
 Je reste à votre entière disposition pour toute information complémentaire.
@@ -281,30 +281,46 @@ async function fetchWeather(lat, lon, date) {
 }
 
 async function updateDistances() {
-    if (isCalculating || !userPosition) {
-        if(!userPosition) alert("Veuillez d'abord activer votre position GPS.");
+    // Vérification de sécurité
+    if (isCalculating) return;
+    if (!userPosition) {
+        alert("Veuillez d'abord définir une position (GPS ou Ville).");
         return;
     }
 
     isCalculating = true;
     const btn = document.getElementById('calcDistBtn');
+    
+    // Feedback visuel sur le bouton
+    const originalBtnText = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calcul...';
 
     const targets = currentlyFiltered;
 
-    // 1. On traite tous les matchs en parallèle
+    // --- ÉTAPE IMPORTANTE : RESET VISUEL ---
+    // On remet les distances à 0 pour forcer le recalcul et montrer à l'utilisateur que ça change
+    allMatches.forEach(m => {
+        m.distance = 0;
+        m.times.car = 0;
+        m.times.public = 0;
+    });
+    // On rafraichit l'affichage tout de suite pour montrer des "-- km" pendant le calcul
+    renderMatches(currentlyFiltered); 
+
+    // --- CALCUL PARALLÈLE ---
     await Promise.all(targets.map(async (m) => {
-        if (m.locationCoords && m.distance === 0) {
-            // fetchTravelData vérifie déjà le localStorage en premier
+        // CORRECTION : On a supprimé "&& m.distance === 0" pour forcer le recalcul
+        if (m.locationCoords) {
             const travel = await fetchTravelData(userPosition.lat, userPosition.lon, m.locationCoords.lat, m.locationCoords.lon);
             
+            // Gestion Météo (uniquement pour le foot ici, selon votre logique)
             if (m.sport.toLowerCase() === "football") {
                 m.weather = await fetchWeather(m.locationCoords.lat, m.locationCoords.lon, m.dateObj);
             }
 
             if (travel) {
-                // Mise à jour de toutes les occurrences du même club
+                // On met à jour TOUTES les occurrences de ce match dans la mémoire globale
                 allMatches.forEach(match => {
                     if (match.home.name === m.home.name) {
                         match.distance = travel.dist;
@@ -316,11 +332,13 @@ async function updateDistances() {
         }
     }));
 
-    // 2. On ne fait qu'UN SEUL rendu à la fin de la boucle
+    // Fin du calcul
     isCalculating = false;
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-solid fa-route"></i> Calculer les distances';
-    renderMatches(currentlyFiltered); 
+    
+    // Rendu final avec les nouvelles valeurs
+    applyFilters();
 }
 
 async function loadMatches() {
@@ -357,45 +375,44 @@ async function loadMatches() {
 
 function requestUserLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
+        // On ajoute 'async' ici pour pouvoir attendre le calcul
+        navigator.geolocation.getCurrentPosition(async pos => {
             const newPos = { 
                 lat: pos.coords.latitude, 
                 lon: pos.coords.longitude 
             };
 
-            // 1. Vérification du changement de position
+            // 1. Vérification du changement de position (Logic existante)
             if (userPosition) {
-                // Calcul de la différence de latitude et longitude
                 const latDiff = Math.abs(userPosition.lat - newPos.lat);
                 const lonDiff = Math.abs(userPosition.lon - newPos.lon);
 
-                // Si le déplacement est > ~5.5km, on invalide le cache
                 if (latDiff > 0.05 || lonDiff > 0.05) {
                     console.log("📍 Position modifiée : nettoyage du cache de distance.");
-                    
-                    // Vide le Map en mémoire vive
                     travelCache.clear();
-                    
-                    // Vide les entrées de trajet dans le localStorage
                     Object.keys(localStorage).forEach(key => {
-                        if (key.startsWith('travel_')) {
-                            localStorage.removeItem(key);
-                        }
+                        if (key.startsWith('travel_')) localStorage.removeItem(key);
                     });
                 }
             }
 
             // 2. Mise à jour de la position globale
             userPosition = newPos;
-            localStorage.setItem('userLastPosition', JSON.stringify(newPos)); // Sauvegarde
-            document.getElementById('gpsBtn').classList.add('active');
+            localStorage.setItem('userLastPosition', JSON.stringify(newPos)); 
             
-            // 3. Mise à jour de l'interface
+            // Mise à jour visuelle du bouton
             document.getElementById('gpsBtn').classList.add('active');
-            console.log("Position mise à jour :", userPosition);
+            console.log("Position GPS mise à jour :", userPosition);
+            
+            // --- AJOUT IMPORTANT ICI ---
+            // On lance le calcul automatiquement une fois la position GPS trouvée
+            await updateDistances(); 
+            // ---------------------------
             
         }, (error) => {
             console.warn("Erreur de géolocalisation :", error.message);
+            // Si erreur, on décoche le bouton pour ne pas laisser l'utilisateur penser que c'est actif
+            document.getElementById('gpsBtn').classList.remove('active');
             alert("Veuillez autoriser la géolocalisation pour calculer les distances.");
         });
     } else {
@@ -629,11 +646,31 @@ function updateFilterSlider() {
 }
 
 // Listeners
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
     loadMatches();
     
     document.getElementById('calcDistBtn').addEventListener('click', updateDistances);
-    document.getElementById('gpsBtn').addEventListener('click', requestUserLocation);
+    document.getElementById('gpsBtn').addEventListener('click', () => {
+        const btn = document.getElementById('gpsBtn');
+        
+        // Si le GPS est déjà actif -> on le désactive pour afficher le champ ville
+        if (btn.classList.contains('active')) {
+            btn.classList.remove('active');
+            userPosition = null; // On vide la position
+            localStorage.removeItem('userLastPosition'); // On nettoie le stockage
+            
+            // Optionnel : on vide le champ ville pour repartir à zéro
+            document.getElementById('startCityInput').value = "";
+            
+            console.log("📍 GPS désactivé, passage en mode manuel.");
+        } 
+        // Sinon -> on active la géolocalisation
+        else {
+            // On vide le champ ville pour éviter la confusion
+            document.getElementById('startCityInput').value = ""; 
+            requestUserLocation();
+        }
+    });
 
     document.getElementById('searchInput').addEventListener('input', e => {
         currentFilters.search = e.target.value;
@@ -656,7 +693,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('compFilter').addEventListener('change', e => { currentFilters.comp = e.target.value; applyFilters(); });
     document.getElementById('sortFilter').addEventListener('change', e => { currentFilters.sortBy = e.target.value; applyFilters(); });
     document.getElementById('accredToggle').addEventListener('change', e => { currentFilters.accredOnly = e.target.checked; applyFilters(); });
-    document.getElementById('gpsBtn').addEventListener('click', requestUserLocation);
     
     window.addEventListener('scroll', () => {
         document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 20);
@@ -703,4 +739,73 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('theme', 'light');
         }
     });
+
+    const cityInput = document.getElementById('startCityInput');
+
+    // Fonction pour gérer la recherche et le calcul
+    const handleCitySearch = async () => {
+        const city = cityInput.value.trim();
+        if (!city) return;
+
+        // Feedback visuel : ça charge
+        cityInput.style.opacity = "0.5";
+        cityInput.disabled = true;
+        document.body.style.cursor = "wait";
+
+        try {
+            const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(city)}&limit=1&apiKey=${GEOAPIFY_KEY}`;
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (data.features && data.features.length > 0) {
+                const props = data.features[0].properties;
+                
+                // 1. On force la mise à jour de la position
+                userPosition = { lat: props.lat, lon: props.lon };
+                
+                // 2. On s'assure que le bouton GPS est visuellement éteint
+                document.getElementById('gpsBtn').classList.remove('active');
+                
+                // 3. IMPORTANT : On nettoie le cache précédent
+                travelCache.clear();
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('travel_')) localStorage.removeItem(key);
+                });
+
+                console.log(`✅ Ville trouvée : ${props.city || city} (${userPosition.lat}, ${userPosition.lon})`);
+
+                // 4. On force le recalcul immédiat
+                // On remet isCalculating à false au cas où il serait bloqué
+                isCalculating = false; 
+                await updateDistances();
+                
+                // Succès visuel
+                cityInput.style.borderColor = "#34C759";
+            } else {
+                alert("Ville introuvable. Essayez avec le code postal (ex: Paris 75001)");
+                cityInput.style.borderColor = "red";
+                userPosition = null; // On annule la position si ville fausse
+            }
+        } catch (e) {
+            console.error("Erreur Geocoding:", e);
+            alert("Erreur de connexion lors de la recherche de la ville.");
+        } finally {
+            // Rétablissement de l'interface
+            cityInput.disabled = false;
+            cityInput.style.opacity = "1";
+            document.body.style.cursor = "default";
+            // On redonne le focus au champ pour pouvoir corriger si besoin
+            cityInput.focus(); 
+        }
+    };
+
+    // Déclenchement sur "Entrée"
+    cityInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            handleCitySearch();
+        }
+    });
+
+    // Déclenchement quand on clique ailleurs (changement de focus)
+    cityInput.addEventListener('change', handleCitySearch);
 });

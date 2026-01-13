@@ -232,4 +232,43 @@
         background: #48484A;
         color: #FFF;
     }
+
+    /* --- FIX MOBILE : BOUTON CALCUL ET CHAMP VILLE --- */
+
+@media (max-width: 768px) {
+    /* 1. On transforme le bouton "Calculer" en bouton carré (icône seule) */
+    #calcDistBtn {
+        font-size: 0 !important; /* Cache le texte "Calculer les distances" */
+        padding: 0 !important;
+        width: 42px; /* Largeur fixe carrée */
+        height: 42px; /* Hauteur fixe */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px; /* Empêche l'écrasement */
+    }
+
+    /* 2. On s'assure que l'icône reste visible et de bonne taille */
+    #calcDistBtn i {
+        font-size: 18px !important;
+        margin-right: 0 !important; /* Enlève la marge à droite de l'icône */
+    }
+
+    /* 3. On demande au conteneur du champ ville de prendre toute la place libre */
+    .city-input-wrapper {
+        flex-grow: 1;
+        width: auto;
+    }
+
+    /* 4. On ajuste l'input lui-même pour qu'il remplisse son conteneur */
+    #startCityInput {
+        width: 100% !important;
+        min-width: 0; /* Important pour éviter le dépassement flexbox */
+    }
+    
+    /* Optionnel : Ajuster l'espacement global du groupe */
+    .location-group {
+        gap: 8px; /* Un peu d'espace entre les boutons */
+    }
+}
 }

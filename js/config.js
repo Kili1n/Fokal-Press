@@ -19,7 +19,9 @@ const ACCRED_LIST = {
     "EVREUX" : "secretariat@almevreuxbasket.com",
     "VIMY" : "contact@usvimy.fr",
     "PARIS FC" : "https://parisfc.fr/presse/",
-    "RACING CLUB FRANCE" : "https://www.instagram.com/racing_cff/"
+    "RACING CLUB FRANCE" : "https://www.instagram.com/racing_cff/",
+    "LE MANS" : "communication@msb.fr",
+    "BRETIGNY" : "csbfootball@orange.fr"
 };
 
 const CUSTOM_LOGOS = {
