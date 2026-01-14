@@ -401,6 +401,8 @@ body.dark-mode .calendar-btn {
 /* ÉTAT 3 : REÇUE (Vert) */
 .fav-btn.status-received { color: #34C759; }
 
+.fav-btn.status-refused { color: #FF3B30; }
+
 /* Mode sombre */
 body.dark-mode .fav-btn { color: #48484A; }
 body.dark-mode .fav-btn.status-envie { color: #FFD700; }

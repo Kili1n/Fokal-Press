@@ -122,7 +122,7 @@ const getAccreditationHTML = (match) => {
 let matchStatuses = JSON.parse(localStorage.getItem('matchStatuses') || '{}');
 
 // Ordre du cycle des statuts
-const STATUS_CYCLE = [null, 'envie', 'asked', 'received'];
+const STATUS_CYCLE = [null, 'envie', 'asked', 'received', 'refused'];
 
 // Helpers visuels (Icône selon le statut)
 const getStatusIcon = (status) => {
@@ -130,6 +130,7 @@ const getStatusIcon = (status) => {
         case 'envie': return 'fa-solid fa-star';          // Étoile pleine
         case 'asked': return 'fa-solid fa-paper-plane';   // Avion papier
         case 'received': return 'fa-solid fa-circle-check'; // Coche validée
+        case 'refused': return 'fa-solid fa-circle-xmark'; // Croix refusée
         default: return 'fa-regular fa-star';             // Étoile vide
     }
 };
@@ -162,7 +163,7 @@ function cycleStatus(event, matchId) {
     localStorage.setItem('matchStatuses', JSON.stringify(matchStatuses));
 
     // Mise à jour visuelle immédiate (Classes)
-    btn.classList.remove('status-envie', 'status-asked', 'status-received');
+    btn.classList.remove('status-envie', 'status-asked', 'status-received', 'status-refused');
     if (nextStatus) btn.classList.add(`status-${nextStatus}`);
 
     // Mise à jour de l'icône
@@ -173,6 +174,7 @@ function cycleStatus(event, matchId) {
         envie: "Envie d'y aller",
         asked: "Accréditation demandée",
         received: "Accréditation confirmée !",
+        refused: "Accréditation refusée",
         null: "Ajouter au suivi"
     };
     btn.title = titles[nextStatus] || titles.null;
@@ -582,7 +584,7 @@ function applyFilters() {
     filtered.sort((a, b) => {
         if (currentFilters.sortBy === "favorite") {
             // On donne un poids à chaque statut pour le tri
-            const weights = { 'received': 3, 'asked': 2, 'envie': 1 };
+            const weights = { 'received': 3, 'asked': 2, 'envie': 1, 'refused': -1 };
             
             const statusA = matchStatuses[getMatchId(a)];
             const statusB = matchStatuses[getMatchId(b)];

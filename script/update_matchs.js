@@ -39,7 +39,6 @@ const FOOTBALL_URLS = [
 const BASKET_URLS = [
     'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005138535',
     'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005138551',
-    'https://competitions.ffbb.com/ligues/pdl/comites/0072/clubs/pdl0072021/equipes/200000005152744',
     'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152746',
     'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152781',
     'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152783',
