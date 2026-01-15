@@ -88,16 +88,17 @@ Ce dashboard centralise les calendriers de plusieurs sports (Football, Basket, H
 ```
 Fokal-Press/
 ├── css/
-│   ├── index.css       # Styles principaux et Dark Mode
-│   └── mobile.css      # Adaptations responsive
+│   ├── index.css        # Styles principaux et thématique Dark Mode
+│   └── mobile.css       # Optimisations pour l'affichage smartphone
 ├── js/
-│   ├── config.js       # Clés API et configurations
-│   └── index.js        # Logique applicative (Filtres, API, Favoris)
+│   ├── config.js        # Clés API (Open-Meteo, Mapbox) et paramètres globaux
+│   └── index.js         # Cœur du Dashboard (Filtres, rendu Leaflet, Favoris)
 ├── data/
-│   └── matchs.json     # Données scrapées
-├── index.html          # Point d'entrée
-├── update_matchs.js    # Script de scraping
-└── README.md
+│   ├── matchs.json      # Base de données des rencontres (Foot, Basket, Hand)
+│   └── screen.png       # Captures d'écran pour la documentation
+├── index.html           # Interface utilisateur unique (SPA)
+├── update_matchs.js     # Script Node.js pour l'automatisation du scraping
+└── README.md            # Documentation technique et guide d'installation
 ```
 
 ## 🤝 Contribution & Contact

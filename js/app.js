@@ -1242,6 +1242,10 @@ function updateFilterSlider() {
         }
     }
 
+    requestAnimationFrame(() => {
+        document.body.classList.add('loaded');
+    }); 
+
 });
 
 // --- GESTION DES MAILS DU FOOTER ---

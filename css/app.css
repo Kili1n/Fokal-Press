@@ -22,6 +22,12 @@ body {
     min-height: 100vh;       /* Force le corps à prendre toute la hauteur de l'écran */
     display: flex;           /* Active le mode Flexbox */
     flex-direction: column;
+    opacity: 0; 
+    transition: opacity 0.3s ease-in-out;
+}
+
+body.loaded {
+    opacity: 1; /* Deviendra visible quand le JS ajoutera cette classe */
 }
 
 header {

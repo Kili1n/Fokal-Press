@@ -3,27 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fokal Press - Dashboard Photographes & Accréditations</title>
+    <title>Fokal Press - Dashboard pour Photographes de Sport</title>
+    <meta name="description" content="L'outil ultime pour planifier votre saison. Calendriers, Carte interactive, Logistique et Gestion des accréditations. Couverture H/F, U17, U19.">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/mobile.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'><path d='M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z' fill='%23007BFF'/><path transform='translate(0, -2)' d='M14.8333 9H13.6667L12.9375 8.25H11.0625L10.3333 9H9.16667C8.525 9 8 9.525 8 10.1667V13.6667C8 14.3083 8.525 14.8333 9.16667 14.8333H14.8333C15.475 14.8333 16 14.3083 16 13.6667V10.1667C16 9.525 15.475 9 14.8333 9ZM12 13.9583C10.8708 13.9583 9.95833 13.0458 9.95833 11.9167C9.95833 10.7875 10.8708 9.875 12 9.875C13.1292 9.875 14.0417 10.7875 14.0417 11.9167C14.0417 13.0458 13.1292 13.9583 12 13.9583Z' fill='white'/></svg>">
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #121212;
+            --bg-card-hover: #1c1c1e;
+            --accent: #0071E3;
+            --accent-glow: rgba(0, 113, 227, 0.5);
+            --text-main: #ffffff;
+            --text-muted: #a1a1a6;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            overflow-x: hidden;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;            
+        }
+
+        body.fade-out {
+            opacity: 0;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- UTILITY CLASSES --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-accent { color: var(--accent); }
+        
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: 50px;
+            font-weight: 600; font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .btn-primary {
+            background: var(--accent); color: white;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--accent-glow); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.1); color: white;
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border); padding: 16px 0;
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        /* --- HERO --- */
+        .hero {
+            padding: 180px 0 100px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .hero-glow {
+            position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+            width: 600px; height: 600px; background: var(--accent);
+            filter: blur(150px); opacity: 0.2; pointer-events: none; z-index: -1;
+        }
+        .hero h1 { font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 24px; letter-spacing: -2px; }
+        .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; }
+
+        /* --- FEATURES GRID --- */
+        .features-section { padding: 80px 0; }
+        .grid-3 {
+            display: grid;
+            /* Force l'affichage en 4 colonnes égales */
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 32px;
+            transition: 0.3s; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; height: 100%;
+        }
+        .feature-card:hover {
+            border-color: var(--accent); transform: translateY(-5px);
+            background: var(--bg-card-hover);
+        }
+        
+        .icon-box {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: rgba(0, 113, 227, 0.1); color: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; margin-bottom: 20px;
+        }
+
+        .feature-card h3 { font-size: 1.5rem; margin-bottom: 12px; }
+        .feature-card p { color: var(--text-muted); margin-bottom: 24px; flex-grow: 1; }
+
+        .tag-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+        .tag {
+            font-size: 0.75rem; padding: 4px 10px; border-radius: 6px;
+            background: rgba(255,255,255,0.05); color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* --- SPECIFIC CARD STYLES --- */
+        .card-highlight { border-color: rgba(0, 113, 227, 0.3); background: linear-gradient(to bottom right, #121212, #0d1b2a); }
+
+        /* --- STATS BAR --- */
+        .stats-bar {
+            display: flex; justify-content: center; gap: 60px;
+            padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            margin: 60px 0;
+            flex-wrap: wrap; /* Ajouté pour gérer le 4ème élément proprement */
+        }
+        .stat-item { text-align: center; }
+        .stat-num { font-size: 2rem; font-weight: 700; color: white; display: block; }
+        .stat-label { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- FOOTER --- */
+        footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem; }
+        .footer-links a { margin: 0 10px; } .footer-links a:hover { color: var(--accent); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stats-bar { flex-direction: column; gap: 30px; }
+        }
+
+        /* --- HERO IMAGE --- */
+        .hero-image-wrapper {
+            margin-top: 60px;
+            padding: 8px; /* Petit padding pour faire un cadre */
+            background: rgba(255, 255, 255, 0.03); /* Fond très léger */
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); /* Ombre profonde */
+            display: inline-block;
+            max-width: 100%;
+            transform: perspective(1000px) rotateX(2deg); /* Léger effet 3D optionnel */
+            transition: transform 0.5s ease;
+        }
+
+        .hero-image-wrapper:hover {
+            transform: perspective(1000px) rotateX(0deg); /* Revient à plat au survol */
+        }
+
+        .hero-image-wrapper img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- RESPONSIVE GRID --- */
+        /* En dessous de 1200px (Tablettes / Petits PC), on passe à 2 colonnes */
+        @media (max-width: 1200px) {
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* En dessous de 768px (Mobile), on passe à 1 colonne */
+        @media (max-width: 768px) {
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            /* Vos règles mobiles existantes... */
+            .hero h1 { font-size: 2.5rem; }
+            .stats-bar { flex-direction: column; gap: 30px; }
+        }
+
+        /* --- GALLERY SECTION --- */
+        .gallery-section {
+            padding: 80px 0;
+            background: linear-gradient(to top, #050505, #0a0a0a); /* Léger dégradé */
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* 2 tiers / 1 tiers */
+            grid-template-rows: repeat(2, 250px); /* Hauteur fixe pour l'alignement */
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #000;
+            display: flex;
+        }
+
+        /* L'image prend toute la place */
+        .gallery-item img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+            flex-shrink: 0;
+        }
+
+        /* La première image prend toute la hauteur à gauche (Colonne 1, Ligne 1 à 3) */
+        .item-large {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+        }
+
+        /* Effet de zoom au survol */
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Légende en bas de l'image */
+/* --- AMÉLIORATION LISIBILITÉ GALERIE --- */
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px; 
+            /* Dégradé noir solide à la base pour éviter les fuites visuelles */
+            background: linear-gradient(to top, 
+                rgba(0,0,0,1) 0%, 
+                rgba(0,0,0,0.8) 50%, 
+                transparent 100%);
+            color: white;
+            z-index: 2;
+            /* On prépare la transition sur le padding-bottom pour soulever le texte */
+            transition: padding-bottom 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            pointer-events: none;
+        }
+
+        /* AU HOVER : Le texte se soulève en augmentant l'espace en bas */
+        .gallery-item:hover .gallery-caption {
+            padding-bottom: 40px; /* Ajustez cette valeur pour la hauteur du soulèvement */
+        }
+
+        /* Optionnel : Ajout d'une transition sur le titre pour plus de fluidité */
+        .gallery-caption h4, .gallery-caption p {
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-caption h4 {
+            transform: translateY(-5px);
+        }
+
+        /* --- RESPONSIVE GALERIE --- */
+        @media (max-width: 900px) {
+            .gallery-grid {
+                grid-template-columns: 1fr; /* Tout en une seule colonne */
+                grid-template-rows: auto;
+            }
+            .item-large {
+                grid-column: auto;
+                grid-row: auto;
+                height: 300px; /* Hauteur forcée sur mobile */
+            }
+            .gallery-item {
+                height: 250px;
+                object-position: top center;
+            }
+        }
+    </style>
 </head>
-<body>  
-    <header id="mainHeader">
-        <div class="header-top">
-        <div class="brand" id="siteLogo">
-            <div style="
+<body>
+
+    <header>
+        <div class="container nav-content">
+            <div class="logo">
+                 <div style="
                     position: relative;
                     width: 28px; height: 38px;
                     background: #ffffff;
@@ -68,177 +341,268 @@
                         </g>
                     </svg>
                 </div>
+            </div> FokalPress
             </div>
-
-            <span>Fokal<span style="font-weight: 400; opacity: 0.8;">Press</span></span>
-            
-            <button id="menuToggle" class="menu-toggle"><i class="fa-solid fa-bars"></i></button>
-        </div>
-        <div class="search-group">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="loc-input search-input" placeholder="Rechercher un club...">
-        </div>
-            <div class="location-group">
-        <button class="icon-btn" id="viewToggle" title="Vue Liste / Grille">
-            <i class="fa-solid fa-list"></i>
-        </button>
-        <button class="icon-btn" id="mapToggle" title="Voir la carte">
-            <i class="fa-solid fa-map"></i>
-        </button>
-        <button class="icon-btn" id="themeToggle" title="Changer le thème">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-        <button class="icon-btn" id="gpsBtn" title="Ma position actuelle"><i class="fa-solid fa-location-crosshairs"></i></button>
-
-        <div class="city-input-wrapper" style="position: relative;">
-            <input type="text" id="startCityInput" class="loc-input" placeholder="Ou ville..." style="width: 160px; padding-left: 10px; height: 36px;">
-        </div>
-    </div>
-        <div class="nav-controls">
-            <div class="filters-container" style="display:flex; align-items:center; gap:10px;">
-                <div class="filters">
-                    <div class="filter-slider"></div>
-                        <button class="filter-btn active" data-filter="all">Tous</button>
-                        <button class="filter-btn" data-filter="football">⚽ <span class="btn-text">Foot</span></button>
-                        <button class="filter-btn" data-filter="basketball">🏀 <span class="btn-text">Basket</span></button>
-                        <button class="filter-btn" data-filter="handball">🤾 <span class="btn-text">Hand</span></button>
-                     </div>
-                    <button id="advFiltersBtn" class="icon-btn" title="Filtres avancés">
-                        <i class="fa-solid fa-sliders"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="header-bottom">
-            <div class="filter-group hidden-filters" id="advancedFilters">
-                <select id="compFilter" class="control-input">
-                    <option value="all">📊 Toutes compétitions</option>
-                </select>
-
-                <input type="week" id="weekFilter" class="control-input">
-
-                <div class="ui-group">
-                    <span class="filter-label">Tri</span>
-                    <input type="range" id="distSlider" min="10" max="300" step="10" value="300" style="width: 80px; accent-color: var(--accent); cursor: pointer;">
-                    <span id="distValue" style="font-size: 11px; font-weight: 600; min-width: 35px; text-align: right;">300km</span>
-                    <select id="sortFilter" class="control-input" style="border:none;">
-                        <option value="date">📅 Date</option>
-                        <option value="distance">📍 Distance</option>
-                        <option value="level">🏆 Niveau</option>
-                        <option value="favorite">⭐ Favoris</option>
-                    </select>
-                </div>
-
-                <div class="ui-group">
-                    <span class="filter-label">Accréd.</span>
-                    <label class="switch">
-                        <input type="checkbox" id="accredToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
+            <a href="app.html" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.9rem;">
+                Accéder à l'App
+            </a>
         </div>
     </header>
 
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <div class="container">
+            <h1><span class="text-gradient">Ne manquez plus aucun match.</span><br>Ne ratez aucune accréditation.</h1>
+            
+            <p>
+                Fini la chasse aux matchs, la recherche laborieuse de contacts et les oublis de relance. 
+                Visualisez les calendriers (Foot, Basket, Hand), calculez vos trajets et pilotez tout votre suivi d'accréditation depuis une interface unique. 
+                L'outil pro pour votre logistique, <strong>100% gratuit</strong>.
+            </p>
+
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <a href="app.html" class="btn btn-primary">
+                    <i class="fa-solid fa-rocket"></i> Lancer le Dashboard
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <i class="fa-solid fa-chevron-down"></i> Découvrir
+                </a>
+            </div>
+
+            <div class="hero-image-wrapper">
+                <img src="data/screen.png" alt="Interface du Dashboard Fokal Press">
+            </div>
+
+        </div>
+    </section>
+
     <div class="container">
-        <div id="mapModal" class="map-modal hidden">
-            <div class="map-container">
-                <button id="closeMapBtn" class="close-map"><i class="fa-solid fa-xmark"></i></button>
-                <div id="leafletMap"></div>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-num">3 Sports</span>
+                <span class="stat-label">Foot, Basket, Hand</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-num">U17 à Pros</span>    
+                <span class="stat-label">Seniors H/F, U19 Nat...</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-num">J+60</span>
+                <span class="stat-label">Planning mis à jour le 1er du mois</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-num">100%</span>
+                <span class="stat-label">Gratuit & Open Source</span>
             </div>
         </div>
-        <div class="matches-grid" id="grid"></div>
     </div>
 
-    <footer id="mainFooter">
-        <div class="footer-content">
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 style="font-size: 2rem; margin-bottom: 40px;">Votre bureau, avant le terrain.</h2>
             
-        <div class="footer-col">
-            <div class="footer-brand" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                
-                <div style="
-                    position: relative;
-                    width: 28px; height: 38px;
-                    background: #ffffff;
-                    border-radius: 4px;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-                    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-                    overflow: hidden;
-                    transform: rotate(-8deg);
-                    transition: transform 0.3s ease;
-                    flex-shrink: 0;
-                "
-                onmouseover="this.style.transform='rotate(0deg) scale(1.1)'" 
-                onmouseout="this.style.transform='rotate(-8deg)'">
-                
-                    <div style="width: 8px; height: 3px; background: #e0e0e0; border-radius: 2px; margin-top: 3px;"></div>
-                    <div style="width: 100%; height: 6px; background: var(--accent); margin-top: 3px;"></div>
+<div class="grid-3">
+    
+        <div class="feature-card card-highlight">
+            <div class="icon-box"><i class="fa-solid fa-map-location-dot"></i></div>
+            <h3>Cartographie Intelligente</h3>
+            <p>
+                Une vue interactive Leaflet pour visualiser votre zone d'action. 
+                Le clustering intelligent gère les matchs superposés au même stade pour une navigation fluide.
+            </p>
+            <div class="tag-container">
+                <span class="tag">🗺️ Vue Globale</span>
+                <span class="tag">📍 Clustering</span>
+                <span class="tag">⚡ Leaflet.js</span>
+            </div>
+        </div>
 
-                    <div style="position: relative; flex-grow: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 4px; width: 100%;">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 16.5L8 14.5L14 16.5L21 13.5V20.5L14 23.5L8 21.5L3 23.5V16.5Z" fill="var(--accent)"/>
-                            <path d="M8 14.5V21.5M14 16.5V23.5" stroke="white" stroke-opacity="0.3" stroke-width="0.7"/>
-                            <g transform="translate(3, 0) scale(0.75)">
-                                <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" fill="var(--accent)" stroke="white" stroke-width="1.5"/>
-                                <path transform="translate(0, -2)" d="M14.8333 9H13.6667L12.9375 8.25H11.0625L10.3333 9H9.16667C8.525 9 8 9.525 8 10.1667V13.6667C8 14.3083 8.525 14.8333 9.16667 14.8333H14.8333C15.475 14.8333 16 14.3083 16 13.6667V10.1667C16 9.525 15.475 9 14.8333 9ZM12 13.9583C10.8708 13.9583 9.95833 13.0458 9.95833 11.9167C9.95833 10.7875 10.8708 9.875 12 9.875C13.1292 9.875 14.0417 10.7875 14.0417 11.9167C14.0417 13.0458 13.1292 13.9583 12 13.9583Z" fill="white"/>
-                            </g>
-                        </svg>
+    <div class="feature-card">
+        <div class="icon-box"><i class="fa-solid fa-calendar-days"></i></div>
+        <h3>Planning Centralisé</h3>
+        <p>
+            Football, Basket, Hand : tout est réuni. Filtrez par compétition (L1, U19...), par club ou distance, et exportez le match vers Google Agenda en un clic.
+        </p>
+        <div class="tag-container">
+            <span class="tag">⚽ 🏀 🤾 Multi-Sports</span>
+            <span class="tag">📅 Export Agenda</span>
+            <span class="tag">🔍 Filtres précis</span>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon-box"><i class="fa-solid fa-route"></i></div>
+        <h3>Logistique & Coûts</h3>
+        <p>
+            Optimisez vos déplacements. Simulez un départ depuis n'importe quelle ville et comparez instantanément le temps de trajet en Voiture vs Train.
+        </p>
+        <div class="tag-container">
+            <span class="tag">🚗 Voiture vs 🚆 Train</span>
+            <span class="tag">⏱️ Calcul temps réel</span>
+            <span class="tag">💸 Choix éco</span>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon-box"><i class="fa-solid fa-envelope-open-text"></i></div>
+        <h3>Mini-CRM Accréditations</h3>
+        <p>
+            Accédez à une base de contacts pré-remplie et générez vos mails en un clic. Suivez ensuite le cycle de vie de vos demandes : liste de souhaits, email envoyé, accréditation reçue ou refusée.
+        </p>
+        <div class="tag-container">
+            <span class="tag">📩 Mails auto-générés</span>
+            <span class="tag">📊 Suivi (Reçu/Refusé)</span>
+            <span class="tag">⭐ Système de favoris</span>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon-box"><i class="fa-solid fa-camera-retro"></i></div>
+        <h3>Boostez votre Portfolio</h3>
+        <p>
+            Idéal pour construire votre book. Repérez facilement les matchs "accessibles" (U19 Nationaux, N3) pour multiplier les opportunités de shooting.
+        </p>
+        <div class="tag-container">
+            <span class="tag">🚀 Accélérateur</span>
+            <span class="tag">📸 Opportunités</span>
+            <span class="tag">🎓 Accès Jeunes</span>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon-box"><i class="fa-solid fa-server"></i></div>
+        <h3>Données Actualisées</h3>
+        <p>
+            Ne travaillez jamais à l'aveugle. Les calendriers sont mis à jour automatiquement le 1er du mois avec une visibilité garantie sur 60 jours.
+        </p>
+        <div class="tag-container">
+            <span class="tag">🔄 Maj Mensuelle</span>
+            <span class="tag">📅 J+60 Jours</span>
+            <span class="tag">🤖 Scraping Auto</span>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon-box"><i class="fa-solid fa-cloud-sun-rain"></i></div>
+        <h3>Météo Terrain</h3>
+        <p>
+            Anticipez la lumière et la pluie. La météo locale exacte pour l'heure du coup d'envoi s'affiche sur la fiche via l'API Open-Meteo.
+        </p>
+        <div class="tag-container">
+            <span class="tag">☂️ Risque Pluie</span>
+            <span class="tag">🌡️ Température</span>
+            <span class="tag">📷 Matériel adapté</span>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon-box"><i class="fa-solid fa-mobile-screen"></i></div>
+        <h3>Expérience Utilisateur</h3>
+        <p>
+            Mode Sombre reposant, sauvegarde de vos préférences (GPS, filtres) et affichage responsive (Mobile/PC). Une interface faite pour les pros.
+        </p>
+        <div class="tag-container">
+            <span class="tag">🌙 Dark Mode</span>
+            <span class="tag">💾 Sauvegarde auto</span>
+            <span class="tag">📱 100% Responsive</span>
+        </div>
+    </div>
+
+</div>
+        </div>
+    </section>
+    <section class="gallery-section">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 40px;">L'interface en détails</h2>
+            
+            <div class="gallery-grid" style="grid-template-columns: 1.5fr 1fr; grid-template-rows: auto;">
+                
+                <div class="gallery-item" style="grid-column: 1 / 2;">
+                    <img src="data/screen_maps.png" alt="Vue Carte Interactive">
+                    <div class="gallery-caption">
+                        <h4>Vue Cartographique</h4>
+                        <p>Repérez les matchs autour de vous en un clin d'œil sur desktop.</p>
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                    <span style="font-weight: 700; font-size: 1.4rem; white-space: nowrap;">Fokal<span style="font-weight: 400; opacity: 0.8;">Press</span></span>
-                    <span style="font-size: 0.9rem; opacity: 0.7; font-weight: 400; border-left: 1px solid rgba(0,0,0,0.1); padding-left: 10px;">
-                        Dashboard Photographes & Accréditations
-                    </span>
+                <div class="gallery-item" style="grid-column: 2 / 3; grid-row: 1 / 3; height: 100%;">
+                    <img src="data/screen_mobile.png" alt="Interface Mobile Fokal Press" style="object-fit: contain; background: #050505;">
+                    <div class="gallery-caption">
+                        <h4>Optimisé pour le Terrain</h4>
+                        <p>Accédez à vos contacts et calendriers directement depuis votre smartphone.</p>
+                    </div>
                 </div>
+
+                <div class="gallery-item" style="grid-column: 1 / 2; height: 300px;">
+                    <img src="data/screen_liste.png" alt="Détails Logistique">
+                    <div class="gallery-caption">
+                        <h4>Vue Liste & Dark Mode</h4>
+                        <p>Une interface sombre et compacte pour une lecture optimale de vos données sans fatigue visuelle.</p>
+                    </div>
+                </div>
+
             </div>
-            
-            <p class="footer-desc" style="max-width: 600px;">
-                L'outil de planification indispensable pour les photographes de sport. Trouvez vos matchs, gérez vos accréditations et simplifiez vos déplacements.
-            </p>
         </div>
+    </section>
 
-            <div class="footer-col">
-                <h4>Contribuer</h4>
-                    <ul class="footer-links">
-                        <li>
-                            <a href="#" onclick="sendFooterMail('add'); return false;">
-                                <i class="fa-solid fa-circle-plus"></i> Demander un ajout de club
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" onclick="sendFooterMail('bug'); return false;">
-                                <i class="fa-solid fa-bug"></i> Signaler un bug
-                            </a>
-                        </li>
-                    </ul>
+<style>
+    /* Ajustement spécifique pour le rendu vertical du téléphone */
+    @media (min-width: 901px) {
+        .gallery-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-rows: 350px 300px !important;
+        }
+    }
+    
+    @media (max-width: 900px) {
+        .gallery-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .gallery-item {
+            grid-column: auto !important;
+            grid-row: auto !important;
+            height: 400px !important;
+        }
+    }
+</style>
+    <footer>
+        <div class="container">
+            <div class="footer-links" style="margin-bottom: 20px;">
+                <a href="https://instagram.com/kiksf4" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="https://github.com/Kili1n/Fokal-Press" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                <a href="mailto:lentzkilian@gmail.com"><i class="fa-regular fa-envelope"></i> Contact</a>
             </div>
-
-            <div class="footer-col">
-                <h4>Contact</h4>
-                <ul class="footer-links">
-                    <li>
-                        <a href="https://www.instagram.com/kiksf4" target="_blank">
-                            <i class="fa-brands fa-instagram"></i> @kiksf4
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" onclick="sendFooterMail('contact'); return false;">
-                            <i class="fa-regular fa-envelope"></i> Contact Email
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 Kilian LENTZ</p>
+            <p>&copy; 2026 Fokal Press. Développé par Kilian Lentz.</p>
         </div>
     </footer>
-    <script src="js/config.js"></script> 
-    <script src="js/index.js"></script> 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // On sélectionne tous les liens avec la classe .btn-primary
+            const appLinks = document.querySelectorAll('a.btn-primary');
+
+            appLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Si c'est un lien interne (ex: #features), on ne fait rien
+                    if (this.getAttribute('href').startsWith('#')) return;
+
+                    e.preventDefault(); // On bloque la navigation immédiate
+                    const targetUrl = this.href;
+
+                    // 1. On lance l'animation
+                    document.body.classList.add('fade-out');
+
+                    // 2. On attend 500ms avant de changer de page
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 500);
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
