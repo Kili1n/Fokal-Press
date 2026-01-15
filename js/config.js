@@ -22,7 +22,10 @@ const ACCRED_LIST = {
     "RACING CLUB FRANCE" : "https://www.instagram.com/racing_cff/",
     "LE MANS" : "communication@msb.fr",
     "BRETIGNY" : "csbfootball@orange.fr",
-    "PARIS BASKETBALL" : "https://www.instagram.com/parisbasketball.asso/"
+    "PARIS BASKETBALL" : "https://parisbasketball.com/contact/",
+    "PARIS SAINT-GERMAIN HANDBALL" : "https://www.instagram.com/psghandassoofficiel/",
+    "NANTERRE 92_U21" : "https://www.nanterre92.com/club/club/contact/",
+    "SAINT QUENTIN BASKET" : "contact@sqbb.fr"
 };
 
 const CUSTOM_LOGOS = {
@@ -141,7 +144,7 @@ const CUSTOM_LOGOS = {
     "VALENCIENNES" : "https://upload.wikimedia.org/wikipedia/fr/thumb/a/ac/Logo_Valenciennes_FC.svg/1761px-Logo_Valenciennes_FC.svg.png",
     "EXEMPT" : "https://www.pngall.com/wp-content/uploads/5/Traffic-Signal-Stop-Sign-PNG-Free-Image.png",
     "ROUBAIX" : "https://rcrwf.football/wp-content/uploads/2024/11/logo-rcrwf-rond-ok.png",
-    "FC ST LO" : "https://upload.wikimedia.org/wikipedia/fr/8/81/Logo_FC_Saint-L%C3%B4_Manche_-_2024.svg"
+    "FC ST LO" : "https://upload.wikimedia.org/wikipedia/fr/8/81/Logo_FC_Saint-L%C3%B4_Manche_-_2024.svg",
     "FC ST LO" : "https://upload.wikimedia.org/wikipedia/fr/8/81/Logo_FC_Saint-L%C3%B4_Manche_-_2024.svg",
     "FC ROUEN" : "https://upload.wikimedia.org/wikipedia/fr/thumb/c/c2/Logo_FC_Rouen_1899_-_2022.svg/1734px-Logo_FC_Rouen_1899_-_2022.svg.png",
     "FLEURY" : "https://upload.wikimedia.org/wikipedia/fr/thumb/6/61/Logo_FC_Fleury_91_-_2023.svg/1280px-Logo_FC_Fleury_91_-_2023.svg.png",
@@ -249,6 +252,26 @@ const STADIUM_COORDS = {
     "MASSY ESSONNE": { lat: 48.730, lon: 2.275 },
     "DRANCY" : { lat: 48.9262, lon: 2.4593 },
     "TREMBLAY" : { lat: 48.9572, lon: 2.5700 }
+    "IVRY US": { lat: 48.812, lon: 2.392 }, 
+    "CRETEIL": { lat: 48.776, lon: 2.450 }, 
+    "PONTAULT-COMBAULT": { lat: 48.796, lon: 2.611 }, 
+    "MASSY ESSONNE": { lat: 48.730, lon: 2.275 },
+    "DRANCY" : { lat: 48.9262, lon: 2.4593 },
+    "RED STAR": { lat: 48.9073, lon: 2.3413 }, 
+    "FLEURY 91": { lat: 48.6145, lon: 2.3678 }, 
+    "CHAMBLY OISE": { lat: 49.2274, lon: 2.2530 },
+    "STADE DE REIMS": { lat: 49.2474, lon: 4.0252 }, 
+    "ORLEANS US": { lat: 47.8443, lon: 1.9360 },
+    "ST MAUR LUSITANOS": { lat: 48.8044, lon: 2.4832 }, 
+    "CHANTILLY US": { lat: 49.1974, lon: 2.4571 }, 
+    "FC ROUEN": { lat: 49.4122, lon: 1.0774 },
+    "ST PRYVE ST HILAIRE": { lat: 47.8864, lon: 1.8675 }, 
+    "PARIS 13 ATLETICO": { lat: 48.8236, lon: 2.3692 }, 
+    "QRM": { lat: 49.4122, lon: 1.0774 }, 
+    "BEAUVAIS OISE": { lat: 49.4344, lon: 2.1121 }, 
+    "LE MANS FC": { lat: 47.9576, lon: 0.2244 }, 
+    "AMIENS SCF": { lat: 49.8936, lon: 2.2633 },
+};
 };
 
 const WEATHER_ICONS = {
