@@ -393,37 +393,36 @@ async function updateDistances() {
     // Vérification de sécurité
     if (isCalculating) return;
     if (!userPosition) {
-        alert("Veuillez d'abord définir une position (GPS ou Ville).");
+        // Optionnel : Alert si on appelle la fonction sans position (ne devrait pas arriver via le workflow actuel)
+        console.warn("Tentative de calcul sans position utilisateur.");
         return;
     }
 
     isCalculating = true;
-    const btn = document.getElementById('calcDistBtn');
-    
-    // Feedback visuel sur le bouton
-    const originalBtnText = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calcul...';
+
+    // --- MISE À JOUR VISUELLE (Spinner sur le GPS si c'est lui qui a lancé ?) ---
+    // Pour l'instant, on laisse l'UI gérée par requestUserLocation ou handleCitySearch
+    // Mais on peut changer le curseur pour montrer que ça travaille
+    document.body.style.cursor = "wait";
 
     const targets = currentlyFiltered;
 
-    // --- ÉTAPE IMPORTANTE : RESET VISUEL ---
-    // On remet les distances à 0 pour forcer le recalcul et montrer à l'utilisateur que ça change
+    // --- RESET VISUEL ---
+    // On remet les distances à 0 pour montrer à l'utilisateur que ça change
     allMatches.forEach(m => {
         m.distance = 0;
         m.times.car = 0;
         m.times.public = 0;
     });
-    // On rafraichit l'affichage tout de suite pour montrer des "-- km" pendant le calcul
+    
     renderMatches(currentlyFiltered); 
 
     // --- CALCUL PARALLÈLE ---
     await Promise.all(targets.map(async (m) => {
-        // CORRECTION : On a supprimé "&& m.distance === 0" pour forcer le recalcul
         if (m.locationCoords) {
             const travel = await fetchTravelData(userPosition.lat, userPosition.lon, m.locationCoords.lat, m.locationCoords.lon);
             
-            // Gestion Météo (uniquement pour le foot ici, selon votre logique)
+            // Gestion Météo (si applicable)
             if (m.sport.toLowerCase() === "football") {
                 m.weather = await fetchWeather(m.locationCoords.lat, m.locationCoords.lon, m.dateObj);
             }
@@ -443,10 +442,20 @@ async function updateDistances() {
 
     // Fin du calcul
     isCalculating = false;
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-route"></i> Calculer les distances';
+    document.body.style.cursor = "default";
     
     // Rendu final avec les nouvelles valeurs
+    applyFilters();
+}
+
+function resetDistancesDisplay() {
+    // Remet les données à zéro
+    allMatches.forEach(m => {
+        m.distance = 0;
+        m.times.car = 0;
+        m.times.public = 0;
+    });
+    // Rafraichit la grille
     applyFilters();
 }
 
@@ -483,50 +492,48 @@ async function loadMatches() {
     }
 }
 
-function requestUserLocation() {
+function requestUserLocation(btnElement, originalIcon) {
     if (navigator.geolocation) {
-        // On ajoute 'async' ici pour pouvoir attendre le calcul
         navigator.geolocation.getCurrentPosition(async pos => {
             const newPos = { 
                 lat: pos.coords.latitude, 
                 lon: pos.coords.longitude 
             };
 
-            // 1. Vérification du changement de position (Logic existante)
+            // Gestion du changement de position (nettoyage cache)
             if (userPosition) {
                 const latDiff = Math.abs(userPosition.lat - newPos.lat);
                 const lonDiff = Math.abs(userPosition.lon - newPos.lon);
-
                 if (latDiff > 0.05 || lonDiff > 0.05) {
-                    console.log("📍 Position modifiée : nettoyage du cache de distance.");
                     travelCache.clear();
-                    Object.keys(localStorage).forEach(key => {
-                        if (key.startsWith('travel_')) localStorage.removeItem(key);
-                    });
+                    // Nettoyage localStorage partiel si besoin...
                 }
             }
 
-            // 2. Mise à jour de la position globale
             userPosition = newPos;
             localStorage.setItem('userLastPosition', JSON.stringify(newPos)); 
             
-            // Mise à jour visuelle du bouton
-            document.getElementById('gpsBtn').classList.add('active');
-            console.log("Position GPS mise à jour :", userPosition);
+            // Mise à jour visuelle (Succès)
+            if(btnElement) {
+                btnElement.innerHTML = originalIcon; // Remet l'icône normale
+                btnElement.classList.add('active');
+            }
             
-            // --- AJOUT IMPORTANT ICI ---
-            // On lance le calcul automatiquement une fois la position GPS trouvée
+            console.log("📍 Position GPS trouvée. Lancement du calcul...");
+            
+            // --- AUTOMATISATION : ON LANCE LE CALCUL ICI ---
             await updateDistances(); 
-            // ---------------------------
             
         }, (error) => {
-            console.warn("Erreur de géolocalisation :", error.message);
-            // Si erreur, on décoche le bouton pour ne pas laisser l'utilisateur penser que c'est actif
-            document.getElementById('gpsBtn').classList.remove('active');
-            alert("Veuillez autoriser la géolocalisation pour calculer les distances.");
+            console.warn("Erreur géo:", error);
+            if(btnElement) {
+                btnElement.innerHTML = originalIcon;
+                btnElement.classList.remove('active');
+            }
+            alert("Impossible de vous géolocaliser.");
         });
     } else {
-        alert("La géolocalisation n'est pas supportée par votre navigateur.");
+        alert("Géolocalisation non supportée.");
     }
 }
 
@@ -706,6 +713,7 @@ function renderMatches(data) {
     data.forEach(m => {
         const card = document.createElement('article');
         card.className = 'card';
+        card.id = `match-card-${getMatchId(m)}`;
 
         const matchId = getMatchId(m);
         const currentStatus = matchStatuses[matchId] || null;
@@ -816,26 +824,31 @@ function updateFilterSlider() {
     document.addEventListener('DOMContentLoaded', () => {
     loadMatches();
     
-    document.getElementById('calcDistBtn').addEventListener('click', updateDistances);
     document.getElementById('gpsBtn').addEventListener('click', () => {
         const btn = document.getElementById('gpsBtn');
+        const cityInput = document.getElementById('startCityInput');
         
-        // Si le GPS est déjà actif -> on le désactive pour afficher le champ ville
+        // CAS 1 : DÉSACTIVATION DU GPS
         if (btn.classList.contains('active')) {
             btn.classList.remove('active');
-            userPosition = null; // On vide la position
-            localStorage.removeItem('userLastPosition'); // On nettoie le stockage
+            userPosition = null; 
+            localStorage.removeItem('userLastPosition');
             
-            // Optionnel : on vide le champ ville pour repartir à zéro
-            document.getElementById('startCityInput').value = "";
+            // On réinitialise l'affichage des distances à "-- km"
+            resetDistancesDisplay();
             
-            console.log("📍 GPS désactivé, passage en mode manuel.");
+            console.log("📍 GPS désactivé, affichage de la recherche manuelle.");
         } 
-        // Sinon -> on active la géolocalisation
+        // CAS 2 : ACTIVATION DU GPS
         else {
             // On vide le champ ville pour éviter la confusion
-            document.getElementById('startCityInput').value = ""; 
-            requestUserLocation();
+            cityInput.value = ""; 
+            
+            // On change l'icône temporairement pour montrer le chargement
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            
+            requestUserLocation(btn, originalIcon);
         }
     });
 
@@ -1025,6 +1038,165 @@ function updateFilterSlider() {
             applyFilters();
         });
     }
+
+    let mapInstance = null;
+    let markersLayer = null;
+
+    const mapModal = document.getElementById('mapModal');
+    const mapToggleBtn = document.getElementById('mapToggle');
+    const closeMapBtn = document.getElementById('closeMapBtn');
+
+    function initMap() {
+        if (mapInstance) return; // Déjà initialisée
+
+        // 1. Création de la map (centrée sur la France par défaut)
+        mapInstance = L.map('leafletMap').setView([46.603354, 1.888334], 6);
+
+        // 2. Ajout des tuiles Geoapify (Style OSM Bright)
+        L.tileLayer(`https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_KEY}`, {
+            attribution: 'Powered by Geoapify | © OpenStreetMap',
+            maxZoom: 20, 
+            id: 'osm-bright',
+        }).addTo(mapInstance);
+
+        // 3. Groupe de marqueurs pour pouvoir les nettoyer facilement
+        markersLayer = L.layerGroup().addTo(mapInstance);
+    }
+
+    function updateMapMarkers() {
+        if (!mapInstance || !markersLayer) return;
+
+        markersLayer.clearLayers(); // On efface les anciens points
+
+        const bounds = []; // Pour ajuster le zoom à la fin
+
+        currentlyFiltered.forEach(m => {
+            if (m.locationCoords && m.locationCoords.lat && m.locationCoords.lon) {
+                
+                // Création du contenu de la popup
+                const popupContent = `
+                    <div class="map-popup-card">
+                        <div class="map-popup-header">
+                            <span>${m.home.name}</span>
+                            <span style="color:var(--text-secondary)">vs</span>
+                            <span>${m.away.name}</span>
+                        </div>
+                        <div style="font-size:12px; margin-bottom:4px;">
+                            📅 ${m.dateDisplay} à ${m.time}
+                        </div>
+                        <div style="font-size:12px; margin-bottom:4px;">
+                            🏆 ${m.compFormatted}
+                        </div>
+                        <button class="map-popup-btn" onclick="goToCard('${getMatchId(m)}')">
+                            Voir la fiche
+                        </button>
+                    </div>
+                `;
+
+                const marker = L.marker([m.locationCoords.lat, m.locationCoords.lon])
+                    .bindPopup(popupContent);
+                
+                markersLayer.addLayer(marker);
+                bounds.push([m.locationCoords.lat, m.locationCoords.lon]);
+            }
+        });
+
+        // Ajuster la vue pour voir tous les marqueurs
+        if (bounds.length > 0) {
+            mapInstance.fitBounds(bounds, { padding: [50, 50] });
+        }
+    }
+
+    // Fonction globale pour le clic "Voir la fiche" depuis la popup
+    window.goToCard = (matchId) => {
+        // 1. Fermer la modale
+        mapModal.classList.add('hidden');
+        
+        // 2. Trouver la carte dans la grille
+        const card = document.getElementById(`match-card-${matchId}`);
+        
+        if (card) {
+            // 3. Scroll doux vers la carte
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 4. Petit effet visuel pour mettre en évidence
+            card.style.borderColor = "var(--accent)";
+            setTimeout(() => { card.style.borderColor = ""; }, 2000);
+        }
+    };
+
+    // Event Listeners pour la carte
+    mapToggleBtn.addEventListener('click', () => {
+        mapModal.classList.remove('hidden');
+        
+        // Petit délai pour laisser le DOM afficher la div avant d'init Leaflet
+        setTimeout(() => {
+            initMap();
+            mapInstance.invalidateSize(); // Important : recalculer la taille car la div était cachée
+            updateMapMarkers(); // Charger les matchs filtrés actuels
+        }, 100);
+    });
+
+    closeMapBtn.addEventListener('click', () => {
+        mapModal.classList.add('hidden');
+    });
+
+    // Fermer si on clique en dehors de la carte (sur le fond gris)
+    mapModal.addEventListener('click', (e) => {
+        if (e.target === mapModal) {
+            mapModal.classList.add('hidden');
+        }
+    });
+
+    // --- GESTION DES FILTRES AVANCÉS & MODE COMPACT ---
+
+    const advFiltersBtn = document.getElementById('advFiltersBtn');
+    const advancedFilters = document.getElementById('advancedFilters');
+    const mainHeader = document.getElementById('mainHeader'); // <-- Cible principale
+
+    function toggleAdvancedFilters() {
+        const isHidden = advancedFilters.classList.contains('hidden-filters');
+        
+        if (isHidden) {
+            // --- OUVERTURE (Mode normal) ---
+            advancedFilters.classList.remove('hidden-filters');
+            advFiltersBtn.classList.add('active');
+            
+            // On retire le mode compact du header
+            mainHeader.classList.remove('compact-mode');
+            
+            localStorage.setItem('showAdvancedFilters', 'true');
+        } else {
+            // --- FERMETURE (Mode compact) ---
+            advancedFilters.classList.add('hidden-filters');
+            advFiltersBtn.classList.remove('active');
+            
+            // On active le mode compact sur le header
+            mainHeader.classList.add('compact-mode');
+            
+            localStorage.setItem('showAdvancedFilters', 'false');
+        }
+    }
+
+    // Initialisation au chargement de la page
+    if (advFiltersBtn && advancedFilters) {
+        advFiltersBtn.addEventListener('click', toggleAdvancedFilters);
+
+        const savedState = localStorage.getItem('showAdvancedFilters');
+        
+        if (savedState === 'true') {
+            // État initial : OUVERT
+            advancedFilters.classList.remove('hidden-filters');
+            advFiltersBtn.classList.add('active');
+            mainHeader.classList.remove('compact-mode');
+        } else {
+            // État initial : FERMÉ (Compact)
+            advancedFilters.classList.add('hidden-filters');
+            advFiltersBtn.classList.remove('active');
+            mainHeader.classList.add('compact-mode');
+        }
+    }
+
 });
 
 // --- GESTION DES MAILS DU FOOTER ---

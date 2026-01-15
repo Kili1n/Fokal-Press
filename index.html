@@ -9,6 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/mobile.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'><path d='M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z' fill='%23007BFF'/><path transform='translate(0, -2)' d='M14.8333 9H13.6667L12.9375 8.25H11.0625L10.3333 9H9.16667C8.525 9 8 9.525 8 10.1667V13.6667C8 14.3083 8.525 14.8333 9.16667 14.8333H14.8333C15.475 14.8333 16 14.3083 16 13.6667V10.1667C16 9.525 15.475 9 14.8333 9ZM12 13.9583C10.8708 13.9583 9.95833 13.0458 9.95833 11.9167C9.95833 10.7875 10.8708 9.875 12 9.875C13.1292 9.875 14.0417 10.7875 14.0417 11.9167C14.0417 13.0458 13.1292 13.9583 12 13.9583Z' fill='white'/></svg>">
@@ -68,41 +74,44 @@
             
             <button id="menuToggle" class="menu-toggle"><i class="fa-solid fa-bars"></i></button>
         </div>
-            <div class="nav-controls">
-                <div class="search-group">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="searchInput" class="loc-input search-input" placeholder="Rechercher un club...">
-                </div>
+        <div class="search-group">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" class="loc-input search-input" placeholder="Rechercher un club...">
+        </div>
+            <div class="location-group">
+        <button class="icon-btn" id="viewToggle" title="Vue Liste / Grille">
+            <i class="fa-solid fa-list"></i>
+        </button>
+        <button class="icon-btn" id="mapToggle" title="Voir la carte">
+            <i class="fa-solid fa-map"></i>
+        </button>
+        <button class="icon-btn" id="themeToggle" title="Changer le thème">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="icon-btn" id="gpsBtn" title="Ma position actuelle"><i class="fa-solid fa-location-crosshairs"></i></button>
 
-                <div class="location-group">
-                    <button class="icon-btn" id="viewToggle" title="Vue Liste / Grille">
-                        <i class="fa-solid fa-list"></i>
+        <div class="city-input-wrapper" style="position: relative;">
+            <input type="text" id="startCityInput" class="loc-input" placeholder="Ou ville..." style="width: 160px; padding-left: 10px; height: 36px;">
+        </div>
+    </div>
+        <div class="nav-controls">
+            <div class="filters-container" style="display:flex; align-items:center; gap:10px;">
+                <div class="filters">
+                    <div class="filter-slider"></div>
+                        <button class="filter-btn active" data-filter="all">Tous</button>
+                        <button class="filter-btn" data-filter="football">⚽ <span class="btn-text">Foot</span></button>
+                        <button class="filter-btn" data-filter="basketball">🏀 <span class="btn-text">Basket</span></button>
+                        <button class="filter-btn" data-filter="handball">🤾 <span class="btn-text">Hand</span></button>
+                     </div>
+                    <button id="advFiltersBtn" class="icon-btn" title="Filtres avancés">
+                        <i class="fa-solid fa-sliders"></i>
                     </button>
-                    <button class="icon-btn" id="themeToggle" title="Changer le thème">
-                        <i class="fa-solid fa-moon"></i>
-                    </button>
-                    <button class="icon-btn" id="gpsBtn" title="Ma position actuelle"><i class="fa-solid fa-location-crosshairs"></i></button>
-                    <button class="calc-btn" id="calcDistBtn">
-                        <i class="fa-solid fa-route"></i> Calculer les distances
-                    </button>
-
-                    <div class="city-input-wrapper" style="position: relative;">
-                        <input type="text" id="startCityInput" class="loc-input" placeholder="Ou ville..." style="width: 160px; padding-left: 10px; height:44px">
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="header-bottom">
-            <div class="filters">
-                <div class="filter-slider"></div>
-                <button class="filter-btn active" data-filter="all">Tous</button>
-                <button class="filter-btn" data-filter="football">Foot</button>
-                <button class="filter-btn" data-filter="basketball">Basket</button>
-                <button class="filter-btn" data-filter="handball">Hand</button>
-            </div>
-
-            <div class="filter-group">
+            <div class="filter-group hidden-filters" id="advancedFilters">
                 <select id="compFilter" class="control-input">
                     <option value="all">📊 Toutes compétitions</option>
                 </select>
@@ -133,6 +142,12 @@
     </header>
 
     <div class="container">
+        <div id="mapModal" class="map-modal hidden">
+            <div class="map-container">
+                <button id="closeMapBtn" class="close-map"><i class="fa-solid fa-xmark"></i></button>
+                <div id="leafletMap"></div>
+            </div>
+        </div>
         <div class="matches-grid" id="grid"></div>
     </div>
 

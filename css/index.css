@@ -37,6 +37,7 @@ header {
     flex-direction: column;
     gap: 12px;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 header.scrolled {
@@ -49,7 +50,10 @@ header.scrolled {
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+    width: 100%;          /* Force les conteneurs à prendre toute la place */
+    box-sizing: border-box;
 }
+
 
 .brand { 
     font-size: 20px; 
@@ -72,8 +76,8 @@ header.scrolled {
 .loc-input {
     padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 8px;
     font-family: var(--font-main); font-size: 13px; color: var(--text-primary);
-    background: #FFF; outline: none; height: 36px; transition: border 0.2s;
-    width: 160px;
+    background: #FFF; outline: none; transition: border 0.2s;
+    width: 160px; 
 }
 .search-input { padding-left: 32px !important; width: 220px; }
 
@@ -154,10 +158,27 @@ input:checked + .slider:before { transform: translateX(14px); }
 }
 
 .filter-btn { 
-    border: none; background: transparent; padding: 6px 16px; 
-    font-family: var(--font-main); font-size: 13px; font-weight: 600; 
-    color: var(--text-secondary); border-radius: 7px; cursor: pointer; 
-    z-index: 1
+    /* --- CORRECTION D'ALIGNEMENT --- */
+    display: flex;             /* Active Flexbox */
+    align-items: center;       /* Centre verticalement l'émoji et le texte */
+    justify-content: center;   /* Centre horizontalement */
+    gap: 8px;                  /* Espace propre entre l'émoji et le texte */
+    
+    /* --- STYLES VISUELS --- */
+    border: none; 
+    background: transparent; 
+    padding: 6px 16px; 
+    font-family: var(--font-main); 
+    font-size: 13px; 
+    font-weight: 600; 
+    color: var(--text-secondary); 
+    border-radius: 7px; 
+    cursor: pointer; 
+    
+    /* Important pour qu'il soit au-dessus du fond blanc glissant */
+    z-index: 1;
+    position: relative; 
+    transition: color 0.2s ease;
 }
 .filter-btn.active { background: #FFFFFF; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
@@ -686,4 +707,151 @@ body.dark-mode .source-link:hover {
     
     /* Dark mode fix pour mobile */
     body.dark-mode .matches-grid.list-view .transport-block { background: var(--tag-bg); }
+}
+/* --- MODALE CARTE --- */
+.map-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.map-modal.hidden {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.map-container {
+    width: 90%;
+    height: 90%;
+    background: var(--card-bg);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-color);
+}
+
+#leafletMap {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.close-map {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Au-dessus de Leaflet */
+    background: white;
+    color: #1D1D1F;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.close-map:hover {
+    transform: scale(1.1);
+}
+
+/* Style des Popups Leaflet */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    font-family: var(--font-main);
+    padding: 0;
+    overflow: hidden;
+}
+.leaflet-popup-content {
+    margin: 0;
+    width: 260px !important;
+}
+
+/* Customisation du contenu de la popup pour ressembler à tes cartes */
+.map-popup-card {
+    padding: 12px;
+}
+.map-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 13px;
+}
+.map-popup-btn {
+    display: block;
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+}
+.map-popup-btn:hover {
+    background: #005bb7;
+}
+
+/* Adaptation Dark Mode */
+body.dark-mode .leaflet-tile {
+    filter: invert(1) hue-rotate(180deg) brightness(0.8); /* Astuce pour assombrir la carte gratuitement */
+}
+body.dark-mode .leaflet-popup-content-wrapper {
+    background: #1C1C1E;
+    color: white;
+}
+body.dark-mode .leaflet-popup-tip {
+    background: #1C1C1E;
+}
+
+/* État par défaut (Ouvert) */
+#advancedFilters {
+    max-height: 500px; /* Valeur arbitraire suffisante pour le contenu */
+    opacity: 1;
+    overflow: hidden; /* Nécessaire pour l'animation */
+    transition: all 0.3s ease-in-out;
+    margin-top: 12px; /* Espace si nécessaire */
+}
+
+/* Garde l'icône blanche quand le bouton est actif (fond bleu) */
+#advFiltersBtn.active {
+    color: #FFFFFF; 
+}
+/* --- ANIMATION DU MENU FILTRES & LOCALISATION --- */
+
+/* État par défaut (OUVERT) */
+.header-bottom {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* État fermé (MODE COMPACT) */
+#mainHeader.compact-mode .header-bottom {
+    max-height: 0;      /* Réduit la hauteur à 0 */
+    opacity: 0;         /* Rend transparent */
+    margin: 0;          /* Supprime les marges pour coller au haut */
+    transform: translateY(-10px); /* Petit effet de glissement vers le haut */
+    pointer-events: none; /* Empêche de cliquer sur les éléments invisibles */
 }

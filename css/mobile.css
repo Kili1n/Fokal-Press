@@ -206,6 +206,14 @@
     border-radius: 10px;
     }
 
+
+    #mapToggle {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    }
+
     body.dark-mode header {
         background: #1C1C1E !important;
         border-bottom-color: #2C2C2E;
@@ -293,5 +301,24 @@
 
     .footer-desc {
         margin: 0 auto; /* Centre le texte de description */
+    }
+}
+
+/* --- OPTIMISATION MOBILE : EMOJIS SEULEMENT --- */
+@media (max-width: 768px) {
+    /* Cache le texte à l'intérieur des spans que nous avons créés */
+    .filter-btn .btn-text {
+        display: none;
+    }
+
+    /* Ajuste le bouton pour qu'il soit joli avec juste un émoji */
+    .filter-btn {
+        font-size: 18px; /* On grossit un peu l'émoji */
+        padding: 6px 12px; /* On ajuste les marges */
+    }
+    
+    /* Cas spécifique pour le bouton "Tous" qui n'a pas d'émoji */
+    .filter-btn[data-filter="all"] {
+        font-size: 13px; /* On garde la taille de texte normale pour "Tous" */
     }
 }
