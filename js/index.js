@@ -1063,18 +1063,37 @@ function updateFilterSlider() {
         markersLayer = L.layerGroup().addTo(mapInstance);
     }
 
+
     function updateMapMarkers() {
         if (!mapInstance || !markersLayer) return;
 
         markersLayer.clearLayers(); // On efface les anciens points
-
         const bounds = []; // Pour ajuster le zoom à la fin
+
+        // 1. Groupement des matchs par coordonnées (lat_lon)
+        const groupedMatches = {};
 
         currentlyFiltered.forEach(m => {
             if (m.locationCoords && m.locationCoords.lat && m.locationCoords.lon) {
-                
-                // Création du contenu de la popup
-                const popupContent = `
+                const key = `${m.locationCoords.lat}_${m.locationCoords.lon}`;
+                if (!groupedMatches[key]) {
+                    groupedMatches[key] = [];
+                }
+                groupedMatches[key].push(m);
+            }
+        });
+
+        // 2. Création des marqueurs pour chaque groupe
+        Object.keys(groupedMatches).forEach(key => {
+            const matches = groupedMatches[key];
+            const [lat, lon] = key.split('_').map(Number);
+            
+            let popupContent = '';
+
+            // CAS A : Un seul match (Affichage standard comme avant)
+            if (matches.length === 1) {
+                const m = matches[0];
+                popupContent = `
                     <div class="map-popup-card">
                         <div class="map-popup-header">
                             <span>${m.home.name}</span>
@@ -1092,13 +1111,39 @@ function updateFilterSlider() {
                         </button>
                     </div>
                 `;
+            } 
+            // CAS B : Plusieurs matchs (Affichage en liste)
+            else {
+                let listHtml = matches.map(m => `
+                    <div class="map-list-item">
+                        <div class="map-list-title">
+                            ${m.home.name} <span style="font-weight:400; opacity:0.7;">vs</span> ${m.away.name}
+                        </div>
+                        <div class="map-list-meta">
+                            📅 ${m.dateDisplay} (${m.time})
+                        </div>
+                        <button class="map-popup-btn small-btn" onclick="goToCard('${getMatchId(m)}')">
+                            Voir
+                        </button>
+                    </div>
+                `).join('');
 
-                const marker = L.marker([m.locationCoords.lat, m.locationCoords.lon])
-                    .bindPopup(popupContent);
-                
-                markersLayer.addLayer(marker);
-                bounds.push([m.locationCoords.lat, m.locationCoords.lon]);
+                popupContent = `
+                    <div class="map-popup-card">
+                        <div class="map-popup-header multi-header">
+                            📍 ${matches.length} Matchs ici
+                        </div>
+                        <div class="map-scroll-container">
+                            ${listHtml}
+                        </div>
+                    </div>
+                `;
             }
+
+            // Création du marqueur
+            const marker = L.marker([lat, lon]).bindPopup(popupContent);
+            markersLayer.addLayer(marker);
+            bounds.push([lat, lon]);
         });
 
         // Ajuster la vue pour voir tous les marqueurs

@@ -855,3 +855,72 @@ body.dark-mode .leaflet-popup-tip {
     transform: translateY(-10px); /* Petit effet de glissement vers le haut */
     pointer-events: none; /* Empêche de cliquer sur les éléments invisibles */
 }
+
+/* Dans index.css, à la fin */
+
+/* Header spécifique quand il y a plusieurs matchs */
+.map-popup-header.multi-header {
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    margin-bottom: 0;
+    color: var(--accent);
+}
+
+/* Conteneur avec scroll pour la liste */
+.map-scroll-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 4px; /* Espace pour la scrollbar */
+}
+
+/* Scrollbar fine et propre (Webkit) */
+.map-scroll-container::-webkit-scrollbar {
+    width: 4px;
+}
+.map-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.map-scroll-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+/* Élément de la liste */
+.map-list-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.map-list-item:last-child {
+    border-bottom: none;
+}
+
+.map-list-title {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+.map-list-meta {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* Bouton plus petit pour la liste */
+.map-popup-btn.small-btn {
+    padding: 4px 0;
+    font-size: 11px;
+    margin-top: 4px;
+    width: 100%;
+}
+
+/* Dark Mode fixes pour la popup liste */
+body.dark-mode .map-list-item {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .map-scroll-container::-webkit-scrollbar-thumb {
+    background: #48484A;
+}
