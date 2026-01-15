@@ -231,7 +231,7 @@ const STADIUM_COORDS = {
     "QUEVILLY RM": { lat: 49.408, lon: 1.074 },
     "RACING CLUB FRANCE": { lat: 48.929, lon: 2.249 },
     "SAINT DENIS RC": { lat: 48.934, lon: 2.349 },
-    "SQBB": { lat: 49.849, lon: 3.280 },
+    "SAINT QUENTIN": { lat: 49.849, lon: 3.280 },
     "ST QUENTIN O.": { lat: 49.858, lon: 3.275 },
     "STADE DE REIMS 2": { lat: 49.293, lon: 4.053 },
     "STADE FRANCAIS BASKET": { lat: 48.844, lon: 2.254 },
