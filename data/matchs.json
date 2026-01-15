@@ -177,28 +177,6 @@
     },
     {
         "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0095/clubs/idf0095010/equipes/200000005139349",
-        "isoDate": "2026-01-17T19:00:00.000Z",
-        "date": "samedi 17 janvier 2026",
-        "home": "BASKET CLUB FRANCONVILLE (BCF) - 1",
-        "away": "COTE D'OPALE BASKET CALAIS - 1",
-        "competition": "NF1",
-        "round": "J12",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092008/equipes/200000005139361",
-        "isoDate": "2026-01-17T19:00:00.000Z",
-        "date": "samedi 17 janvier 2026",
-        "home": "ASA SCEAUX",
-        "away": "LAMBOISIERES-MARTIN BASKET - 1",
-        "competition": "NF1",
-        "round": "J12",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152746",
         "isoDate": "2026-01-17T19:30:00.000Z",
         "date": "samedi 17 janvier 2026",
@@ -781,17 +759,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075055/equipes/200000005139357",
-        "isoDate": "2026-01-31T19:00:00.000Z",
-        "date": "samedi 31 janvier 2026",
-        "home": "STADE FRANCAIS BASKET",
-        "away": "ESB VILLENEUVE D'ASCQ LILLE METROPOLE - ESPOIR",
-        "competition": "NF1",
-        "round": "J13",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc-21/equipe/2025_616_U19_4/saison",
         "isoDate": "2026-02-01T13:30:00.000Z",
@@ -1089,17 +1056,6 @@
         "location": "N/A"
     },
     {
-        "sport": "handball",
-        "sourceUrl": "http://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954529/",
-        "isoDate": "2026-02-07T19:00:00.000Z",
-        "date": "samedi 7 février 2026",
-        "home": "US CRETEIL HANDBALL",
-        "away": "CERNAY/WATTWILLER HANDBALL",
-        "competition": "NATIONALE 1 MASCULINE 2025-26",
-        "round": "JOURNÉE 12",
-        "location": "N/A"
-    },
-    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005138535",
         "isoDate": "2026-02-07T19:00:00.000Z",
@@ -1108,39 +1064,6 @@
         "away": "LANDERNEAU",
         "competition": "LBWL",
         "round": "J17",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0095/clubs/idf0095010/equipes/200000005139349",
-        "isoDate": "2026-02-07T19:00:00.000Z",
-        "date": "samedi 7 février 2026",
-        "home": "BASKET CLUB FRANCONVILLE (BCF) - 1",
-        "away": "LAMBOISIERES-MARTIN BASKET - 1",
-        "competition": "NF1",
-        "round": "J14",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092008/equipes/200000005139361",
-        "isoDate": "2026-02-07T19:00:00.000Z",
-        "date": "samedi 7 février 2026",
-        "home": "ASA SCEAUX",
-        "away": "STADE FRANCAIS BASKET",
-        "competition": "NF1",
-        "round": "J14",
-        "location": "N/A"
-    },
-    {
-        "sport": "handball",
-        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954494/",
-        "isoDate": "2026-02-07T19:15:00.000Z",
-        "date": "samedi 7 février 2026",
-        "home": "ELITE VAL-D'OISE",
-        "away": "CERCLE SPORTIF VESULIEN HAUTE SAONE",
-        "competition": "NATIONALE 1 MASCULINE 2025-26",
-        "round": "JOURNÉE 14",
         "location": "N/A"
     },
     {
@@ -1273,17 +1196,6 @@
         "away": "US ST MALO",
         "competition": "SECONDE LIGUE - Senior F",
         "round": "Journée 12",
-        "location": "N/A"
-    },
-    {
-        "sport": "handball",
-        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954500/",
-        "isoDate": "2026-02-08T15:00:00.000Z",
-        "date": "dimanche 8 février 2026",
-        "home": "TREMBLAY-EN-FRANCE HANDBALL",
-        "away": "SARAN LOIRET HB",
-        "competition": "NATIONALE 1 MASCULINE 2025-26",
-        "round": "JOURNÉE 14",
         "location": "N/A"
     },
     {
@@ -1460,17 +1372,6 @@
         "away": "FCLDSD",
         "competition": "N2 - Senior",
         "round": "Journée 18",
-        "location": "N/A"
-    },
-    {
-        "sport": "handball",
-        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954535/",
-        "isoDate": "2026-02-14T17:00:00.000Z",
-        "date": "samedi 14 février 2026",
-        "home": "UNION SPORTIVE IVRY HANDBALL",
-        "away": "METZ HANDBALL",
-        "competition": "NATIONALE 1 MASCULINE 2025-26",
-        "round": "JOURNÉE 13",
         "location": "N/A"
     },
     {
@@ -1815,28 +1716,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075055/equipes/200000005139357",
-        "isoDate": "2026-02-21T19:00:00.000Z",
-        "date": "samedi 21 février 2026",
-        "home": "STADE FRANCAIS BASKET",
-        "away": "BASKET FEMININ ESCAUDAIN PORTE DU HAINAUT - 1",
-        "competition": "NF1",
-        "round": "J15",
-        "location": "N/A"
-    },
-    {
-        "sport": "handball",
-        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954494/",
-        "isoDate": "2026-02-21T19:15:00.000Z",
-        "date": "samedi 21 février 2026",
-        "home": "ELITE VAL-D'OISE",
-        "away": "ATHLETIC CLUB BOULOGNE-BILLANCOURT",
-        "competition": "NATIONALE 1 MASCULINE 2025-26",
-        "round": "JOURNÉE 16",
-        "location": "N/A"
-    },
-    {
         "sport": "handball",
         "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949484/",
         "isoDate": "2026-02-21T19:30:00.000Z",
@@ -2068,17 +1947,6 @@
         "location": "N/A"
     },
     {
-        "sport": "handball",
-        "sourceUrl": "http://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954529/",
-        "isoDate": "2026-02-28T17:30:00.000Z",
-        "date": "samedi 28 février 2026",
-        "home": "US CRETEIL HANDBALL",
-        "away": "SELESTAT ALSACE HANDBALL",
-        "competition": "NATIONALE 1 MASCULINE 2025-26",
-        "round": "JOURNÉE 15",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/504891-orleans-us-45/equipe/2025_2421_SEM_1/saison",
         "isoDate": "2026-02-28T18:00:00.000Z",
@@ -2087,28 +1955,6 @@
         "away": "FC ROUEN 1899",
         "competition": "NATIONAL - Senior",
         "round": "Journée 23",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0095/clubs/idf0095010/equipes/200000005139349",
-        "isoDate": "2026-02-28T19:00:00.000Z",
-        "date": "samedi 28 février 2026",
-        "home": "BASKET CLUB FRANCONVILLE (BCF) - 1",
-        "away": "STADE FRANCAIS BASKET",
-        "competition": "NF1",
-        "round": "J16",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092008/equipes/200000005139361",
-        "isoDate": "2026-02-28T19:00:00.000Z",
-        "date": "samedi 28 février 2026",
-        "home": "ASA SCEAUX",
-        "away": "COTE D'OPALE BASKET CALAIS - 1",
-        "competition": "NF1",
-        "round": "J16",
         "location": "N/A"
     },
     {
@@ -2648,17 +2494,6 @@
         "away": "BASKET CLUB MARITIME GRAVELINES - GRAND FORT PHILIPPE",
         "competition": "BETCLICE",
         "round": "J22",
-        "location": "N/A"
-    },
-    {
-        "sport": "handball",
-        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954494/",
-        "isoDate": "2026-03-14T19:15:00.000Z",
-        "date": "samedi 14 mars 2026",
-        "home": "ELITE VAL-D'OISE",
-        "away": "DRAGUIGNAN VAR HANDBALL",
-        "competition": "NATIONALE 1 MASCULINE 2025-26",
-        "round": "JOURNÉE 18",
         "location": "N/A"
     }
 ]

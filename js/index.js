@@ -32,26 +32,50 @@ const formatCompetition = (rawName, sport) => {
     if (!rawName) return "MATCH";
     const name = rawName.toUpperCase();
     const s = (sport).toLowerCase();
+    
     let sportLabel = s.includes("basket") ? "BASKET" : (s.includes("foot") ? "FOOT" : "HAND");
     
     let level = "AUTRE", age = "SENIOR";
-    if (name.includes("BETCLIC") || name.includes("STARLIGUE")) {level = "L1"}
+
+    // --- NIVEAU L1 ---
+    if (name.includes("BETCLIC") || name.includes("STARLIGUE")) { level = "L1"; }
     else if (name.includes("BUTAGAZ") || name.includes("LBWL")) { level = "L1"; age = "SENIOR F"; }
+    else if (name.includes("ARKEMA") || name.includes("PREMIERE LIGUE")) { level = "L1"; age = "SENIOR F"; }
+
+    // --- NIVEAU L2 ---
     else if (name.includes("ÉLIT2") || name.includes("PROLIGUE")) { level = "L2"; }
+    else if (name.includes("LIGUE 2") || name.includes("L2")) { level = "L2"; }
+    else if (name.includes("SECONDE LIGUE")) { level = "L2"; age = "SENIOR F"; } 
     else if (name.includes("LF2")) { level = "L2"; age = "SENIOR F"; }
+
+    // --- NIVEAU N1 ---
     else if (name.includes("NF1")) { level = "N1"; age = "SENIOR F"; }
     else if (name.includes("ESPOIRS")) { level = "L1"; age = "U21"; }
-    else if (name.includes("NATIONALE 1")) { level = "N1"; }
+    else if (name.includes("NATIONALE 1") || name.includes("NATIONAL 1") || name.includes("NATIONAL - SENIOR")) { level = "N1"; }
+
+    // --- LOGIQUE GÉNÉRIQUE ---
     else {
-        const isFeminine = name.includes("FÉMININ") || name.includes("FEMININ") || name.includes(" F ");
+        const isFeminine = name.includes("FÉMININ") || name.includes("FEMININ") || name.includes(" F ") || name.includes("SEF");
+        
         if (name.includes("N3")) level = "N3";
         else if (name.includes("N2")) level = "N2";
         else if (name.includes("D3") && (name.includes("FÉMININE") || name.includes("FEMININE"))) level = "L3";
+        else if (name.includes("NATIONAL - SENIOR")) level = "N1";
         else if (name.includes("NATIONAL") || name.includes("NAT")) level = "NAT";
+        
         if (name.includes("U19")) age = "U19";
         else if (name.includes("U17")) age = "U17";
+        
         if (isFeminine && !age.includes("F")) age += " F";
     }
+
+    // --- MODIFICATION ICI ---
+    // Si le niveau est "AUTRE", on ne met pas le sport devant.
+    // Cela permet de grouper "AUTRE - SENIOR" pour le Foot et le Basket ensemble.
+    if (level === "AUTRE") {
+        return "AUTRE";
+    }
+
     return `${sportLabel} - ${level} - ${age}`;
 };
 
@@ -78,8 +102,23 @@ Kilian LENTZ`);
 const getAccreditationHTML = (match) => {
     if (!match || !match.home) return `<div class="accred-status accred-unavailable"><i class="fa-solid fa-circle-xmark"></i> <span>Inconnu</span></div>`;
 
-    const teamName = match.home.name;
-    const key = Object.keys(ACCRED_LIST).find(k => teamName.toUpperCase().includes(k));
+    const teamName = match.home.name.toUpperCase();
+    
+    // 1. Détection du contexte ESPOIRS / U21
+    // On regarde si le formatage de la compétition contient U21 ou ESPOIRS
+    const isEspoirs = match.compFormatted.includes("U21") || match.compFormatted.includes("ESPOIRS");
+    
+    let key = null;
+
+    // 2. Si c'est un match Espoirs, on cherche D'ABORD une clé spécifique (ex: "PARIS BASKETBALL_U21")
+    if (isEspoirs) {
+        key = Object.keys(ACCRED_LIST).find(k => k === `${teamName}_U21` || k === `${teamName}_ESPOIRS`);
+    }
+
+    // 3. Si pas de clé spécifique trouvée (ou si ce n'est pas un match espoir), on cherche la clé normale
+    if (!key) {
+        key = Object.keys(ACCRED_LIST).find(k => teamName.includes(k) && !k.includes("_U21") && !k.includes("_ESPOIRS"));
+    }
     
     if (key) {
         const contact = ACCRED_LIST[key];
@@ -91,10 +130,8 @@ const getAccreditationHTML = (match) => {
                     </div>`;
         } 
 
-        // --- AJOUT : Formatage de la date en DD/MM ---
         const d = match.dateObj;
         const shortDate = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
-        // --------------------------------------------
 
         const home = match.home.name.replace(/'/g, "\\'");
         const away = match.away.name.replace(/'/g, "\\'");
@@ -183,6 +220,13 @@ function cycleStatus(event, matchId) {
 const getTeamCoords = (name) => {
     const upperName = name.toUpperCase();
     const key = Object.keys(STADIUM_COORDS).find(k => upperName.includes(k));
+    
+    // --- AJOUT LOG ---
+    if (!key) {
+        console.warn(`❌ Pas de coordonnées pour : ${name}`);
+    }
+    // -----------------
+
     return key ? STADIUM_COORDS[key] : null;
 };
 
@@ -489,23 +533,44 @@ function requestUserLocation() {
 function populateCompFilter(filteredMatches) {
     const select = document.getElementById('compFilter');
     const savedValue = currentFilters.comp;
+    
+    // Réinitialisation du menu
     select.innerHTML = '<option value="all">📊 Toutes compétitions</option>';
+    
     const uniqueComps = [];
     const seen = new Set();
+    
+    // 1. Récupération des compétitions uniques
     filteredMatches.forEach(m => {
         if (!seen.has(m.compFormatted)) {
             seen.add(m.compFormatted);
             uniqueComps.push({ name: m.compFormatted, sport: m.sport.toLowerCase() });
         }
     });
-    uniqueComps.sort((a, b) => a.name.localeCompare(b.name)).forEach(c => {
-        const emoji = SPORT_EMOJIS[c.sport] || "🏟️";
+
+    // 2. Tri : Alphabétique mais "AUTRE" est forcé à la fin
+    uniqueComps.sort((a, b) => {
+        if (a.name === "AUTRE") return 1;  // Pousse "AUTRE" vers le bas
+        if (b.name === "AUTRE") return -1; // Garde les autres au-dessus
+        return a.name.localeCompare(b.name); // Tri alphabétique standard
+    }).forEach(c => {
+        
+        // 3. Gestion des émojis (avec 'let' pour éviter l'erreur)
+        let emoji = SPORT_EMOJIS[c.sport] || "🏟️";
+        
+        if (c.name === "AUTRE") {
+            emoji = "🔖"; 
+        }
+
         const opt = document.createElement('option');
         opt.value = c.name;
         opt.textContent = `${emoji} ${c.name}`;
+        
         if (c.name === savedValue) opt.selected = true;
         select.appendChild(opt);
     });
+
+    // Sécurité : si le filtre sélectionné n'existe plus dans la nouvelle liste, on repasse à "all"
     if (!seen.has(savedValue)) currentFilters.comp = "all";
 }
 
