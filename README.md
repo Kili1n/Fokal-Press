@@ -8,6 +8,11 @@ Ce dashboard centralise les calendriers de plusieurs sports (Football, Basket, H
 
 ## ✨ Fonctionnalités Clés
 
+### 👤 Compte & Cloud Sync (Nouveau)
+- **Authentification Google** : Connectez-vous en un clic pour sécuriser vos données.
+- **Synchronisation Multi-appareils** : Retrouvez vos favoris et votre historique sur mobile et desktop grâce à **Google Firebase**.
+- **Profil Photographe** : Enregistrez vos liens (Instagram, Portfolio) une seule fois. Ils seront automatiquement utilisés pour signer vos demandes d'accréditation.
+
 ### 📅 Planification & Filtres Avancés
 - **Multi-Sports** : Support du Football ⚽, Basketball 🏀 et Handball 🤾.
 - **Filtres Précis** : Tri par compétition (L1, L2, N1, U19...), par semaine, ou par club via la barre de recherche.
@@ -37,10 +42,12 @@ Ce dashboard centralise les calendriers de plusieurs sports (Football, Basket, H
   - 📨 **Accréditation Demandée** (Orange)
   - ✅ **Accréditation Reçue** (Vert)
   - ❌ **Accréditation Réfusée** (Rouge)
+  - Les statuts sont **sauvegardés dans le Cloud** en temps réel.
 - **Tri Intelligent** : Possibilité de trier la grille pour voir les priorités (Accréditations reçues/demandées) en premier.
 - **Automatisation des Mails** : 
   - Génération de mails de demande d'accréditation pré-remplis (Objet, Corps avec date/match, Destinataire) ouvrant directement Gmail.
   - Copie rapide des adresses emails.
+  - **Signature Dynamique** : Le mail inclut automatiquement vos liens (Instagram/Portfolio) définis dans votre profil.
 
 ### 🎨 Interface & UX
 - **Modes d'Affichage** :
@@ -58,6 +65,9 @@ Ce dashboard centralise les calendriers de plusieurs sports (Football, Basket, H
   - HTML5, CSS3 (Flexbox/Grid, Variables CSS).
   - JavaScript Vanilla (ES6+).
   - **Leaflet.js** : Librairie open-source pour la carte interactive.
+- **Backend / Cloud (BaaS)** :
+  - **Google Firebase Authentication** : Gestion des utilisateurs.
+  - **Google Cloud Firestore** : Base de données NoSQL pour le stockage des profils et favoris.
 - **APIs Externes** :
   - **Geoapify** : Géocodage (Recherche ville) et Routing (Calcul distance/temps).
   - **Open-Meteo** : Prévisions météorologiques.
