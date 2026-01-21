@@ -246,6 +246,33 @@
             </div>
         </div>
     </div>
+    <div id="featureAuthModal" class="map-modal hidden">
+        <div class="login-card">
+            <button class="close-map" id="closeFeatureAuthBtn"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="login-header">
+                <div class="login-icon-circle" style="background: #EEF2FF; color: #6366F1;">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h2>Fonctionnalité réservée</h2>
+                <p>Vous devez être connecté pour utiliser cet outil (Export Agenda & Envoi d'e-mails).</p>
+                
+                <p style="font-size: 13px; color: #6366F1; margin-top: 12px; font-weight: 600; background: #EEF2FF; padding: 8px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fa-brands fa-google"></i> Inscription ultra-rapide grâce à Google !
+                </p>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                <button id="featureLoginBtn" class="login-submit-btn" style="background: var(--accent); color: white;">
+                    Me connecter maintenant
+                </button>
+                
+                <button id="featureDismissBtn" class="login-submit-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);">
+                    Annuler
+                </button>
+            </div>
+        </div>
+    </div>
     <div id="settingsModal" class="map-modal hidden">
         <div class="login-card">
             <button class="close-map" id="closeSettingsBtn"><i class="fa-solid fa-xmark"></i></button>

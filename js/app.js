@@ -105,7 +105,20 @@ const isMobile = () => {
            || window.innerWidth <= 768;
 };
 
+function checkAuthOrBlock() {
+    if (firebase.auth().currentUser) {
+        return true;
+    } else {
+        document.getElementById('featureAuthModal').classList.remove('hidden');
+        return false;
+    }
+}
+
 function openGmailCompose(email, homeTeam, awayTeam, matchDate, sport, compet) {
+    // --- VERIFICATION AUTH ---
+    if (!checkAuthOrBlock()) return;
+    // -------------------------
+
     // 1. Récupération des infos
     const user = firebase.auth().currentUser;
     const storedInsta = localStorage.getItem('userInsta');
@@ -117,16 +130,12 @@ function openGmailCompose(email, homeTeam, awayTeam, matchDate, sport, compet) {
     let workSentence = "";
 
     if (storedInsta && storedPortfolio) {
-        // Cas : Les deux existent
         workSentence = `Vous pouvez avoir un aperçu de mon travail sur mon portfolio : ${storedPortfolio} ainsi que sur mon compte Instagram : ${storedInsta}`;
     } else if (storedInsta) {
-        // Cas : Uniquement Instagram
         workSentence = `Vous pouvez avoir un aperçu de mon travail sur mon compte Instagram : @${storedInsta}`;
     } else if (storedPortfolio) {
-        // Cas : Uniquement Portfolio
         workSentence = `Vous pouvez avoir un aperçu de mon travail sur mon portfolio : ${storedPortfolio}`;
     } else {
-        // Cas : Aucun (Placeholder par défaut)
         workSentence = `Vous pouvez avoir un aperçu de mon travail ici : [LIEN VERS VOTRE PORTFOLIO / INSTAGRAM]`;
     }
 
@@ -945,15 +954,21 @@ const compShort = getShortComp(m.compFormatted, m.sport);
 }
 
 function exportToGoogleCalendar(home, away, dateObj, comp, sport, coords) {
+    // --- VERIFICATION AUTH ---
+    if (!checkAuthOrBlock()) return;
+    // -------------------------
+
     const formatDate = (date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
 
-    const startTime = formatDate(dateObj);
-    const endTime = formatDate(new Date(dateObj.getTime() + 2 * 60 * 60 * 1000));
+    // Si dateObj est passé comme string par le HTML inline, on le reconvertit
+    const d = new Date(dateObj); 
+
+    const startTime = formatDate(d);
+    const endTime = formatDate(new Date(d.getTime() + 2 * 60 * 60 * 1000));
 
     const title = encodeURIComponent(`${home} vs ${away}`);
     const details = encodeURIComponent(`Accréditation photographe sur le match ${home} vs ${away} en ${comp} - Généré via Fokal Press`);
     
-    // Modification ici : si coords existe, on met "lat,lon", sinon le nom du club
     const locationValue = coords ? `${coords.lat},${coords.lon}` : home;
     const location = encodeURIComponent(locationValue);
 
@@ -974,6 +989,7 @@ function updateFilterSlider() {
 
 // Listeners
     document.addEventListener('DOMContentLoaded', () => {
+    localStorage.removeItem('hasShownLoginHint');
     loadMatches();
     
     document.getElementById('gpsBtn').addEventListener('click', () => {
@@ -1943,6 +1959,32 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             document.getElementById('signupView').style.display = 'none';
             loginView.style.display = 'block';
+        });
+    }
+
+    // --- GESTION MODALE FONCTIONNALITÉ RESTREINTE ---
+    const featureAuthModal = document.getElementById('featureAuthModal');
+    const closeFeatureAuthBtn = document.getElementById('closeFeatureAuthBtn');
+    const featureLoginBtn = document.getElementById('featureLoginBtn');
+    const featureDismissBtn = document.getElementById('featureDismissBtn');
+
+    // Fermer la modale
+    const closeFeatureModal = () => featureAuthModal.classList.add('hidden');
+    
+    if (closeFeatureAuthBtn) closeFeatureAuthBtn.addEventListener('click', closeFeatureModal);
+    if (featureDismissBtn) featureDismissBtn.addEventListener('click', closeFeatureModal);
+    
+    // Clic en dehors
+    featureAuthModal.addEventListener('click', (e) => {
+        if (e.target === featureAuthModal) closeFeatureModal();
+    });
+
+    // Redirection vers le Login
+    if (featureLoginBtn) {
+        featureLoginBtn.addEventListener('click', () => {
+            closeFeatureModal(); // Ferme la modale "Restriction"
+            document.getElementById('loginModal').classList.remove('hidden'); // Ouvre la modale "Login"
+            document.getElementById('loginView').style.display = 'block'; // S'assure qu'on est sur la vue connexion
         });
     }
 });
