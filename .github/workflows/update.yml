@@ -2,8 +2,8 @@ name: Scraping Mensuel des Matchs
 
 on:
   schedule:
-    # S'exécute à 00:00, le 1er jour de chaque mois
-    - cron: '0 0 1 * *'
+    # S'exécute à 00:00, le 1er et le 15 de chaque mois
+    - cron: '0 0 1,15 * *'
   workflow_dispatch: # Permet de lancer le script manuellement depuis l'onglet Actions
 
 jobs:

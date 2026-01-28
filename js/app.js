@@ -748,16 +748,18 @@ function resetFilters() {
 function applyFilters() {
     let filtered = [...allMatches];
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
 
     filtered = filtered.filter(m => {
-        return m.dateObj >= today;
+        return m.dateObj >= now;
     });
 
     filtered = filtered.filter(m => {
         if (m.distance > 0 && m.distance > currentFilters.maxDist) {
             return false; 
+        }
+        if (m.away.name.toUpperCase().includes("EXEMPT")) {
+            return false;
         }
         return true;
     });
@@ -1039,14 +1041,21 @@ function updateFilterSlider() {
         } 
         // CAS 2 : ACTIVATION DU GPS
         else {
-            // On vide le champ ville pour éviter la confusion
             cityInput.value = ""; 
-            
-            // On change l'icône temporairement pour montrer le chargement
-            const originalIcon = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            
-            requestUserLocation(btn, originalIcon);
+            const savedPos = localStorage.getItem('userLastPosition');
+
+            if (savedPos) {
+                // On récupère la position sauvegardée sans redemander au navigateur
+                userPosition = JSON.parse(savedPos);
+                btn.classList.add('active');
+                console.log("📍 Position récupérée du stockage local. Calcul...");
+                updateDistances(); 
+            } else {
+                // Si rien en mémoire, on lance la demande de géolocalisation classique
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                requestUserLocation(btn, originalIcon);
+            }
         }
     });
 
@@ -1078,12 +1087,6 @@ function updateFilterSlider() {
 
     window.addEventListener('load', updateFilterSlider);
     window.addEventListener('resize', updateFilterSlider);
-
-    const savedPos = localStorage.getItem('userLastPosition');
-    if (savedPos) {
-        userPosition = JSON.parse(savedPos);
-        document.getElementById('gpsBtn').classList.add('active');
-    }
 
     document.getElementById('menuToggle').addEventListener('click', (e) => {
         e.stopPropagation(); 
@@ -2029,9 +2032,19 @@ function sendFooterMail(type) {
     const config = mailConfigs[type] || mailConfigs['contact'];
     const encodedSubject = encodeURIComponent(config.subject);
     const encodedBody = encodeURIComponent(config.body);
+
+    // 1. On prépare les deux types d'URLs
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${adminEmail}&su=${encodedSubject}&body=${encodedBody}`;
-    
-    window.open(gmailUrl, '_blank');
+    const mailtoUrl = `mailto:${adminEmail}?subject=${encodedSubject}&body=${encodedBody}`;
+
+    // 2. On applique la même logique que openGmailCompose
+    if (isMobile()) {
+        // Sur mobile, on tente d'ouvrir l'application mail par défaut
+        window.location.href = mailtoUrl;
+    } else {
+        // Sur ordinateur, on ouvre l'onglet Gmail Web
+        window.open(gmailUrl, '_blank');
+    }
 }
 // --- CONFIGURATION FIREBASE ---
 const firebaseConfig = {

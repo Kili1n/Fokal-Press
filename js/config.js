@@ -6,7 +6,7 @@ const ACCRED_LIST = {
     "US CHANTILLY": "https://www.instagram.com/uschantilly/",
     "US ORLEANS": "https://orleansloiretfoot.com/contact/",
     "NANTERRE": "https://www.nanterre92.com/club/acces/accreditations-journalistes/",
-    "C'CHARTRES MHB": "manon.bougard@ccmhb.fr",     // mail présent sur https://pro.ccmhb.fr/pages/presse-medias-photographes-42.html
+    "C'CHARTRES": "manon.bougard@ccmhb.fr",     // mail présent sur https://pro.ccmhb.fr/pages/presse-medias-photographes-42.html
     "CHARTRES FOOTBALL" : "https://cchartresfootball.com/about-us/contact/",
     "CHARTRES": "https://tally.so/r/obRDgO",
     "PARIS 92": "contact@paris92.fr",
