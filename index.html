@@ -386,6 +386,23 @@
         .faq-question i { color: var(--accent); font-size: 0.9rem; }
         .faq-answer { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
         
+        /* --- ANIMATION DE RÉVÉLATION --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, opacity;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Optionnel : Délai progressif pour les listes de cartes */
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
     </style>
 </head>
 <body>
@@ -466,7 +483,7 @@
                 </a>
             </div>
 
-            <div class="stats-bar">
+            <div class="stats-bar reveal">
                 <div class="stat-item">
                     <span class="stat-num">3 Sports</span>
                     <span class="stat-label">Foot, Basket, Hand</span>
@@ -488,14 +505,14 @@
                 </div>
             </div>
 
-            <div class="hero-image-wrapper">
+            <div class="hero-image-wrapper reveal">
                 <img src="data/screen.png" alt="Interface du Dashboard Fokal Press">
             </div>
 
         </div>
     </section>
 
-    <section class="problem-section">
+    <section class="problem-section reveal">
         <div class="container">
             <div class="problem-grid">
                 <div class="problem-content">
@@ -513,7 +530,7 @@
             </div>
         </div>
     </section>
-    <section id="features" class="features-section">
+    <section id="features" class="features-section reveal">
         <div class="container">
             <h2 style="font-size: 2rem; margin-bottom: 40px;">La solution : FokalPress</h2>
             
@@ -641,7 +658,7 @@
             </div>
         </div>
     </section>
-        <section class="how-it-works" style="padding: 100px 0; background: #080808; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative;">
+        <section class="how-it-works reveal" style="padding: 100px 0; background: #080808; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative;">
         <div class="container">
             <div style="text-align: center; margin-bottom: 60px;">
                 <h2 class="text-gradient" style="font-size: 2.5rem; margin-bottom: 16px;">Comment ça marche ?</h2>
@@ -677,7 +694,7 @@
             </div>
         </div>
     </section>
-    <section class="gallery-section">
+    <section class="gallery-section reveal">
         <div class="container">
             <h2 style="text-align: center; font-size: 2rem; margin-bottom: 40px;">L'interface en détails</h2>
             
@@ -710,7 +727,7 @@
         </div>
     </section>
 
-    <section class="share-feature" style="padding: 100px 0; background: linear-gradient(to bottom, #0a0a0a, #050505); border-bottom: 1px solid var(--border); overflow: hidden;">
+    <section class="share-feature reveal" style="padding: 100px 0; background: linear-gradient(to bottom, #0a0a0a, #050505); border-bottom: 1px solid var(--border); overflow: hidden;">
         <div class="container" style="display: flex; align-items: center; justify-content: space-between; gap: 60px; flex-wrap: wrap;">
             
             <div style="flex: 1; min-width: 300px;">
@@ -749,7 +766,7 @@
         </div>
     </section>
 
-    <section class="faq-section">
+    <section class="faq-section reveal">
         <div class="container">
             <h2 class="text-gradient" style="text-align: center; font-size: 2.5rem; margin-bottom: 50px;">Questions fréquentes</h2>
             <div class="faq-grid">
@@ -782,7 +799,7 @@
         </div>
     </section>
 
-    <section class="final-cta">
+    <section class="final-cta reveal">
         <div class="container">
             <div class="cta-card">
                 <h2 style="font-size: 2.5rem; margin-bottom: 15px;">Prêt à optimiser votre saison ?</h2>
@@ -801,7 +818,7 @@
         </div>
     </section>
     <footer>
-        <div class="container">
+        <div class="container reveal">
             <div class="footer-links" style="margin-bottom: 20px;">
                 <a href="https://instagram.com/kiksf4" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
                 <a href="https://github.com/Kili1n/Fokal-Press" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
@@ -834,6 +851,22 @@
                 });
             });
         });
+        // --- SCRIPT DE REVEAL AU SCROLL ---
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // On peut arrêter d'observer l'élément une fois qu'il est apparu
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15 // L'élément doit être visible à 15% pour déclencher l'animation
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
     </script>
 </body>
 </html>
