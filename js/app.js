@@ -873,6 +873,8 @@ function renderMatches(data) {
                 mapsUrl = `https://www.google.com/maps/search/?api=1&query=${m.locationCoords.lat},${m.locationCoords.lon}`;
             }
         }
+        
+        const compShort = getShortComp(m.compFormatted, m.sport);
 
         card.innerHTML = `
             <button class="fav-btn ${statusClass}" 
@@ -895,7 +897,8 @@ function renderMatches(data) {
                 </div>
             </div>
             <div class="match-meta">
-                <span class="badge"><span>${emoji}</span> ${m.compFormatted}</span>
+                <span class="badge badge-long"><span>${emoji}</span> ${m.compFormatted}</span>
+                <span class="badge badge-short">${compShort}</span>
                 <div class="date-group" style="display: flex; align-items: center; gap: 8px;">
                     <span class="date-time">${m.dateDisplay}</span>
                     <button class="calendar-btn" 
@@ -927,60 +930,6 @@ function renderMatches(data) {
             </div>
         `;
 
-const compShort = getShortComp(m.compFormatted, m.sport);
-
-        card.innerHTML = `
-            <button class="fav-btn ${statusClass}" onclick="cycleStatus(event, '${matchId}')">
-                <i class="${getStatusIcon(currentStatus)}"></i>
-            </button>
-            <div class="match-header">
-                <div class="team">
-                    <img src="${getLogoUrl(m.home.name)}" class="team-logo" onerror="this.src='https://placehold.co/42x42/png?text=H'">
-                    <span class="team-name">${m.home.name}</span>
-                </div>
-                <div class="match-center">
-                    <div class="match-time">${m.time}</div>
-                    <div class="vs">VS</div>
-                </div>
-                <div class="team">
-                    <img src="${getLogoUrl(m.away.name)}" class="team-logo" onerror="this.src='https://placehold.co/42x42/png?text=A'">
-                    <span class="team-name">${m.away.name}</span>
-                </div>
-            </div>
-            <div class="match-meta">
-                
-                <span class="badge badge-long"><span>${emoji}</span> ${m.compFormatted}</span>
-                <span class="badge badge-short">${compShort}</span>
-
-                <div class="date-group" style="display: flex; align-items: center; gap: 8px;">
-                    <span class="date-time date-long">${m.dateDisplay}</span>
-                    <span class="date-time date-short">${m.dateShort}</span>
-
-                    <button class="calendar-btn" 
-                            onclick='exportToGoogleCalendar("${m.home.name.replace(/"/g, "")}", "${m.away.name.replace(/"/g, "")}", new Date("${m.dateObj.toISOString()}"), "${m.compFormatted}", "${m.sport}", ${coordsArg})'>
-                        <i class="fa-solid fa-calendar-plus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="transport-block">
-                <div class="transport-info">
-                    <div class="distance">${distText}</div>
-                    <div class="modes">
-                        ${m.weather ? `<div class="mode weather-badge">${m.weather}</div>` : ''}
-                        <div class="mode"><i class="fa-solid fa-car"></i> ${m.times.car || '--'}'</div>
-                    </div>
-                </div>
-                <a href="${mapsUrl}" target="_blank" class="maps-arrow ${!m.locationCoords ? 'disabled' : ''}">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </a>
-            </div>
-            <div class="accred-footer">
-                ${getAccreditationHTML(m)}
-                <a href="${m.sourceUrl}" target="_blank" class="source-link">
-                    <i class="fa-solid fa-link"></i>
-                </a>
-            </div>
-        `;
         grid.appendChild(card);
     });
 }

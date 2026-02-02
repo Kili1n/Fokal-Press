@@ -31,7 +31,7 @@ jobs:
         run: npm install puppeteer
 
       - name: 4. Lancer le script de scraping
-        run: node update_matchs.js
+        run: node script/update_matchs.js
 
       - name: 5. Sauvegarder et Envoyer les modifications
         uses: stefanzweifel/git-auto-commit-action@v5
