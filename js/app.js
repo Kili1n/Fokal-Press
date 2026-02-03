@@ -164,20 +164,14 @@ function openGmailCompose(email, homeTeam, awayTeam, matchDate, sport, compet) {
 const getAccreditationHTML = (match) => {
     if (!match || !match.home) return `<div class="accred-status accred-unavailable"><i class="fa-solid fa-circle-xmark"></i> <span>Inconnu</span></div>`;
 
+    const isLogged = firebase.auth() && firebase.auth().currentUser;
     const teamName = match.home.name.toUpperCase();
-    
-    // 1. Détection du contexte ESPOIRS / U21
-    // On regarde si le formatage de la compétition contient U21 ou ESPOIRS
     const isEspoirs = match.compFormatted.includes("U21") || match.compFormatted.includes("ESPOIRS");
     
     let key = null;
-
-    // 2. Si c'est un match Espoirs, on cherche D'ABORD une clé spécifique (ex: "PARIS BASKETBALL_U21")
     if (isEspoirs) {
         key = Object.keys(ACCRED_LIST).find(k => k === `${teamName}_U21` || k === `${teamName}_ESPOIRS`);
     }
-
-    // 3. Si pas de clé spécifique trouvée (ou si ce n'est pas un match espoir), on cherche la clé normale
     if (!key) {
         key = Object.keys(ACCRED_LIST).find(k => teamName.includes(k) && !k.includes("_U21") && !k.includes("_ESPOIRS"));
     }
@@ -185,6 +179,21 @@ const getAccreditationHTML = (match) => {
     if (key) {
         const contact = ACCRED_LIST[key];
         
+        // --- CAS : UTILISATEUR NON CONNECTÉ ---
+        if (!isLogged) {
+            return `
+                <div class="accred-status accred-available" 
+                    onclick="document.getElementById('featureAuthModal').classList.remove('hidden')" 
+                    style="gap: 12px; opacity: 0.7; cursor: pointer;" 
+                    title="Connectez-vous pour voir l'adresse">
+                    <i class="fa-solid fa-lock" style="font-size: 12px; color: var(--text-muted);"></i>
+                    <span class="accred-text accred-email-text" style="filter: blur(4px); user-select: none;">
+                        adresse@masquee.fr
+                    </span>
+                </div>`;
+        }
+
+        // --- CAS : UTILISATEUR CONNECTÉ ---
         if (contact.startsWith('http')) {
             return `<div class="accred-status accred-available">
                         <a href="${contact}" target="_blank" class="accred-email" title="Accéder à la plateforme" style="display:flex; align-items:center; gap:6px;">
@@ -199,19 +208,18 @@ const getAccreditationHTML = (match) => {
         const home = match.home.name.replace(/'/g, "\\'");
         const away = match.away.name.replace(/'/g, "\\'");
         const compRaw = match.competition.replace(/'/g, "\\'");
-        const sportComplet = match.sport;
 
         return `
             <div class="accred-status accred-available" style="gap: 12px;">
                 <a href="#" onclick="copyToClipboard(event, '${contact}')" title="Copier le mail">
                     <i class="fa-solid fa-copy"></i>
                 </a>
-                <a href="#" onclick="openGmailCompose('${contact}', '${home}', '${away}', '${shortDate}', '${sportComplet}', '${compRaw}')" title="Ouvrir dans Gmail" style="color: #ea4335;">
+                <a href="#" onclick="openGmailCompose('${contact}', '${home}', '${away}', '${shortDate}', '${match.sport}', '${compRaw}')" title="Ouvrir dans Gmail" style="color: #ea4335;">
                     <i class="fa-solid fa-envelope"></i>
                 </a>
                 <span class="accred-text accred-email-text">${contact}</span>
             </div>`;
-        }
+    }
     
     return `<div class="accred-status accred-unavailable">
                 <i class="fa-solid fa-circle-xmark"></i> 
@@ -2197,6 +2205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             renderMatches(currentlyFiltered);
         }
+        renderMatches(currentlyFiltered);
     });
 
     // --- 2. GESTION DU CLIC SUR L'ICÔNE UTILISATEUR ---

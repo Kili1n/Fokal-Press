@@ -1587,6 +1587,8 @@ body.dark-mode .stat-count-badge {
         margin: 0 !important;
     }
 
+    .matches-grid.list-view .card.mobile-expanded .calendar-btn {display: block}
+
     /* --- DÉFINITION DE L'ANIMATION D'APPARITION --- */
 @keyframes cardExpandPop {
     0% {
