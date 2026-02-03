@@ -601,7 +601,7 @@ async function loadMatches() {
         allMatches = data.map(m => {
             const d = new Date(m.isoDate);
             // Formatage de l'heure (ex: 19h00)
-            const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h');
+            const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }).replace(':', 'h');
                             
         return {
                 sport: m.sport,
