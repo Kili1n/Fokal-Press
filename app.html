@@ -345,6 +345,15 @@
                     <h2 style="font-size: 20px; margin-bottom: 4px;">Mon Historique</h2>
                     <p style="font-size: 13px;">Retrouvez tous les matchs pour lesquels vous avez obtenu une accréditation.</p>
                 </div>
+                <div class="history-actions">
+                    <button id="openAddMatchBtn" class="action-btn">
+                        <i class="fa-solid fa-plus"></i> Ajouter un match
+                    </button>
+                    
+                    <button id="exportCsvBtn" class="action-btn">
+                        <i class="fa-solid fa-file-csv"></i> Exporter CSV
+                    </button>
+                </div>
                 <button class="close-map" id="closeHistoryBtn" style="position: static; margin-left: 15px;"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
@@ -352,6 +361,129 @@
                 <div class="matches-grid" id="historyGrid"></div>
             </div>
 
+        </div>
+    </div>
+
+    <div id="addMatchModal" class="modal hidden" style="z-index: 3000;">
+        <div class="modal-content login-card" style="max-width: 500px; position: relative; overflow: hidden;">
+            
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fa-solid fa-pen-to-square"></i> Ajouter un match</h3>
+                <button id="closeAddMatchBtn" class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="addMatchForm" class="add-match-form">
+                
+                <div id="step-1">
+                    <div class="form-group">
+                        <label>Sport</label>
+                        <div class="sport-select-group">
+                            <input type="radio" name="manualSport" value="football" id="ms_foot" checked onchange="refreshManualLists()">
+                            <label for="ms_foot">⚽ Foot</label>
+                            <input type="radio" name="manualSport" value="basketball" id="ms_basket" onchange="refreshManualLists()">
+                            <label for="ms_basket">🏀 Basket</label>
+                            <input type="radio" name="manualSport" value="handball" id="ms_hand" onchange="refreshManualLists()">
+                            <label for="ms_hand">🤾 Hand</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Compétition</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="manualComp" placeholder="Ex: L1, Régional 1..." required autocomplete="off">
+                            <div id="compResults" class="autocomplete-results hidden"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date (Optionnel)</label>
+                            <input type="date" id="manualDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Heure (Optionnel)</label>
+                            <input type="time" id="manualTime">
+                        </div>
+                    </div>
+
+                    <hr class="separator" style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                    <div class="form-group team-input-group">
+                        <label>Équipe Domicile</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="manualHome" placeholder="Chercher ou écrire..." required autocomplete="off">
+                            <div id="homeResults" class="autocomplete-results hidden"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group team-input-group">
+                        <label>Équipe Extérieur</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="manualAway" placeholder="Chercher ou écrire..." required autocomplete="off">
+                            <div id="awayResults" class="autocomplete-results hidden"></div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="nextStepBtn" class="login-btn" style="margin-top: 15px;">
+                        Suivant <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div id="step-2" class="hidden" style="text-align: center;">
+                    <div style="margin-bottom: 20px;">
+                        <i class="fa-solid fa-image" style="font-size: 40px; color: var(--accent); margin-bottom: 10px;"></i>
+                        <h4>Logos manquants ?</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary);">
+                            Certaines équipes ne sont pas reconnues. Vous pouvez ajouter un lien vers leur logo (PNG/JPG) pour un affichage plus joli.
+                        </p>
+                    </div>
+
+                    <div id="manualHomeLogoDiv" class="form-group custom-logo-input hidden">
+                        <label id="lblHomeLogo">Logo pour Domicile</label>
+                        <input type="url" id="manualHomeLogo" placeholder="https://exemple.com/logo-club.png">
+                    </div>
+
+                    <div id="manualAwayLogoDiv" class="form-group custom-logo-input hidden">
+                        <label id="lblAwayLogo">Logo pour Extérieur</label>
+                        <input type="url" id="manualAwayLogo" placeholder="https://exemple.com/logo-club.png">
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="button" id="skipStepBtn" class="calc-btn" style="background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); flex: 1;">
+                            Passer
+                        </button>
+                        <button type="submit" class="login-btn" style="flex: 1; margin-top:0;">
+                            <i class="fa-solid fa-check"></i> Terminer
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteConfirmModal" class="modal hidden" style="z-index: 4000;">
+        <div class="modal-content login-card" style="max-width: 400px; text-align: center;">
+            
+            <div class="login-icon-circle" style="background: #FEE2E2; color: #FF3B30; width: 60px; height: 60px; font-size: 24px;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            
+            <h3 style="margin-bottom: 10px; font-size: 18px;">Supprimer ce match ?</h3>
+            
+            <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 25px;">
+                Cette action est <strong>définitive</strong>.<br>
+                Le match sera retiré de votre historique et des statistiques.
+            </p>
+            
+            <div style="display: flex; gap: 10px;">
+                <button id="cancelDeleteBtn" class="login-submit-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary);">
+                    Annuler
+                </button>
+                <button id="confirmDeleteBtn" class="login-submit-btn" style="background: #FF3B30; color: white; border: 1px solid #FF3B30;">
+                    Supprimer
+                </button>
+            </div>
         </div>
     </div>
 

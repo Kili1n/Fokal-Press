@@ -1610,15 +1610,41 @@ body.dark-mode .stat-count-badge {
 /* --- STYLE HISTORIQUE --- */
 
 /* Carte simplifiée pour l'historique */
-.card.history-card {
-    border-left: 4px solid #34C759; /* Barre verte pour indiquer "Validé" */
-    opacity: 0.9;
+/* --- NOUVEAU STYLE BOUTON SUPPRIMER HISTORIQUE --- */
+
+/* S'assurer que la carte est le repère de positionnement */
+.history-card {
+    position: relative !important;
+    /* On rajoute un peu de padding à droite pour que le texte ne passe pas sous la poubelle */
+    padding-right: 40px !important; 
 }
 
-.card.history-card:hover {
-    transform: none; /* Pas d'effet de levée */
-    opacity: 1;
-    border-color: #34C759;
+.history-delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    /* Couleur neutre par défaut (gris clair ou foncé selon le mode) */
+    color: var(--text-secondary); 
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 5; /* S'assurer qu'il est cliquable */
+    font-size: 14px;
+}
+
+/* Au survol : devient plus lumineux (blanc en mode sombre) avec un léger fond */
+.history-delete-btn:hover {
+    background: var(--bg-color);
+    color: var(--text-primary);
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* Badge spécifique "Accrédité" */
@@ -1711,4 +1737,341 @@ body.dark-mode .history-badge {
         height: 32px;
         font-size: 14px;
     }
+}
+
+.sport-select-group {
+    display: flex;
+    gap: 10px;
+    background: var(--input-bg);
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.sport-select-group input[type="radio"] {
+    display: none;
+}
+
+.sport-select-group label {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+    border: 1px solid transparent;
+}
+
+.sport-select-group input:checked + label {
+    background: var(--bg-body);
+    color: var(--accent);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-color: var(--accent);
+}
+
+.custom-logo-input {
+    margin-top: 8px;
+    background: rgba(0,0,0,0.03);
+    padding: 8px;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+    font-size: 12px;
+}
+.custom-logo-input label { display: block; margin-bottom: 4px; color: var(--text-secondary); }
+.custom-logo-input input { font-size: 12px; padding: 6px; }
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+.form-row .form-group { flex: 1; }
+
+/* --- CSS AUTOCOMPLETE & MODALE --- */
+
+.autocomplete-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Style adapté au thème (Dark/Light) */
+.autocomplete-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg); /* S'adapte au mode sombre */
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 12px 12px; /* Arrondi plus doux */
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* Ombre plus marquée pour se détacher */
+}
+
+.autocomplete-results.hidden { display: none; }
+
+.result-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary); /* Texte couleur principale */
+    font-size: 13px;
+}
+
+.result-item:last-child { border-bottom: none; }
+
+/* Couleur de survol adaptée */
+.result-item:hover {
+    background-color: var(--bg-color); /* Utilise la couleur de fond du body */
+}
+
+/* En mode sombre, s'assure que le survol est visible */
+body.dark-mode .result-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.result-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    background: #fff; /* Fond blanc pour les logos transparents */
+    border-radius: 50%;
+    padding: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.result-emoji {
+    font-size: 20px;
+    width: 28px;
+    text-align: center;
+}
+
+/* Animation simple entre les étapes */
+#step-1, #step-2 {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.custom-logo-input {
+    text-align: left;
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+}
+
+/* --- CORRECTION MODALE AJOUT MATCH --- */
+
+/* Style de base de la modale (fond gris transparent) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Fond sombre */
+    backdrop-filter: blur(4px);      /* Flou d'arrière-plan */
+    z-index: 3000;                   /* Au-dessus de tout (Header, Map, etc.) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+/* LE POINT CRUCIAL : Cacher la modale quand elle a la classe 'hidden' */
+.modal.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Ajustement pour la croix de fermeture dans cette modale spécifique */
+#addMatchModal .close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+#addMatchModal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- BARRE D'ACTION HISTORIQUE --- */
+.history-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.action-btn {
+    background-color: var(--tag-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: var(--accent); /* Bleu au survol */
+    color: white;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.2);
+}
+
+.action-btn i {
+    font-size: 14px;
+}
+
+/* Adaptation Dark Mode */
+body.dark-mode .action-btn {
+    background-color: #2C2C2E;
+    color: #FFF;
+    border-color: rgba(255,255,255,0.1);
+}
+body.dark-mode .action-btn:hover {
+    background-color: var(--accent);
+}
+
+/* --- CORRECTION ESSENTIELLE : UTILITAIRE POUR CACHER --- */
+/* C'est ce qui manque pour que le système d'étapes fonctionne */
+.hidden {
+    display: none !important;
+}
+
+/* --- STYLES DU FORMULAIRE AJOUT MANUEL --- */
+
+.add-match-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espace entre les blocs */
+    text-align: left; /* Aligner les labels à gauche */
+}
+
+.add-match-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    margin-left: 2px;
+}
+
+/* Style des inputs (similaire au Login) */
+.add-match-form input[type="text"],
+.add-match-form input[type="date"],
+.add-match-form input[type="time"],
+.add-match-form input[type="url"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--bg-color); /* Gris clair adaptatif */
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: var(--font-main);
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.add-match-form input:focus {
+    border-color: var(--accent);
+    background: var(--card-bg);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+/* Alignement des dates sur une ligne */
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+.form-row .form-group {
+    flex: 1;
+}
+
+/* Sélecteur de Sport (Radio buttons) */
+.sport-select-group {
+    display: flex;
+    background: var(--bg-color);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.sport-select-group input[type="radio"] {
+    display: none; /* On cache les ronds moches */
+}
+
+.sport-select-group label {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    margin: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+/* État sélectionné */
+.sport-select-group input:checked + label {
+    background: var(--card-bg); /* Blanc (ou Noir en dark mode) */
+    color: var(--text-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-color: var(--border-color);
+}
+
+/* Boutons d'action */
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+.login-btn:hover {
+    background: #005bb7;
+}
+
+/* Zone Logos manquants (Step 2) */
+.custom-logo-input {
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px dashed var(--border-color); /* Bordure pointillée pour différencier */
+    margin-bottom: 15px;
 }

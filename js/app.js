@@ -6,6 +6,7 @@ let allMatches = [];
 let currentlyFiltered = []; 
 let currentFilters = { week: "", comp: "all", sport: "all", accredOnly: false, sortBy: "date", search: "", maxDist: 300 };
 let userPosition = null;
+let matchToDelete = null;
 let isCalculating = false;
 const travelCache = new Map();
 const logoCache = new Map();
@@ -2632,59 +2633,59 @@ function renderHistory() {
     const historyGrid = document.getElementById('historyGrid');
     historyGrid.innerHTML = '';
 
-    // 1. Récupération des archives
-    let historyList = Object.values(matchArchives);
+    // 1. Récupération des IDs
+    let historyList = Object.entries(matchArchives).map(([key, data]) => {
+        return { ...data, id: key };
+    });
 
     if (historyList.length === 0) {
         historyGrid.innerHTML = `
             <div class="empty-history">
                 <i class="fa-solid fa-box-open"></i>
                 <p>Aucun match archivé.</p>
-            </div>
-        `;
+            </div>`;
         return;
     }
 
-    // 2. Tri par date
-    historyList.sort((a, b) => new Date(b.dateObj) - new Date(a.dateObj));
+    // 2. Tri
+    historyList.sort((a, b) => {
+        const dateA = (a.dateObj === "UNKNOWN") ? 0 : new Date(a.dateObj).getTime();
+        const dateB = (b.dateObj === "UNKNOWN") ? 0 : new Date(b.dateObj).getTime();
+        if (dateA === 0 && dateB === 0) return 0;
+        if (dateA === 0) return 1;
+        if (dateB === 0) return -1;
+        return dateB - dateA;
+    });
 
-    // 3. Génération avec Filtrage
     historyList.forEach(m => {
-        
-        // A. Définition des noms avec sécurité (Fallback)
-        // Si m.home.name n'existe pas, on met "Équipe Inconnue"
         const homeName = m.home?.name || "Équipe Inconnue";
         const awayName = m.away?.name || "Équipe Inconnue";
-        
-        // --- B. LE FILTRE QUE VOUS AVEZ DEMANDÉ ---
-        // Si le nom contient le mot clé "Inconnue", on arrête tout pour ce match (on ne l'affiche pas).
-        if (homeName.includes("Inconnue") || awayName.includes("Inconnue")) {
-            return; 
-        }
-        // ------------------------------------------
+        if (homeName.includes("Inconnue") || awayName.includes("Inconnue")) return;
 
-        const sport = m.sport || "autre";
-        const comp = m.compFormatted || "Compétition Inconnue";
-        
-        // Gestion sécurisée de la date
         let dateDisplay = "Date inconnue";
         let time = "--h--";
-        if (m.dateObj) {
+        if (m.dateObj && m.dateObj !== "UNKNOWN") {
             try {
                 const d = new Date(m.dateObj);
                 dateDisplay = d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: 'long', year: 'numeric' });
                 time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h');
-            } catch (e) { console.warn("Date invalide", m); }
+            } catch (e) {}
         }
 
-        const homeLogo = getLogoUrl(homeName);
-        const awayLogo = getLogoUrl(awayName);
-        const emoji = SPORT_EMOJIS[sport.toLowerCase()] || "🏟️";
+        const homeLogo = m.home.logo || getLogoUrl(homeName);
+        const awayLogo = m.away.logo || getLogoUrl(awayName);
+        const emoji = SPORT_EMOJIS[(m.sport || "autre").toLowerCase()] || "🏟️";
+        const badgeManual = m.isManual ? '<span style="font-size:10px; opacity:0.6; margin-left:5px;">(Manuel)</span>' : '';
 
         const card = document.createElement('article');
         card.className = 'card history-card';
         
+        // --- CHANGEMENT ICI : Structure HTML mise à jour ---
         card.innerHTML = `
+            <button class="history-delete-btn" onclick="askDeleteMatch('${m.id}')" title="Supprimer de l'historique">
+                 <i class="fa-solid fa-trash"></i>
+            </button>
+
             <div class="match-header">
                 <div class="team">
                     <img src="${homeLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
@@ -2701,15 +2702,511 @@ function renderHistory() {
             </div>
             
             <div class="match-meta" style="border-top: 1px solid var(--border-color); margin-top: 10px; padding-top: 10px;">
-                <span class="badge badge-long"><span>${emoji}</span> ${comp}</span>
+                <span class="badge badge-long"><span>${emoji}</span> ${m.compFormatted || 'Compétition'}</span>
                 <span class="date-time">${dateDisplay}</span>
             </div>
 
             <div class="history-badge">
-                <i class="fa-solid fa-circle-check"></i> Couvert / Validé
+                <span><i class="fa-solid fa-circle-check"></i> Couvert ${badgeManual}</span>
             </div>
         `;
+        // ----------------------------------------------------
 
         historyGrid.appendChild(card);
     });
+}
+
+// --- VARIABLES GLOBALES POUR LE MANUEL ---
+let manualTeamsData = []; // Stocke {name, sport}
+let manualCompsData = []; // Stocke {name, sport}
+
+function initManualMatchForm() {
+    // 1. Reset des données
+    const uniqueTeams = new Map(); // Nom -> Sport (Set ne suffit pas car on veut filtrer par sport)
+    const uniqueComps = new Map(); 
+
+    allMatches.forEach(m => {
+        // Stockage Equipes
+        const s = m.sport.toLowerCase();
+        if(!uniqueTeams.has(m.home.name)) uniqueTeams.set(m.home.name, s);
+        if(!uniqueTeams.has(m.away.name)) uniqueTeams.set(m.away.name, s);
+        
+        // Stockage Compétitions
+        const compName = m.compFormatted.split(' - ')[1] || m.compFormatted;
+        if (!uniqueComps.has(compName)) {
+            uniqueComps.set(compName, s);
+        }
+    });
+
+    // Conversion en tableaux exploitables
+    manualTeamsData = Array.from(uniqueTeams, ([name, sport]) => ({ name, sport })).sort((a,b) => a.name.localeCompare(b.name));
+    manualCompsData = Array.from(uniqueComps, ([name, sport]) => ({ name, sport })).sort((a,b) => a.name.localeCompare(b.name));
+
+    // 2. Initialisation initiale des listes avec le sport par défaut (Football)
+    refreshManualLists();
+
+    // 3. Reset UI (Revenir à l'étape 1)
+    document.getElementById('step-1').classList.remove('hidden');
+    document.getElementById('step-2').classList.add('hidden');
+    document.getElementById('manualHomeLogoDiv').classList.add('hidden');
+    document.getElementById('manualAwayLogoDiv').classList.add('hidden');
+    
+    // Vider les champs
+    document.getElementById('manualComp').value = "";
+    document.getElementById('manualHome').value = "";
+    document.getElementById('manualAway').value = "";
+    document.getElementById('manualHomeLogo').value = "";
+    document.getElementById('manualAwayLogo').value = "";
+}
+
+// --- FONCTION DE FILTRAGE DYNAMIQUE ---
+function refreshManualLists() {
+    // 1. Quel sport est sélectionné ?
+    const selectedSport = document.querySelector('input[name="manualSport"]:checked').value;
+    
+    // 2. Filtrer les données
+    const filteredTeams = manualTeamsData.filter(t => t.sport === selectedSport).map(t => t.name);
+    const filteredComps = manualCompsData.filter(c => c.sport === selectedSport); // Garde l'objet {name, sport} pour l'emoji
+
+    // 3. Ré-initialiser les autocompletes avec les nouvelles données
+    
+    // A. Équipe Domicile
+    setupAutocomplete(
+        document.getElementById('manualHome'), 
+        document.getElementById('homeResults'), 
+        filteredTeams, 
+        (teamName) => {
+            const logo = getLogoUrl(teamName) || 'data/default-team.png';
+            return `<img src="${logo}" class="result-icon" onerror="this.src='data/default-team.png'"> <span>${teamName}</span>`;
+        }
+    );
+
+    // B. Équipe Extérieur
+    setupAutocomplete(
+        document.getElementById('manualAway'), 
+        document.getElementById('awayResults'), 
+        filteredTeams, 
+        (teamName) => {
+            const logo = getLogoUrl(teamName) || 'data/default-team.png';
+            return `<img src="${logo}" class="result-icon" onerror="this.src='data/default-team.png'"> <span>${teamName}</span>`;
+        }
+    );
+
+    // C. Compétition
+    setupAutocomplete(
+        document.getElementById('manualComp'), 
+        document.getElementById('compResults'), 
+        filteredComps, 
+        (compObj) => {
+            // compObj est {name, sport}
+            const emoji = SPORT_EMOJIS[compObj.sport] || "🏆";
+            return `<span class="result-emoji">${emoji}</span> <span>${compObj.name}</span>`;
+        },
+        true // Flag objet
+    );
+}
+
+// --- LOGIQUE AUTOCOMPLETE (Mise à jour pour gérer Objets et Strings) ---
+function setupAutocomplete(input, resultsContainer, dataArray, renderer, isObject = false) {
+    // On clone le noeud pour supprimer les anciens EventListeners (éviter les doublons lors du refresh)
+    const newInput = input.cloneNode(true);
+    input.parentNode.replaceChild(newInput, input);
+    input = newInput;
+
+    const showResults = (val) => {
+        resultsContainer.innerHTML = '';
+        const filterVal = val.toLowerCase();
+        
+        const matches = dataArray.filter(item => {
+            const textToCheck = isObject ? item.name : item;
+            return textToCheck.toLowerCase().includes(filterVal);
+        });
+
+        if (matches.length === 0) {
+            resultsContainer.classList.add('hidden');
+            return;
+        }
+
+        matches.slice(0, 10).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            const textValue = isObject ? item.name : item;
+            
+            div.innerHTML = renderer(item);
+            
+            div.addEventListener('click', () => {
+                input.value = textValue;
+                resultsContainer.classList.add('hidden');
+            });
+            
+            resultsContainer.appendChild(div);
+        });
+        
+        resultsContainer.classList.remove('hidden');
+    };
+
+    input.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (val.length < 1) {
+            resultsContainer.classList.add('hidden');
+            return;
+        }
+        showResults(val);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !resultsContainer.contains(e.target)) {
+            resultsContainer.classList.add('hidden');
+        }
+    });
+    
+    input.addEventListener('focus', () => {
+        if(input.value.length > 0) showResults(input.value);
+    });
+}
+
+// --- GESTION DES ÉTAPES ET SOUMISSION ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Bouton "Suivant" (Step 1 -> Step 2 OU Submit direct)
+    const nextBtn = document.getElementById('nextStepBtn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const home = document.getElementById('manualHome').value.trim();
+            const away = document.getElementById('manualAway').value.trim();
+            const comp = document.getElementById('manualComp').value.trim();
+
+            if(!home || !away || !comp) {
+                alert("Merci de remplir les équipes et la compétition.");
+                return;
+            }
+
+            // Vérifier si les équipes sont connues
+            const homeKnown = getLogoUrl(home) !== '';
+            const awayKnown = getLogoUrl(away) !== '';
+
+            // Si les deux sont connues, on sauvegarde direct sans passer par l'étape 2
+            if (homeKnown && awayKnown) {
+                handleManualMatchSubmit(); 
+            } else {
+                // Sinon, on montre l'étape 2
+                document.getElementById('step-1').classList.add('hidden');
+                document.getElementById('step-2').classList.remove('hidden');
+
+                // On affiche les champs URL uniquement pour les équipes inconnues
+                const homeLogoDiv = document.getElementById('manualHomeLogoDiv');
+                const awayLogoDiv = document.getElementById('manualAwayLogoDiv');
+                
+                if (!homeKnown) {
+                    homeLogoDiv.classList.remove('hidden');
+                    document.getElementById('lblHomeLogo').textContent = `Lien logo pour "${home}"`;
+                }
+                if (!awayKnown) {
+                    awayLogoDiv.classList.remove('hidden');
+                    document.getElementById('lblAwayLogo').textContent = `Lien logo pour "${away}"`;
+                }
+            }
+        });
+    }
+
+    // Bouton "Passer" (Step 2 -> Submit sans logos)
+    const skipBtn = document.getElementById('skipStepBtn');
+    if(skipBtn) {
+        skipBtn.addEventListener('click', () => {
+            // On vide les champs logo pour être sûr
+            document.getElementById('manualHomeLogo').value = "";
+            document.getElementById('manualAwayLogo').value = "";
+            handleManualMatchSubmit();
+        });
+    }
+
+    const exportBtn = document.getElementById('exportCsvBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportHistoryToCSV);
+    }
+
+    // Soumission finale (via le bouton "Terminer" du formulaire)
+    const form = document.getElementById('addMatchForm');
+    if(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleManualMatchSubmit();
+        });
+    }
+
+    const openAddMatchBtn = document.getElementById('openAddMatchBtn');
+    const addMatchModal = document.getElementById('addMatchModal');
+    const closeAddMatchBtn = document.getElementById('closeAddMatchBtn');
+
+    if (openAddMatchBtn) {
+        openAddMatchBtn.addEventListener('click', () => {
+            // 1. Initialiser le formulaire (vider les champs, charger les listes)
+            initManualMatchForm(); 
+            // 2. Afficher la modale
+            addMatchModal.classList.remove('hidden');
+        });
+    }
+
+    if (closeAddMatchBtn) {
+        closeAddMatchBtn.addEventListener('click', () => {
+            addMatchModal.classList.add('hidden');
+        });
+    }
+
+    // Fermeture en cliquant en dehors (sur le fond gris)
+    if (addMatchModal) {
+        addMatchModal.addEventListener('click', (e) => {
+            if (e.target === addMatchModal) {
+                addMatchModal.classList.add('hidden');
+            }
+        });
+    }
+
+
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    const cancelBtn = document.getElementById('cancelDeleteBtn');
+
+    if (confirmBtn) confirmBtn.addEventListener('click', executeDeleteMatch);
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            deleteModal.classList.add('hidden');
+            matchToDelete = null;
+        });
+    }
+
+    // Fermeture clic extérieur
+    if (deleteModal) {
+        deleteModal.addEventListener('click', (e) => {
+            if (e.target === deleteModal) {
+                deleteModal.classList.add('hidden');
+                matchToDelete = null;
+            }
+        });
+    }
+});
+
+async function handleManualMatchSubmit() {
+    const user = firebase.auth().currentUser;
+    if (!user) { alert("Erreur auth."); return; }
+
+    // Récupération des données
+    const sport = document.querySelector('input[name="manualSport"]:checked').value;
+    const compRaw = document.getElementById('manualComp').value.toUpperCase();
+    const compFormatted = `${sport.toUpperCase()} - ${compRaw} - SENIOR`;
+    
+    const homeName = document.getElementById('manualHome').value.trim();
+    const awayName = document.getElementById('manualAway').value.trim();
+    
+    // Logos optionnels (s'ils ont été remplis à l'étape 2)
+    const homeLogo = document.getElementById('manualHomeLogo').value.trim();
+    const awayLogo = document.getElementById('manualAwayLogo').value.trim();
+
+    const dateVal = document.getElementById('manualDate').value;
+    const timeVal = document.getElementById('manualTime').value;
+
+    let dateObjString = "UNKNOWN";
+    if (dateVal) {
+        const d = new Date(dateVal);
+        if (timeVal) {
+            const [h, m] = timeVal.split(':');
+            d.setHours(h, m);
+        } else { d.setHours(20, 0); }
+        dateObjString = d.toISOString();
+    }
+
+    const matchId = `manual_${Date.now()}`;
+    const matchSnapshot = {
+        sport: sport,
+        compFormatted: compFormatted,
+        home: { name: homeName, logo: homeLogo }, 
+        away: { name: awayName, logo: awayLogo },
+        dateObj: dateObjString,
+        isManual: true
+    };
+
+    try {
+        matchArchives[matchId] = matchSnapshot;
+        localStorage.setItem('matchArchives', JSON.stringify(matchArchives));
+        
+        const updateData = {};
+        updateData[`archives.${matchId}`] = matchSnapshot;
+        await db.collection('users').doc(user.uid).update(updateData);
+
+        // Reset et fermeture
+        document.getElementById('addMatchModal').classList.add('hidden');
+        document.getElementById('addMatchForm').reset();
+        renderHistory();
+        alert("Match ajouté !");
+    } catch (e) {
+        console.error(e);
+        alert("Erreur sauvegarde.");
+    }
+}
+
+async function deleteManualArchive(dateStr, homeName) {
+    if(!confirm("Supprimer ce match de l'historique ?")) return;
+
+    // Retrouver la clé (un peu laborieux car on n'a pas stocké l'ID dans l'objet archive, 
+    // mais on peut itérer sur matchArchives pour trouver la clé correspondante)
+    const entry = Object.entries(matchArchives).find(([key, val]) => {
+        return val.isManual && val.home.name === homeName && val.dateObj === dateStr;
+    });
+
+    if (entry) {
+        const [keyToDelete] = entry;
+        const user = firebase.auth().currentUser;
+
+        // Delete Local
+        delete matchArchives[keyToDelete];
+        localStorage.setItem('matchArchives', JSON.stringify(matchArchives));
+
+        // Delete Firebase
+        if (user) {
+            const updateData = {};
+            updateData[`archives.${keyToDelete}`] = firebase.firestore.FieldValue.delete();
+            await db.collection('users').doc(user.uid).update(updateData);
+        }
+
+        renderHistory();
+    }
+}
+
+// 1. Ouvre la modale "Attention"
+function askDeleteMatch(matchId) {
+    matchToDelete = matchId; // On mémorise l'ID
+    document.getElementById('deleteConfirmModal').classList.remove('hidden');
+}
+
+// 2. Exécute la suppression (appelée par le bouton "Supprimer" de la modale)
+async function executeDeleteMatch() {
+    if (!matchToDelete) return;
+
+    const btn = document.getElementById('confirmDeleteBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+    btn.disabled = true;
+
+    try {
+        const user = firebase.auth().currentUser;
+        
+        // A. Suppression Locale
+        delete matchArchives[matchToDelete];
+        
+        // Si c'est un match "Favori" (pas manuel), on le retire aussi des statuts
+        // pour qu'il ne réapparaisse pas comme "Accréditation confirmée"
+        if (matchStatuses[matchToDelete]) {
+            delete matchStatuses[matchToDelete];
+            localStorage.setItem('matchStatuses', JSON.stringify(matchStatuses));
+        }
+
+        localStorage.setItem('matchArchives', JSON.stringify(matchArchives));
+
+        // B. Suppression Firebase
+        if (user) {
+            const updateData = {};
+            // Suppression de l'archive
+            updateData[`archives.${matchToDelete}`] = firebase.firestore.FieldValue.delete();
+            // Suppression du statut favori (si existant)
+            updateData[`favorites.${matchToDelete}`] = firebase.firestore.FieldValue.delete();
+            
+            await db.collection('users').doc(user.uid).update(updateData);
+        }
+
+        // C. UI Update
+        renderHistory();
+        renderMatches(currentlyFiltered); // Met à jour la grille principale pour enlever le statut vert
+        
+        // Fermer la modale
+        document.getElementById('deleteConfirmModal').classList.add('hidden');
+
+    } catch (error) {
+        console.error("Erreur suppression :", error);
+        alert("Erreur lors de la suppression.");
+    } finally {
+        // Reset bouton
+        btn.innerHTML = 'Supprimer';
+        btn.disabled = false;
+        matchToDelete = null;
+    }
+}
+
+function exportHistoryToCSV() {
+    // 1. Récupération des données
+    const archives = matchArchives ? Object.values(matchArchives) : [];
+
+    if (archives.length === 0) {
+        alert("Aucun historique à exporter.");
+        return;
+    }
+
+    // 2. FILTRAGE STRICT (Identique à l'affichage)
+    // On ne garde que les matchs qui n'ont pas "Inconnue" dans leurs noms d'équipes
+    const validArchives = archives.filter(m => {
+        // Sécurité : si m.home est undefined, on considère que c'est "Inconnue"
+        const homeName = m.home?.name || "Inconnue";
+        const awayName = m.away?.name || "Inconnue";
+        
+        // Si l'un des deux contient "Inconnue", on EXCLUT du CSV
+        if (homeName.includes("Inconnue") || awayName.includes("Inconnue")) {
+            return false;
+        }
+        return true;
+    });
+
+    if (validArchives.length === 0) {
+        alert("Aucune donnée valide à exporter.");
+        return;
+    }
+
+    // 3. Préparation du CSV
+    const headers = ["Date", "Heure", "Sport", "Competition", "Domicile", "Exterieur", "Type"];
+    
+    // Fonction de nettoyage pour éviter les bugs CSV (guillemets, null, etc.)
+    const clean = (data) => {
+        if (data === null || data === undefined) return '""';
+        const str = String(data);
+        return `"${str.replace(/"/g, '""')}"`;
+    };
+
+    const rows = validArchives.map(m => {
+        let dateStr = "Date Inconnue";
+        let timeStr = "--:--";
+
+        try {
+            if (m.dateObj && m.dateObj !== "UNKNOWN") {
+                const d = new Date(m.dateObj);
+                if (!isNaN(d.getTime())) {
+                    dateStr = d.toLocaleDateString('fr-CA'); // YYYY-MM-DD
+                    timeStr = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                }
+            }
+        } catch (e) { console.warn("Erreur date export", e); }
+
+        return [
+            clean(dateStr),
+            clean(timeStr),
+            clean(m.sport || "Inconnu"),
+            clean(m.compFormatted || "Autre"),
+            clean(m.home?.name || ""), // Plus besoin de valeur par défaut "Inconnue" car déjà filtré
+            clean(m.away?.name || ""),
+            clean(m.isManual ? "Manuel" : "Accréditation")
+        ].join(",");
+    });
+
+    // 4. Génération et Téléchargement
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    const today = new Date().toISOString().slice(0, 10);
+    link.setAttribute("download", `FokalPress_Historique_${today}.csv`);
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
