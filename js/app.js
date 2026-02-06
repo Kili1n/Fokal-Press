@@ -249,11 +249,18 @@ const getStatusIcon = (status) => {
 };
 
 const getMatchId = (m) => {
-    const h = m.home.name.replace(/\s+/g, '');
-    const a = m.away.name.replace(/\s+/g, '');
-    const d = m.dateObj.toISOString().split('T')[0];
+    // Le regex /['"\s]/g cible : les apostrophes ('), les guillemets (") et les espaces (\s)
+    const clean = (str) => str.replace(/['"\s]/g, '');
+
+    const h = clean(m.home.name);
+    const a = clean(m.away.name);
+    
+    // Sécurité supplémentaire : s'assurer que la date est valide
+    const d = m.dateObj ? m.dateObj.toISOString().split('T')[0] : 'NODATE';
+    
     return `${h}_${a}_${d}`;
 };
+
 
 // Fonction pour envoyer un changement unique à Firebase
 async function syncFavoriteToFirebase(matchId, status, snapshotData) {
