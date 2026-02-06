@@ -265,32 +265,30 @@ const getMatchId = (m) => {
 // Fonction pour envoyer un changement unique à Firebase
 async function syncFavoriteToFirebase(matchId, status, snapshotData) {
     const user = auth.currentUser;
-    if (!user) return; 
+    if (!user) return;
+
+    const userRef = db.collection('users').doc(user.uid);
+    const payload = {};
+
+    if (status) {
+        payload.favorites = { [matchId]: status };
+    } else {
+        payload.favorites = { [matchId]: firebase.firestore.FieldValue.delete() };
+    }
+
+    if (snapshotData) {
+        payload.archives = { [matchId]: snapshotData };
+    } else {
+        payload.archives = { [matchId]: firebase.firestore.FieldValue.delete() };
+    }
 
     try {
-        const updateData = {};
-        
-        // 1. Mise à jour du statut (existant)
-        updateData[`favorites.${matchId}`] = status ? status : firebase.firestore.FieldValue.delete();
-
-        // 2. Mise à jour de l'archive (NOUVEAU)
-        // Si snapshotData existe (donc status == 'received'), on l'écrit.
-        // Sinon, on SUPPRIME le champ archive correspondant.
-        updateData[`archives.${matchId}`] = snapshotData ? snapshotData : firebase.firestore.FieldValue.delete();
-
-        await db.collection('users').doc(user.uid).update(updateData);
+        await userRef.set(payload, { merge: true });
     } catch (e) {
-        console.error("Erreur sync favoris :", e);
-        if (e.code === 'not-found') {
-             // Création initiale du document si inexistant
-             const initialData = { favorites: { [matchId]: status } };
-             if (snapshotData) {
-                 initialData.archives = { [matchId]: snapshotData };
-             }
-             await db.collection('users').doc(user.uid).set(initialData, { merge: true });
-        }
+        console.error(e);
     }
 }
+
 
 // 2. Fonction de cycle appelée au clic
 function cycleStatus(event, matchId) {
