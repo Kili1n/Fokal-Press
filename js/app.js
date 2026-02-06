@@ -2632,36 +2632,47 @@ function renderHistory() {
     const historyGrid = document.getElementById('historyGrid');
     historyGrid.innerHTML = '';
 
-    // 1. Conversion de l'objet archives en tableau
-    // matchArchives est déjà chargé globalement depuis Firebase/LocalStorage
+    // 1. Récupération des archives
     let historyList = Object.values(matchArchives);
 
-    // 2. Si vide
     if (historyList.length === 0) {
         historyGrid.innerHTML = `
             <div class="empty-history">
                 <i class="fa-solid fa-box-open"></i>
-                <p>Aucun match archivé pour le moment.<br>Les matchs passent en historique une fois l'accréditation validée.</p>
+                <p>Aucun match archivé.</p>
             </div>
         `;
         return;
     }
 
-    // 3. Tri par date décroissante (Le plus récent en haut)
+    // 2. Tri par date
     historyList.sort((a, b) => new Date(b.dateObj) - new Date(a.dateObj));
 
-    // 4. Génération des cartes simplifiées
+    // 3. Génération avec "Réparation Automatique"
     historyList.forEach(m => {
-        // Reconstruction des données nécessaires
-        // Attention : m.dateObj dans l'archive est souvent une String, il faut reconvertir
-        const d = new Date(m.dateObj);
-        const dateDisplay = d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: 'long', year: 'numeric' });
-        const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h');
         
-        // Logos
-        const homeLogo = getLogoUrl(m.home.name);
-        const awayLogo = getLogoUrl(m.away.name);
-        const emoji = SPORT_EMOJIS[m.sport.toLowerCase()] || "🏟️";
+        // --- BLINDAGE ROBUSTE (Comme dans les Stats) ---
+        // On crée des variables sécurisées. Si l'info manque, on met un texte par défaut.
+        const homeName = m.home?.name || "Équipe Inconnue";
+        const awayName = m.away?.name || "Équipe Inconnue";
+        const sport = m.sport || "autre";
+        const comp = m.compFormatted || "Compétition Inconnue";
+        
+        // Gestion sécurisée de la date
+        let dateDisplay = "Date inconnue";
+        let time = "--h--";
+        if (m.dateObj) {
+            try {
+                const d = new Date(m.dateObj);
+                dateDisplay = d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: 'long', year: 'numeric' });
+                time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h');
+            } catch (e) { console.warn("Date invalide", m); }
+        }
+        // -----------------------------------------------
+
+        const homeLogo = getLogoUrl(homeName);
+        const awayLogo = getLogoUrl(awayName);
+        const emoji = SPORT_EMOJIS[sport.toLowerCase()] || "🏟️";
 
         const card = document.createElement('article');
         card.className = 'card history-card';
@@ -2670,20 +2681,20 @@ function renderHistory() {
             <div class="match-header">
                 <div class="team">
                     <img src="${homeLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
-                    <span class="team-name">${m.home.name}</span>
+                    <span class="team-name">${homeName}</span>
                 </div>
                 <div class="match-center">
                     <div class="match-time">${time}</div>
                     <div class="vs">VS</div>
                 </div>
                 <div class="team">
-                    <img src="${awayLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png''">
-                    <span class="team-name">${m.away.name}</span>
+                    <img src="${awayLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
+                    <span class="team-name">${awayName}</span>
                 </div>
             </div>
             
             <div class="match-meta" style="border-top: 1px solid var(--border-color); margin-top: 10px; padding-top: 10px;">
-                <span class="badge badge-long"><span>${emoji}</span> ${m.compFormatted}</span>
+                <span class="badge badge-long"><span>${emoji}</span> ${comp}</span>
                 <span class="date-time">${dateDisplay}</span>
             </div>
 
