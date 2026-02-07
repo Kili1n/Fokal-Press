@@ -1617,24 +1617,35 @@ function updateFilterSlider() {
             }
         } catch (err) { console.warn("Erreur photo stats:", err); }
 
-        // --- 2. Mise à jour UI User (inchangé) ---
-        const userNameEl = document.getElementById('statsUserName');
-        if (userNameEl) userNameEl.textContent = user.displayName || "Photographe";
-        
+        // --- 2. Mise à jour UI User (inchangé) ---    
         const initial = (user.displayName || "U").charAt(0).toUpperCase();
-        const proxyUrl = finalPhotoURL ? `https://wsrv.nl/?url=${encodeURIComponent(finalPhotoURL)}&output=png` : null;
+        
+        // CORRECTION : On utilise directement l'URL (elle est déjà propre ou déjà proxifiée)
+        const proxyUrl = finalPhotoURL;
 
         document.getElementById('statsUserInitial').innerHTML = proxyUrl 
             ? `<img src="${proxyUrl}" crossorigin="anonymous" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`
             : initial;
 
+        const userNameEl = document.getElementById('statsUserName');
         const insta = localStorage.getItem('userInsta');
         const portfolio = localStorage.getItem('userPortfolio');
-        let socialHtml = '';
-        if (insta) socialHtml += `<span><i class="fa-brands fa-instagram"></i> @${insta.replace('@','')}</span>`;
-        if (portfolio && !insta) socialHtml += `<span><i class="fa-solid fa-globe"></i> Web</span>`;
-        if (!insta && !portfolio) socialHtml = `<span>Saison 2024-2025</span>`;
-        document.getElementById('statsSocials').innerHTML = socialHtml;
+        const statsSocialsEl = document.getElementById('statsSocials');
+        if (insta) {
+            // SI INSTA : On ajoute l'icône Instagram avant le pseudo
+            if (userNameEl) {
+                userNameEl.innerHTML = `<i class="fa-brands fa-instagram" style="margin-right: 6px; opacity: 0.9;"></i>@${insta.replace('@','')}`;
+            }
+            if (statsSocialsEl) statsSocialsEl.innerHTML = ''; // On n'affiche rien en dessous
+        } else {
+            // SI PAS D'INSTA : On met le Nom Prénom dans le titre principal
+            if (userNameEl) userNameEl.textContent = user.displayName || "Photographe";
+            
+            // On peut mettre une info par défaut dans le sous-titre si on veut
+            if (statsSocialsEl) {
+                statsSocialsEl.innerHTML = `<span>Saison 2024-2025</span>`;
+            }
+        }
 
         // --- 3. Initialisation des compteurs ---
         let counts = { asked: 0, received: 0, refused: 0 };
