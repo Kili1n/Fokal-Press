@@ -66,7 +66,12 @@ const BASKET_URLS = [
     'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152787',
     'https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005152397',
     'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152748',
-    'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152752'
+    'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152752',
+    'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005138565',
+    'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005138579',
+    'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005138555',
+    'https://competitions.ffbb.com/ligues/idf/comites/0078/clubs/idf0078013/equipes/200000005138581',
+    'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005138577'
 ];
 
 const HANDBALL_URLS = [
@@ -79,7 +84,8 @@ const HANDBALL_URLS = [
     'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/liqui-moly-starligue-2025-26-28399/equipe-1947878/',
     'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957557/',
     'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957560/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957558/'
+    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957558/',
+    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957562/'
 ];
 
 const OUTPUT_FILE = 'data/matchs.json';
