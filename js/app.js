@@ -1885,79 +1885,82 @@ function updateFilterSlider() {
     // --- LISTENER BOUTON ENREGISTRER (IMAGE) ---
     if (saveStatsBtn) {
         saveStatsBtn.addEventListener('click', () => {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (isIOS && navigator.share) {
-                alert("Sur iPhone, veuillez utiliser le bouton 'Partager' puis choisir 'Enregistrer l'image'.");
-                // Optionnel : déclencher le clic sur le bouton partage automatiquement
-                document.getElementById('shareStatsBtn').click();
-                return;
-            }
             const card = document.querySelector('#statsModal .login-card');
             const closeBtn = document.getElementById('closeStatsBtn');
             const btnsWrapper = document.getElementById('statsButtonsWrapper');
-            
-            // On cherche le conteneur des boutons (le div en display:flex) pour le cacher
-            // mais on garde le reste du wrapper (le texte fokalpress.fr) visible
             const buttonsRow = btnsWrapper.querySelector('div[style*="display: flex"]');
 
-            // 1. On cache les éléments inutiles pour la photo
+            // 1. Masquage UI pour la photo
             closeBtn.style.display = 'none';
             if(buttonsRow) buttonsRow.style.display = 'none';
             
-            // Feedback visuel sur le bouton (avant qu'il disparaisse)
             const originalBtnText = saveStatsBtn.innerHTML;
             saveStatsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
-            // --- FIX COULEURS DE FOND (Mode Sombre/Clair) ---
-            // html2canvas a besoin qu'on force les couleurs calculées
+            // --- FIX COULEURS ---
             const originalCardBg = card.style.background;
             const originalCardColor = card.style.color;
-            
             const computedStyle = getComputedStyle(card);
             const computedBgColor = computedStyle.backgroundColor;
             const computedTextColor = computedStyle.color;
 
-            // Application des styles forcés
             card.style.backgroundColor = computedBgColor;
             card.style.color = computedTextColor;
-
-            // On s'assure que le header reste blanc
             const headerDiv = card.querySelector('div[style*="linear-gradient"]');
             if(headerDiv) headerDiv.style.color = 'white';
 
             // 2. Capture
             html2canvas(card, {
-                scale: window.innerWidth < 768 ? 2 : 3, // Qualité maximale (Retina)
-                backgroundColor: computedBgColor, // Fond forcé
-                useCORS: true // Pour charger l'image de profil Google
+                scale: window.innerWidth < 768 ? 2 : 3,
+                backgroundColor: computedBgColor,
+                useCORS: true
             }).then(canvas => {
-                // 3. Téléchargement
-                const link = document.createElement('a');
-                link.download = `FokalPress_Stats_${new Date().toISOString().slice(0,10)}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-
-                // 4. RESTAURATION DE L'ÉTAT ORIGINAL
-                closeBtn.style.display = 'flex';
-                if(buttonsRow) buttonsRow.style.display = 'flex'; // On remet en flex
-                saveStatsBtn.innerHTML = originalBtnText;
                 
-                // Reset styles CSS
-                card.style.backgroundColor = originalCardBg;
-                card.style.color = originalCardColor;
-                if(headerDiv) headerDiv.style.color = ''; 
+                // --- CORRECTION MOBILE ICI ---
+                // Si on est sur mobile et que le navigateur supporte le partage (99% des mobiles)
+                if (isMobile() && navigator.share) {
+                    canvas.toBlob(async (blob) => {
+                        if (!blob) return;
+                        const file = new File([blob], "FokalPress_Stats.png", { type: "image/png" });
+                        
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: 'Mes Stats FokalPress'
+                            });
+                        } catch (err) {
+                            // L'utilisateur a annulé ou erreur, on ne fait rien
+                            console.log("Partage annulé ou erreur", err);
+                        }
+                        
+                        // Restauration UI (dans tous les cas)
+                        restoreUI();
+                    }, 'image/png');
+                } 
+                // --- VERSION ORDINATEUR (Téléchargement direct) ---
+                else {
+                    const link = document.createElement('a');
+                    link.download = `FokalPress_Stats_${new Date().toISOString().slice(0,10)}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    restoreUI();
+                }
 
             }).catch(err => {
                 console.error("Erreur capture :", err);
                 alert("Erreur lors de la création de l'image.");
-                
-                // Restauration en cas d'erreur
+                restoreUI();
+            });
+
+            // Fonction utilitaire pour remettre l'interface
+            function restoreUI() {
                 closeBtn.style.display = 'flex';
                 if(buttonsRow) buttonsRow.style.display = 'flex';
                 saveStatsBtn.innerHTML = originalBtnText;
                 card.style.backgroundColor = originalCardBg;
                 card.style.color = originalCardColor;
-            });
+                if(headerDiv) headerDiv.style.color = ''; 
+            }
         });
     }
 
