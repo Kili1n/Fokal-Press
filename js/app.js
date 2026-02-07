@@ -2327,6 +2327,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = auth.currentUser;
         if (!user) return;
 
+        const emailEl = document.getElementById('settingsUserEmail');
+        if (emailEl) emailEl.textContent = user.email;
+
         settingsModal.classList.remove('hidden');
 
         // Pré-remplissage des champs
@@ -3607,3 +3610,72 @@ function editMatch(id) {
     if(m.home.logo) document.getElementById('manualHomeLogoDiv').classList.remove('hidden');
     if(m.away.logo) document.getElementById('manualAwayLogoDiv').classList.remove('hidden');
 }
+
+
+// --- GESTION PWA (INSTALLATION) ---
+let deferredPrompt; // Pour stocker l'événement Chrome/Android
+
+// 1. Détection de l'événement d'installation (Android / Chrome Desktop)
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Empêche la mini-barre d'info automatique
+    e.preventDefault();
+    // Stocke l'événement pour l'utiliser plus tard
+    deferredPrompt = e;
+    
+    // Affiche le bouton dans les paramètres
+    const installBtn = document.getElementById('installAppBtn');
+    if (installBtn) {
+        installBtn.style.display = 'block';
+    }
+});
+
+// 2. Détection iOS (car iOS ne lance pas 'beforeinstallprompt')
+const isIos = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    return /iphone|ipad|ipod/.test(userAgent);
+};
+
+// 3. Logique au chargement
+document.addEventListener('DOMContentLoaded', () => {
+    const installBtn = document.getElementById('installAppBtn');
+    const iosModal = document.getElementById('iosInstallModal');
+    const closeIosBtn = document.getElementById('closeIosModalBtn');
+
+    // Si on est sur iOS, on affiche toujours le bouton (car on ne peut pas détecter si c'est déjà installé facilement)
+    // Sauf si on est en mode "standalone" (l'app est déjà ouverte comme une app)
+    const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+    
+    if (isIos() && !isInStandaloneMode && installBtn) {
+        installBtn.style.display = 'block';
+    }
+
+    // Gestion du clic sur le bouton "Installer"
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            // CAS A : Android / Desktop (Event capturé)
+            if (deferredPrompt) {
+                deferredPrompt.prompt(); // Affiche la pop-up native
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Résultat installation: ${outcome}`);
+                deferredPrompt = null; // Reset
+            } 
+            // CAS B : iOS (Pas d'event, mode manuel)
+            else if (isIos()) {
+                // Ferme les settings
+                document.getElementById('settingsModal').classList.add('hidden');
+                // Ouvre le tutoriel iOS
+                if(iosModal) iosModal.classList.remove('hidden');
+            }
+        });
+    }
+
+    // Fermeture du tuto iOS
+    if (closeIosBtn && iosModal) {
+        closeIosBtn.addEventListener('click', () => {
+            iosModal.classList.add('hidden');
+        });
+        iosModal.addEventListener('click', (e) => {
+            if (e.target === iosModal) iosModal.classList.add('hidden');
+        });
+    }
+});

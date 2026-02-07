@@ -1,0 +1,21 @@
+{
+  "name": "Fokal Press",
+  "short_name": "FokalPress",
+  "start_url": "/app.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "data/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

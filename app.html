@@ -28,6 +28,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data/logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'><path d='M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z' fill='%23007BFF'/><path transform='translate(0, -2)' d='M14.8333 9H13.6667L12.9375 8.25H11.0625L10.3333 9H9.16667C8.525 9 8 9.525 8 10.1667V13.6667C8 14.3083 8.525 14.8333 9.16667 14.8333H14.8333C15.475 14.8333 16 14.3083 16 13.6667V10.1667C16 9.525 15.475 9 14.8333 9ZM12 13.9583C10.8708 13.9583 9.95833 13.0458 9.95833 11.9167C9.95833 10.7875 10.8708 9.875 12 9.875C13.1292 9.875 14.0417 10.7875 14.0417 11.9167C14.0417 13.0458 13.1292 13.9583 12 13.9583Z' fill='white'/></svg>">
 </head>
 <body>  
@@ -299,6 +303,7 @@
                 <div class="login-icon-circle bg-secondary-adaptive">
                     <i class="fa-solid fa-gear"></i>
                 </div>
+                <p id="settingsUserEmail" style="margin: 10px 0 5px 0; font-weight: 600; color: var(--accent); font-size: 0.95rem;"></p>
                 <h2>Paramètres</h2>
                 <p>Gérez vos informations et votre compte</p>
             </div>
@@ -330,6 +335,10 @@
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="installAppBtn" class="login-submit-btn" style="background: var(--text-main); color: var(--bg-color); display: none;">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Installer l'application
+                </button>
+                
                 <button id="settingsLogoutBtn" class="login-submit-btn bg-secondary-adaptive">
                     <i class="fa-solid fa-right-from-bracket"></i> Se déconnecter
                 </button>
@@ -795,6 +804,27 @@
 
     </div>
     </div>
+
+    <div id="iosInstallModal" class="modal hidden" style="z-index: 9999;">
+    <div class="modal-content login-card" style="max-width: 350px; text-align: center;">
+        <div style="margin-bottom: 15px;">
+            <i class="fa-brands fa-apple" style="font-size: 40px; color: var(--text-main);"></i>
+        </div>
+        <h3>Installer sur iPhone</h3>
+        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+            Pour installer l'application, suivez ces étapes :
+        </p>
+        <div style="text-align: left; background: var(--bg-secondary); padding: 15px; border-radius: 12px; font-size: 14px;">
+            <div style="margin-bottom: 10px;">
+                1. Appuyez sur <strong>Partager</strong> <i class="fa-solid fa-arrow-up-from-bracket" style="margin-left:5px; color:#007AFF;"></i>
+            </div>
+            <div>
+                2. Sélectionnez <strong>"Sur l'écran d'accueil"</strong> <i class="fa-regular fa-square-plus" style="margin-left:5px;"></i>
+            </div>
+        </div>
+        <button id="closeIosModalBtn" class="login-submit-btn" style="margin-top: 20px;">Compris</button>
+    </div>
+</div>
     
     <script src="js/config.js"></script> 
     <script src="js/app.js"></script> 
