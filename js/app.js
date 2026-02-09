@@ -1,37 +1,9 @@
-// Ajoute ceci tout en haut de app.js ou dans ton fichier CSS
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-  .top-match-container { position: relative; cursor: pointer; }
-  .top-match-arrow { margin-left: 8px; color: var(--text-secondary); transition: transform 0.2s; }
-  .top-match-arrow.open { transform: rotate(180deg); }
-.top-match-dropdown {
-      position: absolute; top: 100%; right: 0; 
-      background: var(--card-bg); border: 1px solid var(--border-color);
-      border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 9999; /* Toujours au dessus */
-      min-width: 250px; 
-      display: none; 
-      
-      /* --- CORRECTIONS SCROLL --- */
-      max-height: 250px;           /* Limite la hauteur */
-      overflow-y: auto;            /* Active le scroll vertical */
-      overscroll-behavior: contain; /* EMPÊCHE de scroller le fond quand on arrive au bout */
-  }
-  .top-match-dropdown.show { display: block; }
-  .top-match-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 12px; border-bottom: 1px solid var(--border-color);
-      cursor: pointer; transition: background 0.1s;
-  }
-  .top-match-item:hover { background: var(--bg-secondary); }
-  .top-match-item:last-child { border-bottom: none; }
-`;
-document.head.appendChild(styleSheet);
 const GEOAPIFY_KEY = "61ca90447ebd483ab2f002050433fa42"; 
 const SPORT_EMOJIS = { "football": "⚽", "basketball": "🏀", "handball": "🤾"};
 
 // États globaux
 let allMatches = [];
+let searchTeamsList = [];
 let currentlyFiltered = []; 
 let currentFilters = { week: "", comp: "all", sport: "all", accredOnly: false, sortBy: "date", search: "", maxDist: 300 };
 let userPosition = null;
@@ -672,12 +644,101 @@ async function loadMatches() {
                 isCalculating: false
             };
         }).sort((a, b) => a.dateObj - b.dateObj);
+
+        const uniqueTeamsSet = new Set();
+        allMatches.forEach(m => {
+            uniqueTeamsSet.add(m.home.name);
+            uniqueTeamsSet.add(m.away.name);
+        });
+        // On convertit en tableau et on trie
+        searchTeamsList = Array.from(uniqueTeamsSet).sort();
+
+        // On lance l'initialisation de l'auto-complete principal
+        initSearchAutocomplete();
                         
         applyFilters();
     } catch (error) {
         document.getElementById('grid').innerHTML = `<div class="error-msg">Erreur de chargement.</div>`;
         console.error("Détail de l'erreur :", error);
     }
+}
+
+function initSearchAutocomplete() {
+    const input = document.getElementById('searchInput');
+    const resultsContainer = document.getElementById('searchResults');
+
+    if (!input || !resultsContainer) return;
+
+    // Fonction d'affichage des résultats
+    const showResults = (val) => {
+        resultsContainer.innerHTML = '';
+        const filterVal = val.toLowerCase();
+
+        // Filtrer les équipes qui contiennent la recherche
+        const matches = searchTeamsList.filter(team => 
+            team.toLowerCase().includes(filterVal)
+        );
+
+        // Si aucun résultat ou champ vide
+        if (matches.length === 0 || val.length < 1) {
+            resultsContainer.classList.add('hidden');
+            return;
+        }
+
+        // On affiche max 8 résultats pour ne pas polluer
+        matches.slice(0, 8).forEach(teamName => {
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            
+            // On récupère le logo pour faire joli
+            const logo = getLogoUrl(teamName) || 'data/default-team.png';
+            
+            div.innerHTML = `
+                <img src="${logo}" onerror="this.src='data/default-team.png'"> 
+                <span>${teamName}</span>
+            `;
+
+            // Au clic sur une suggestion
+            div.addEventListener('click', () => {
+                input.value = teamName;      // 1. Remplir l'input
+                currentFilters.search = teamName; // 2. Mettre à jour le filtre
+                applyFilters();              // 3. Mettre à jour la grille
+                resultsContainer.classList.add('hidden'); // 4. Cacher la liste
+            });
+
+            resultsContainer.appendChild(div);
+        });
+
+        resultsContainer.classList.remove('hidden');
+    };
+
+    // Écouteur de saisie
+    input.addEventListener('input', (e) => {
+        const val = e.target.value;
+        
+        // Mise à jour du filtre global en temps réel
+        currentFilters.search = val;
+        applyFilters();
+
+        // Affichage de l'auto-complétion
+        if (val.length > 0) {
+            showResults(val);
+        } else {
+            resultsContainer.classList.add('hidden');
+        }
+    });
+
+    // Écouteur pour fermer si on clique ailleurs
+    document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !resultsContainer.contains(e.target)) {
+            resultsContainer.classList.add('hidden');
+        }
+    });
+    
+    // Réouvrir si on clique dans le champ et qu'il y a du texte
+    input.addEventListener('focus', () => {
+        if (input.value.length > 0) showResults(input.value);
+    });
 }
 
 function requestUserLocation(btnElement, originalIcon) {
@@ -1109,11 +1170,6 @@ function updateFilterSlider() {
                 requestUserLocation(btn, originalIcon);
             }
         }
-    });
-
-    document.getElementById('searchInput').addEventListener('input', e => {
-        currentFilters.search = e.target.value;
-        applyFilters();
     });
 
     document.querySelectorAll('.filter-btn').forEach(btn => {

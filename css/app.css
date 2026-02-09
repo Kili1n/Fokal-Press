@@ -2176,7 +2176,57 @@ body.dark-mode .action-btn:hover {
       display: none; overflow: hidden;
       max-height: 250px;       /* Hauteur max avant scroll */
       overflow-y: auto;        /* Active le scroll vertical */
-  }
-  /* Pour rendre le scroll plus joli (optionnel) */
-  .top-match-dropdown::-webkit-scrollbar { width: 6px; }
-  .top-match-dropdown::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+}
+/* Pour rendre le scroll plus joli (optionnel) */
+.top-match-dropdown::-webkit-scrollbar { width: 6px; }
+.top-match-dropdown::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+.top-match-container { position: relative; cursor: pointer; }
+.top-match-arrow { margin-left: 8px; color: var(--text-secondary); transition: transform 0.2s; }
+.top-match-arrow.open { transform: rotate(180deg); }
+.top-match-dropdown {
+    position: absolute; top: 100%; right: 0; 
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999; /* Toujours au dessus */
+    min-width: 250px; 
+    display: none; 
+    
+    /* --- CORRECTIONS SCROLL --- */
+    max-height: 250px;           /* Limite la hauteur */
+    overflow-y: auto;            /* Active le scroll vertical */
+    overscroll-behavior: contain; /* EMPÊCHE de scroller le fond quand on arrive au bout */
+}
+.top-match-dropdown.show { display: block; }
+.top-match-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-bottom: 1px solid var(--border-color);
+    cursor: pointer; transition: background 0.1s;
+}
+.top-match-item:hover { background: var(--bg-secondary); }
+.top-match-item:last-child { border-bottom: none; }
+
+/* --- STYLE RECHERCHE --- */
+.search-group .autocomplete-results {
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 5px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    max-height: 300px;
+}
+
+/* Ajustement pour que le résultat ressemble à celui du formulaire manuel */
+.result-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 14px;
+}
+.result-item:hover { background: var(--bg-secondary); }
+.result-item:last-child { border-bottom: none; }
+.result-item img { width: 24px; height: 24px; object-fit: contain; }

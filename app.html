@@ -98,9 +98,9 @@
                 <button id="menuToggle" class="menu-toggle"><i class="fa-solid fa-bars"></i></button>
             </div>
         </div>
-        <div class="search-group">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" class="loc-input search-input" placeholder="Rechercher un club...">
+        <div class="search-group" style="position: relative;"> <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" class="loc-input search-input" placeholder="Rechercher un club..." autocomplete="off">
+            <div id="searchResults" class="autocomplete-results hidden"></div>
         </div>
             <div class="location-group">
         <button class="icon-btn" id="viewToggle" title="Vue Liste / Grille">
