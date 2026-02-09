@@ -2424,6 +2424,32 @@ document.addEventListener('DOMContentLoaded', () => {
                             console.warn("Pas bloquant : Erreur maj last_connection", err);
                         });
                     }
+
+                    const shouldCheckPhoto = userData.instagram && 
+                             (!userData.photoURL || !userData.photoURL.includes('wsrv.nl'));
+
+                    const lastCheck = localStorage.getItem('last_insta_check');
+                    const now = Date.now();
+
+                    if (shouldCheckPhoto && (!lastCheck || now - lastCheck > 3600000)) { // 1 heure délai
+                        console.log("🔄 Tentative de migration photo Instagram...");
+                        
+                        fetchInstaProfilePic(userData.instagram).then(newUrl => {
+                            if (newUrl) {
+                                // 1. Mise à jour Firestore (Sauvegarde définitive)
+                                db.collection('users').doc(user.uid).update({ 
+                                    photoURL: newUrl 
+                                });
+
+                                // 2. Mise à jour Visuelle immédiate
+                                updateLoginUI(true, newUrl);
+                                
+                                // 3. Mise à jour du timestamp
+                                localStorage.setItem('last_insta_check', now);
+                                console.log("✅ Photo migrée vers Instagram avec succès !");
+                            }
+                        }).catch(err => console.warn("Échec migration photo auto", err));
+                    }
                     
                     // A. Sync Favoris (Priorité Cloud)
                     matchStatuses = userData.favorites || {};
