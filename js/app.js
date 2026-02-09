@@ -3918,3 +3918,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================================
+// INTEGRATION GOOGLE ONE TAP (CONNEXION RAPIDE)
+// ==========================================
+
+// 1. Fonction qui gère la réponse de Google (le clic utilisateur)
+function handleOneTapResponse(response) {
+    // On récupère le "Credential" (le jeton d'identité) envoyé par Google
+    const idToken = response.credential;
+    
+    // On crée un identifiant Firebase compatible
+    const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
+    
+    // On connecte l'utilisateur à Firebase
+    firebase.auth().signInWithCredential(credential)
+        .then((result) => {
+            console.log("✅ Connexion One Tap réussie :", result.user.email);
+            // La détection auth.onAuthStateChanged fera le reste (mise à jour UI)
+        })
+        .catch((error) => {
+            console.error("Erreur One Tap Firebase :", error);
+        });
+}
+
+// 2. Fonction d'initialisation
+function initGoogleOneTap() {
+    // On ne lance le One Tap QUE si personne n'est connecté
+    firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+            // VOTRE ID CLIENT CORRIGÉ
+            const YOUR_CLIENT_ID = "646309909772-t8kkjkc0b2t85v0bm58npauvg1bbj8b6.apps.googleusercontent.com";
+
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.id.initialize({
+                    client_id: YOUR_CLIENT_ID,
+                    callback: handleOneTapResponse,
+                    cancel_on_tap_outside: false, // Empêche de fermer en cliquant à côté
+                    context: "signin"
+                });
+
+                // Affiche la popup
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        console.log("One Tap non affiché (info):", notification.getNotDisplayedReason());
+                    }
+                });
+            }
+        }
+    });
+}
+
+// 3. On lance l'initialisation une fois la page chargée
+window.addEventListener('load', initGoogleOneTap);
