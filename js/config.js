@@ -13,7 +13,7 @@ const ACCRED_LIST = {
     "CRETEIL US": "https://uschb.fr/infos-pratiques/presse/",
     "IVRY": "5800000@ffhandball.net",
     "FRANCAIS VOLANTS": "contact.hockey@francais-volants.org",
-    "SASP - SAINT QUENTIN BASKET BALL_U21" : "https://www.instagram.com/sqbbjsc/",
+    "SQBB" : "https://www.instagram.com/sqbbjsc/",
     "CHAMBRAY" : "antoine.recher@cthb.fr",      // mail présent sur https://www.cthb.fr/infos_pratiques/contact
     "EVREUX" : "secretariat@almevreuxbasket.com",
     "VIMY" : "contact@usvimy.fr",
@@ -27,7 +27,7 @@ const ACCRED_LIST = {
     "PARIS BASKETBALL" : "https://parisbasketball.com/contact/",
     "PARIS SAINT-GERMAIN HANDBALL" : "https://www.instagram.com/psghandassoofficiel/",
     "NANTERRE 92_U21" : "https://www.nanterre92.com/club/club/contact/",
-    "SQBB" : "contact@sqbb.fr",
+    "SAINT QUENTIN BASKET" : "contact@sqbb.fr",
     "RED STAR" : "news@redstar.fr",
     "PARIS 13" : "523264@lpiff.fr",
     "CHAMBLY" : "https://fcchamblyoise.com/contact/",
