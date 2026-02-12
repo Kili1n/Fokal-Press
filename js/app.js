@@ -946,15 +946,40 @@ function renderMatches(data) {
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
 
+// Dans app.js, à l'intérieur de renderMatches(data)
+
     if (data.length === 0) {
+        const currentSearch = document.getElementById('searchInput').value.trim();
+        const truncatedSearch = currentSearch.length > 15 ? currentSearch.substring(0, 15) + '...' : currentSearch;
+        const btnLabel = currentSearch ? `Ajouter "${truncatedSearch}"` : "Suggérer une équipe";
+
+        // On utilise <article class="card"> pour reprendre le style exact des cartes de match
+        // grid-column: 1 / -1 permet de centrer la carte sur toute la largeur de la grille
         grid.innerHTML = `
-            <div class="no-results">
-                <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
-                <p>Aucun match ne correspond à vos critères de recherche.</p>
-                <button onclick="resetFilters()" class="calc-btn" style="margin-top: 1rem; width: auto;">
-                    Réinitialiser les filtres
-                </button>
-            </div>
+            <article class="card" style="grid-column: 1 / -1; max-width: 380px; margin: 20px 0; text-align: center; align-items: center; padding: 30px 20px; gap: 10px;">
+                
+                <div style="margin-bottom: 5px;">
+                    <i class="fa-regular fa-calendar-xmark" style="font-size: 36px; color: var(--text-secondary);"></i>
+                </div>
+                
+                <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0;">
+                    Aucun match trouvé
+                </h3>
+                
+                <p style="font-size: 13px; color: var(--text-secondary); margin: 0 0 15px 0; line-height: 1.4;">
+                    Aucun match ne correspond à vos critères de recherche.
+                </p>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+                    <button onclick="openSuggestionModal()" class="login-submit-btn" style="background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; font-size: 14px; margin: 0;">
+                        <i class="fa-solid fa-plus"></i> ${btnLabel}
+                    </button>
+                    
+                    <button onclick="resetFilters()" class="login-submit-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px; font-size: 13px; margin: 0;">
+                        Réinitialiser les filtres
+                    </button>
+                </div>
+            </article>
         `;
         return;
     }
@@ -3978,3 +4003,149 @@ function initGoogleOneTap() {
 
 // 3. On lance l'initialisation une fois la page chargée
 window.addEventListener('load', initGoogleOneTap);
+
+// --- LOGIQUE SUGGESTION ÉQUIPE ---
+
+// URLs d'exemple par sport
+const FEDERATION_EXAMPLES = {
+    'Football': 'https://epreuves.fff.fr/competition/club/518488-st-ouen-l-aumone-as/equipe/2025_5883_SEM_1/saison',
+    'Basketball': 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005138535',
+    'Handball': 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949484/'
+};
+
+// Fonction pour mettre à jour l'UI (Placeholder + Autocomplete)
+function refreshSuggestUI() {
+    // 1. Récupérer le sport sélectionné
+    const selectedRadio = document.querySelector('input[name="suggestSport"]:checked');
+    if (!selectedRadio) return;
+    const sport = selectedRadio.value; // "Football", "Basketball" ou "Handball"
+    
+    // 2. Mise à jour du Placeholder du lien
+    const linkInput = document.getElementById('suggestLink');
+    if (linkInput) {
+        linkInput.placeholder = FEDERATION_EXAMPLES[sport] || "https://...";
+    }
+
+    // 3. Mise à jour de l'Autocomplete Championnat
+    // On convertit le sport "Football" (HTML) en "football" (Données JS)
+    const sportKey = sport.toLowerCase();
+    
+    // On s'assure que les données sont chargées (sécurité)
+    if (typeof manualCompsData === 'undefined' || manualCompsData.length === 0) {
+        // Si manualCompsData est vide, on essaie de le remplir grossièrement avec initManualMatchForm
+        // Mais idéalement, initManualMatchForm devrait avoir été appelé une fois au chargement.
+        // Pour éviter de tout casser, on filtre seulement si les données existent.
+    }
+
+    const filteredComps = (typeof manualCompsData !== 'undefined') 
+        ? manualCompsData.filter(c => c.sport === sportKey)
+        : [];
+
+    setupAutocomplete(
+        document.getElementById('suggestComp'), 
+        document.getElementById('suggestCompResults'), 
+        filteredComps, 
+        (compObj) => {
+            const emoji = SPORT_EMOJIS[compObj.sport] || "🏆";
+            return `<span class="result-emoji">${emoji}</span> <span>${compObj.name}</span>`;
+        },
+        true // Flag objet
+    );
+}
+
+function openSuggestionModal() {
+    const modal = document.getElementById('suggestTeamModal');
+    const nameInput = document.getElementById('suggestTeamName');
+    const searchInput = document.getElementById('searchInput');
+
+    // 1. Pré-remplir avec la recherche actuelle
+    if (searchInput && searchInput.value.trim() !== "") {
+        nameInput.value = searchInput.value.trim();
+    } else {
+        nameInput.value = "";
+    }
+    
+    // 2. Si les données d'autocomplete ne sont pas encore générées (utilisateur n'a jamais ouvert "Ajouter match")
+    // On force leur génération
+    if (typeof manualCompsData === 'undefined' || manualCompsData.length === 0) {
+         // Petite astuce : on appelle la fonction d'init du manuel pour remplir les variables globales
+         // sans afficher la modale manuel.
+         initManualMatchForm(); 
+         // On referme/reset l'UI manuel immédiatement pour ne pas interférer
+         document.getElementById('addMatchModal').classList.add('hidden');
+    }
+
+    // 3. Initialiser l'UI (Placeholder + Autocomplete)
+    refreshSuggestUI();
+
+    // 4. Afficher la modale
+    modal.classList.remove('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const suggestModal = document.getElementById('suggestTeamModal');
+    const closeSuggestBtn = document.getElementById('closeSuggestBtn');
+    const suggestForm = document.getElementById('suggestTeamForm');
+    const suggestRadios = document.querySelectorAll('input[name="suggestSport"]');
+
+    // Écouteur changement de sport -> Mise à jour Placeholder & Autocomplete
+    suggestRadios.forEach(radio => {
+        radio.addEventListener('change', refreshSuggestUI);
+    });
+
+    // Fermeture Croix
+    if (closeSuggestBtn) {
+        closeSuggestBtn.addEventListener('click', () => {
+            suggestModal.classList.add('hidden');
+        });
+    }
+
+    // Fermeture Clic Extérieur
+    if (suggestModal) {
+        suggestModal.addEventListener('click', (e) => {
+            if (e.target === suggestModal) suggestModal.classList.add('hidden');
+        });
+    }
+
+    // Gestion de l'envoi du formulaire
+    if (suggestForm) {
+        suggestForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // 1. Récupération des données
+            const sport = document.querySelector('input[name="suggestSport"]:checked').value;
+            const team = document.getElementById('suggestTeamName').value.trim();
+            const comp = document.getElementById('suggestComp').value.trim();
+            const link = document.getElementById('suggestLink').value.trim();
+
+            // 2. Construction de l'e-mail
+            const adminEmail = "contact@fokalPress.fr"; 
+            const subject = `[FokalPress] Suggestion Ajout : ${team}`;
+            
+            const body = `Bonjour,\n\n` +
+                         `Je ne trouve pas cette équipe sur l'application, merci de l'ajouter :\n\n` +
+                         `----------------------------\n` +
+                         `⚽ Sport : ${sport}\n` +
+                         `🛡️ Équipe : ${team}\n` +
+                         `🏆 Championnat : ${comp}\n` +
+                         `🔗 Lien : ${link || "Non renseigné"}\n` +
+                         `----------------------------\n\n` +
+                         `Merci d'avance !`;
+
+            // 3. Encodage et Envoi
+            const encodedSubject = encodeURIComponent(subject);
+            const encodedBody = encodeURIComponent(body);
+
+            if (isMobile()) {
+                window.location.href = `mailto:${adminEmail}?subject=${encodedSubject}&body=${encodedBody}`;
+            } else {
+                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${adminEmail}&su=${encodedSubject}&body=${encodedBody}`, '_blank');
+            }
+
+            // 4. Feedback et Fermeture
+            suggestModal.classList.add('hidden');
+            // Petit reset visuel
+            suggestForm.reset();
+        });
+    }
+});

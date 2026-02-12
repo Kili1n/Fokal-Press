@@ -483,6 +483,68 @@
         </div>
     </div>
 
+    <div id="suggestTeamModal" class="modal hidden" style="z-index: 5000;">
+        <div class="modal-content login-card" style="max-width: 450px; position: relative; padding-top: 20px;">
+            
+            <button id="closeSuggestBtn" class="close-map" style="position: absolute; top: 15px; right: 15px; z-index: 10;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-header" style="margin-top: 10px;">
+                <h3 style="display:flex; align-items:center; gap:10px; justify-content: center;">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--accent);"></i> 
+                    Suggérer une équipe
+                </h3>
+            </div>
+
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; text-align: center;">
+                Cette équipe n'est pas encore référencée ?<br>
+                Remplissez ce formulaire et elle sera intégrée lors de la prochaine mise à jour.
+            </p>
+            
+            <form id="suggestTeamForm" style="text-align: left;">
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:5px; display:block;">Sport</label>
+                    <div class="sport-select-group">
+                        <input type="radio" name="suggestSport" value="Football" id="sug_foot" checked>
+                        <label for="sug_foot">⚽ Foot</label>
+                        <input type="radio" name="suggestSport" value="Basketball" id="sug_basket">
+                        <label for="sug_basket">🏀 Basket</label>
+                        <input type="radio" name="suggestSport" value="Handball" id="sug_hand">
+                        <label for="sug_hand">🤾 Hand</label>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:5px; display:block;">Nom de l'équipe</label>
+                    <input type="text" id="suggestTeamName" placeholder="Ex: FC Versailles" required 
+                        style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-primary);">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:5px; display:block;">Niveau / Championnat</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" id="suggestComp" placeholder="Ex: National 2, L1..." required autocomplete="off"
+                            style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-primary);">
+                        <div id="suggestCompResults" class="autocomplete-results hidden"></div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:5px; display:block;">Lien Site/Fédération (Facultatif)</label>
+                    <input type="url" id="suggestLink" placeholder="https://..."
+                        style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-primary);">
+                </div>
+
+                <button type="submit" class="login-submit-btn" style="background: var(--accent); color: white;">
+                    <i class="fa-regular fa-paper-plane"></i> Envoyer la demande
+                </button>
+
+            </form>
+        </div>
+    </div>
+
     <div id="deleteConfirmModal" class="modal hidden" style="z-index: 4000;">
         <div class="modal-content login-card" style="max-width: 400px; text-align: center;">
             
