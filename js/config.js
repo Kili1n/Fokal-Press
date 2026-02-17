@@ -13,7 +13,7 @@ const ACCRED_LIST = {
     "CRETEIL US": "https://uschb.fr/infos-pratiques/presse/",
     "IVRY": "5800000@ffhandball.net",
     "FRANCAIS VOLANTS": "contact.hockey@francais-volants.org",
-    "SQBB" : "https://www.instagram.com/sqbbjsc/",
+    "SASP - SAINT QUENTIN BASKET BALL_U21" : "https://www.instagram.com/sqbbjsc/",
     "CHAMBRAY" : "antoine.recher@cthb.fr",      // mail présent sur https://www.cthb.fr/infos_pratiques/contact
     "EVREUX" : "secretariat@almevreuxbasket.com",
     "VIMY" : "contact@usvimy.fr",
