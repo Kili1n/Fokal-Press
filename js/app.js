@@ -1736,12 +1736,14 @@ function updateFilterSlider() {
 
         // --- 2. Mise à jour UI User (inchangé) ---    
         const initial = (user.displayName || "U").charAt(0).toUpperCase();
-        
-        // CORRECTION : On utilise directement l'URL (elle est déjà propre ou déjà proxifiée)
         const proxyUrl = finalPhotoURL;
 
+        // On ajoute un fallback onerror : Si l'image (proxy ou originale) échoue (404), on affiche l'initiale
         document.getElementById('statsUserInitial').innerHTML = proxyUrl 
-            ? `<img src="${proxyUrl}" crossorigin="anonymous" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`
+            ? `<img src="${proxyUrl}" 
+                   crossorigin="anonymous" 
+                   style="width:100%; height:100%; border-radius:50%; object-fit:cover;" 
+                   onerror="this.style.display='none'; this.parentNode.innerText='${initial}';">`
             : initial;
 
         const userNameEl = document.getElementById('statsUserName');
