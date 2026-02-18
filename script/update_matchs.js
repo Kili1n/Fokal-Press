@@ -58,7 +58,7 @@ const FOOTBALL_URLS = [
     { name: "FCM AUBERVILLIERS", url: 'https://epreuves.fff.fr/competition/club/527078-aubervilliers-c/equipe/2025_11270_SEM_1/saison' },
     { name: "FC SAINTE GENEVIEVE", url: 'https://epreuves.fff.fr/competition/club/500710-sainte-genevieve-football-club/equipe/2025_675_SEM_2/saison' },
     { name: "ESA LINAS MONTLHERY", url: 'https://epreuves.fff.fr/competition/club/518884-linas-montlhery-e-s-a/equipe/2025_6071_SEM_2/saison' },
-    { name: "US IVRY", url: 'https://epreuves.fff.fr/competition/club/523411-u-s-ivry-football/equipe/2025_8835_SEM_2/equipe' },
+    { name: "IVRY US", url: 'https://epreuves.fff.fr/competition/club/523411-u-s-ivry-football/equipe/2025_8835_SEM_2/equipe' },
     { name: "CS BRETIGNY", url: 'https://epreuves.fff.fr/competition/club/500217-bretigny-foot-c-s/equipe/2025_343_SEM_2/saison' },
     { name: "AS ST OUEN L'AUMONE", url: 'https://epreuves.fff.fr/competition/club/518488-st-ouen-l-aumone-as/equipe/2025_5883_SEM_1/saison' },
     { name: "PARIS FC", url: 'https://epreuves.fff.fr/competition/club/500568-paris-f-c/equipe/2025_616_SEM_3/saison' }
