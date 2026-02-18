@@ -2468,31 +2468,43 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }
 
-                    const shouldCheckPhoto = userData.instagram && 
-                             (!userData.photoURL || !userData.photoURL.includes('wsrv.nl'));
+                    // 1. Vérification : L'utilisateur a-t-il un Instagram renseigné ?
+                    const hasInsta = userData.instagram && userData.instagram.trim() !== "";
 
+                    // 2. Vérification : L'URL actuelle est-elle à l'ancien format ?
+                    // Si l'URL ne contient pas "t=" (notre nouveau paramètre temps), c'est une vieille URL cache
+                    const isOldUrlFormat = userData.photoURL && !userData.photoURL.includes('t=');
+
+                    // 3. Vérification du délai (pour ne pas spammer l'API à chaque rechargement de page)
                     const lastCheck = localStorage.getItem('last_insta_check');
                     const now = Date.now();
+                    // On revérifie si ça fait plus de 1h (3600000ms) OU si on n'a jamais vérifié
+                    const isTimeToCheck = !lastCheck || (now - lastCheck > 3600000);
 
-                    if (shouldCheckPhoto && (!lastCheck || now - lastCheck > 3600000)) { // 1 heure délai
-                        console.log("🔄 Tentative de migration photo Instagram...");
+                    // --- CONDITION DE MISE À JOUR ---
+                    // On met à jour SI : (Il a Insta) ET (C'est une vieille URL OU le délai est passé)
+                    if (hasInsta && (isOldUrlFormat || isTimeToCheck)) {
+                        console.log("🔄 Mise à jour automatique de la photo Instagram pour l'ancien user...");
                         
+                        // On appelle la fonction (qui contient maintenant le correctif JSON.stringify et le timestamp)
                         fetchInstaProfilePic(userData.instagram).then(newUrl => {
                             if (newUrl) {
-                                // 1. Mise à jour Firestore (Sauvegarde définitive)
+                                // A. Mise à jour Firestore (Sauvegarde définitive)
                                 db.collection('users').doc(user.uid).update({ 
                                     photoURL: newUrl 
                                 });
 
-                                // 2. Mise à jour Visuelle immédiate
+                                // B. Mise à jour Visuelle immédiate (sans recharger la page)
                                 updateLoginUI(true, newUrl);
                                 
-                                // 3. Mise à jour du timestamp
+                                // C. On met à jour le compteur de temps
                                 localStorage.setItem('last_insta_check', now);
-                                console.log("✅ Photo migrée vers Instagram avec succès !");
+                                
+                                console.log("✅ Photo mise à jour avec succès !");
                             }
-                        }).catch(err => console.warn("Échec migration photo auto", err));
+                        }).catch(err => console.warn("Échec mise à jour auto photo", err));
                     }
+
                     
                     // A. Sync Favoris (Priorité Cloud)
                     matchStatuses = userData.favorites || {};
@@ -3733,6 +3745,7 @@ async function fetchInstaProfilePic(username) {
     
     // Nettoyage du pseudo
     const cleanUser = username.replace('@', '').trim();
+    const url = 'https://instagram120.p.rapidapi.com/api/instagram/userInfo';
 
     const options = {
         method: 'POST',
@@ -3748,7 +3761,7 @@ async function fetchInstaProfilePic(username) {
 
     try {
         // 1. ENDPOINT CORRIGÉ : /userInfo
-        const response = await fetch('https://instagram120.p.rapidapi.com/api/instagram/userInfo', options);
+        const response = await fetch(url, options);
 
         if (!response.ok) {
             console.warn(`Erreur API Instagram (${response.status})`);
@@ -3777,7 +3790,7 @@ async function fetchInstaProfilePic(username) {
         }
 
         if (imageUrl) {
-            return `https://wsrv.nl/?url=${encodeURIComponent(imageUrl)}`;
+            return `https://wsrv.nl/?url=${encodeURIComponent(imageUrl)}&t=${Date.now()}&maxage=1d`;
         }
 
         return null;
