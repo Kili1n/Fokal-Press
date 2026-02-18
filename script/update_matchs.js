@@ -3,98 +3,99 @@ const fs = require('fs');
 
 // --- CONFIGURATION ---
 const FOOTBALL_URLS = [
-    'https://epreuves.fff.fr/competition/club/542781-a-f-c-compiegne/equipe/2025_22206_U17_5/saison',
-    'https://epreuves.fff.fr/competition/club/500695-aas-sarcelles-21/equipe/2025_670_U19_3/saison',
-    'https://epreuves.fff.fr/competition/club/550141-afc-creil-21/equipe/2025_100490_U19_5/saison',
-    'https://epreuves.fff.fr/competition/club/582560-c-chartres-football-23/equipe/2025_191772_U19_13/saison',
-    'https://epreuves.fff.fr/competition/club/500568-paris-fc-21/equipe/2025_616_U19_4/saison',
-    'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2025_364_U19_4/saison',
-    'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2025_364_U18F_2/saison',
-    'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2025_364_U17_6/saison',
-    'https://epreuves.fff.fr/competition/club/539013-racing-club-de-france-football/equipe/2025_19429_U19_1/saison',
-    'https://epreuves.fff.fr/competition/club/539013-racing-club-france/equipe/2025_19429_SEM_2/saison',
-    'https://epreuves.fff.fr/competition/club/539013-racing-club-de-france-football/equipe/2025_19429_U17_3/saison',
-    'https://epreuves.fff.fr/competition/club/500164-st-quentin-o/equipe/2025_295_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/560836-le-pays-du-valois-us/equipe/2025_199020_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/523259-jeanne-d-arc-drancy/equipe/2025_8734_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/542397-stade-de-reims-2/equipe/2025_21944_SEM_10/saison',    
-    'https://epreuves.fff.fr/competition/club/508884-neuilly-marne-sfc/equipe/2025_3359_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500240-amiens-scf-2/equipe/2025_358_SEM_8/saison',
-    'https://epreuves.fff.fr/competition/club/500054-lille-losc-associati-2/equipe/2025_199_SEM_8/saison',
-    'https://epreuves.fff.fr/competition/club/500942-vimy-us/equipe/2025_773_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/582585-pays-de-cassel-us/equipe/2025_191820_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500650-versailles-78-f-c/equipe/2025_656_U17_4/saison',
-    'https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2025_4969_U17_12/saison',
-    'https://epreuves.fff.fr/competition/club/544913-mantois-78-fc/equipe/2025_23013_U17_4/saison',
-    'https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2025_343_U17_3/saison',
-    'https://epreuves.fff.fr/competition/club/550679-montrouge-fc-92/equipe/2025_105489_U17_4/saison',
-    'https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2025_616_U17_17/saison',
-    'https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2025_670_SEF_1/saison',
-    'https://epreuves.fff.fr/competition/club/531562-quevilly-rm/equipe/2025_14293_SEF_2/saison',
-    'https://epreuves.fff.fr/competition/club/739890-vga-saint-maur/equipe/2025_32963_SEF_4/saison',
-    'https://epreuves.fff.fr/competition/club/536214-saint-denis-rc/equipe/2025_17479_SEF_1/saison',
-    'https://epreuves.fff.fr/competition/club/504891-us-orleans-loiret/equipe/2025_2421_SEF_2/saison',
-    'https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2025_18056_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500240-amiens-scf/equipe/2025_358_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/542397-stade-de-reims/equipe/2025_21944_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500002-red-star-f-c/equipe/2025_154_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500037-fc-rouen-1899/equipe/2025_184_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/504891-orleans-us-45/equipe/2025_2421_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500650-versailles-78-fc/equipe/2025_656_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/524861-fleury-91-fc/equipe/2025_9753_SEM_2/saison',
-    'https://epreuves.fff.fr/competition/club/523264-paris-13-atletico/equipe/2025_8738_SEM_10/saison',
-    'https://epreuves.fff.fr/competition/club/531562-qrm/equipe/2025_14293_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/536772-chambly-oise-fc/equipe/2025_17767_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500260-chantilly-us/equipe/2025_374_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500108-beauvais-oise-as/equipe/2025_244_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/548861-st-pryve-st-hilaire/equipe/2025_25783_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/526258-st-maur-lusitanos/equipe/2025_10744_SEM_2/saison',
-    'https://epreuves.fff.fr/competition/club/500689-creteil-lusitanos-f/equipe/2025_667_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/532133-²-bobigny/equipe/2025_14718_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2025_18056_SEF_3/saison',
-    'https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2025_616_SEF_1/saison',
-    'https://epreuves.fff.fr/competition/club/524861-fc-fleury-91/equipe/2025_9753_SEF_1/saison',
-    'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2025_364_SEF_1/saison',
-    'https://epreuves.fff.fr/competition/club/527078-aubervilliers-c/equipe/2025_11270_SEM_1/saison',
-    'https://epreuves.fff.fr/competition/club/500710-sainte-genevieve-football-club/equipe/2025_675_SEM_2/saison',
-    'https://epreuves.fff.fr/competition/club/518884-linas-montlhery-e-s-a/equipe/2025_6071_SEM_2/saison',
-    'https://epreuves.fff.fr/competition/club/523411-u-s-ivry-football/equipe/2025_8835_SEM_2/equipe',
-    'https://epreuves.fff.fr/competition/club/500217-bretigny-foot-c-s/equipe/2025_343_SEM_2/saison',
-    'https://epreuves.fff.fr/competition/club/518488-st-ouen-l-aumone-as/equipe/2025_5883_SEM_1/saison'    
+    { name: "AFC COMPIEGNE", url: 'https://epreuves.fff.fr/competition/club/542781-a-f-c-compiegne/equipe/2025_22206_U17_5/saison' },
+    { name: "SARCELLES AAS", url: 'https://epreuves.fff.fr/competition/club/500695-aas-sarcelles-21/equipe/2025_670_U19_3/saison' },
+    { name: "AFC CREIL", url: 'https://epreuves.fff.fr/competition/club/550141-afc-creil-21/equipe/2025_100490_U19_5/saison' },
+    { name: "C'CHARTRES FOOTBALL", url: 'https://epreuves.fff.fr/competition/club/582560-c-chartres-football-23/equipe/2025_191772_U19_13/saison' },
+    { name: "PARIS FC", url: 'https://epreuves.fff.fr/competition/club/500568-paris-fc-21/equipe/2025_616_U19_4/saison' },
+    { name: "PARIS SAINT-GERMAIN", url: 'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2025_364_U19_4/saison' },
+    { name: "PARIS SAINT-GERMAIN", url: 'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2025_364_U18F_2/saison' },
+    { name: "PARIS SAINT-GERMAIN", url: 'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2025_364_U17_6/saison' },
+    { name: "RACING CLUB FRANCE", url: 'https://epreuves.fff.fr/competition/club/539013-racing-club-de-france-football/equipe/2025_19429_U19_1/saison' },
+    { name: "RACING CLUB FRANCE", url: 'https://epreuves.fff.fr/competition/club/539013-racing-club-france/equipe/2025_19429_SEM_2/saison' },
+    { name: "RACING CLUB FRANCE", url: 'https://epreuves.fff.fr/competition/club/539013-racing-club-de-france-football/equipe/2025_19429_U17_3/saison' },
+    { name: "OLYMPIQUE SAINT QUENTIN", url: 'https://epreuves.fff.fr/competition/club/500164-st-quentin-o/equipe/2025_295_SEM_1/saison' },
+    { name: "US LE PAYS DU VALOIS", url: 'https://epreuves.fff.fr/competition/club/560836-le-pays-du-valois-us/equipe/2025_199020_SEM_1/saison' },
+    { name: "JA DRANCY", url: 'https://epreuves.fff.fr/competition/club/523259-jeanne-d-arc-drancy/equipe/2025_8734_SEM_1/saison' },
+    { name: "STADE DE REIMS", url: 'https://epreuves.fff.fr/competition/club/542397-stade-de-reims-2/equipe/2025_21944_SEM_10/saison' },
+    { name: "NEUILLY MARNE S.F.C.", url: 'https://epreuves.fff.fr/competition/club/508884-neuilly-marne-sfc/equipe/2025_3359_SEM_1/saison' },
+    { name: "AMIENS SC", url: 'https://epreuves.fff.fr/competition/club/500240-amiens-scf-2/equipe/2025_358_SEM_8/saison' },
+    { name: "LILLE LOSC", url: 'https://epreuves.fff.fr/competition/club/500054-lille-losc-associati-2/equipe/2025_199_SEM_8/saison' },
+    { name: "US VIMY", url: 'https://epreuves.fff.fr/competition/club/500942-vimy-us/equipe/2025_773_SEM_1/saison' },
+    { name: "US PAYS DE CASSEL", url: 'https://epreuves.fff.fr/competition/club/582585-pays-de-cassel-us/equipe/2025_191820_SEM_1/saison' },
+    { name: "FC VERSAILLES 78", url: 'https://epreuves.fff.fr/competition/club/500650-versailles-78-f-c/equipe/2025_656_U17_4/saison' },
+    { name: "CS MAINVILLIERS", url: 'https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2025_4969_U17_12/saison' },
+    { name: "FC MANTOIS 78", url: 'https://epreuves.fff.fr/competition/club/544913-mantois-78-fc/equipe/2025_23013_U17_4/saison' },
+    { name: "CS BRETIGNY ", url: 'https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2025_343_U17_3/saison' },
+    { name: "FC MONTROUGE 92", url: 'https://epreuves.fff.fr/competition/club/550679-montrouge-fc-92/equipe/2025_105489_U17_4/saison' },
+    { name: "PARIS FC", url: 'https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2025_616_U17_17/saison' },
+    { name: "SARCELLES AAS", url: 'https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2025_670_SEF_1/saison' },
+    { name: "QUEVILLY ROUEN METROPOLE", url: 'https://epreuves.fff.fr/competition/club/531562-quevilly-rm/equipe/2025_14293_SEF_2/saison' },
+    { name: "VGA SAINT MAUR", url: 'https://epreuves.fff.fr/competition/club/739890-vga-saint-maur/equipe/2025_32963_SEF_4/saison' },
+    { name: "RC SAINT-DENIS", url: 'https://epreuves.fff.fr/competition/club/536214-saint-denis-rc/equipe/2025_17479_SEF_1/saison' },
+    { name: "U.S. ORLEANS LOIRET", url: 'https://epreuves.fff.fr/competition/club/504891-us-orleans-loiret/equipe/2025_2421_SEF_2/saison' },
+    { name: "LE MANS FC", url: 'https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2025_18056_SEM_1/saison' },
+    { name: "AMIENS SC", url: 'https://epreuves.fff.fr/competition/club/500240-amiens-scf/equipe/2025_358_SEM_1/saison' },
+    { name: "STADE DE REIMS", url: 'https://epreuves.fff.fr/competition/club/542397-stade-de-reims/equipe/2025_21944_SEM_1/saison' },
+    { name: "RED STAR", url: 'https://epreuves.fff.fr/competition/club/500002-red-star-f-c/equipe/2025_154_SEM_1/saison' },
+    { name: "FC ROUEN", url: 'https://epreuves.fff.fr/competition/club/500037-fc-rouen-1899/equipe/2025_184_SEM_1/saison' },
+    { name: "U.S. ORLEANS LOIRET", url: 'https://epreuves.fff.fr/competition/club/504891-orleans-us-45/equipe/2025_2421_SEM_1/saison' },
+    { name: "FC VERSAILLES 78", url: 'https://epreuves.fff.fr/competition/club/500650-versailles-78-fc/equipe/2025_656_SEM_1/saison' },
+    { name: "FC FLEURY 91", url: 'https://epreuves.fff.fr/competition/club/524861-fleury-91-fc/equipe/2025_9753_SEM_2/saison' },
+    { name: "PARIS 13 ATLETICO", url: 'https://epreuves.fff.fr/competition/club/523264-paris-13-atletico/equipe/2025_8738_SEM_10/saison' },
+    { name: "QUEVILLY ROUEN METROPOLE", url: 'https://epreuves.fff.fr/competition/club/531562-qrm/equipe/2025_14293_SEM_1/saison' },
+    { name: "FC CHAMBLY OISE", url: 'https://epreuves.fff.fr/competition/club/536772-chambly-oise-fc/equipe/2025_17767_SEM_1/saison' },
+    { name: "US CHANTILLY", url: 'https://epreuves.fff.fr/competition/club/500260-chantilly-us/equipe/2025_374_SEM_1/saison' },
+    { name: "AS BEAUVAIS OISE", url: 'https://epreuves.fff.fr/competition/club/500108-beauvais-oise-as/equipe/2025_244_SEM_1/saison' },
+    { name: "FC SAINT PRYVE ST HILAIRE", url: 'https://epreuves.fff.fr/competition/club/548861-st-pryve-st-hilaire/equipe/2025_25783_SEM_1/saison' },
+    { name: "ST MAUR LUSITANOS", url: 'https://epreuves.fff.fr/competition/club/526258-st-maur-lusitanos/equipe/2025_10744_SEM_2/saison' },
+    { name: "US CRETEIL", url: 'https://epreuves.fff.fr/competition/club/500689-creteil-lusitanos-f/equipe/2025_667_SEM_1/saison' },
+    { name: "FC 93 BOBIGNY", url: 'https://epreuves.fff.fr/competition/club/532133-²-bobigny/equipe/2025_14718_SEM_1/saison' },
+    { name: "LE MANS FC", url: 'https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2025_18056_SEF_3/saison' },
+    { name: "PARIS FC", url: 'https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2025_616_SEF_1/saison' },
+    { name: "FC FLEURY 91 (F)", url: 'https://epreuves.fff.fr/competition/club/524861-fc-fleury-91/equipe/2025_9753_SEF_1/saison' },
+    { name: "PARIS SAINT-GERMAIN", url: 'https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2025_364_SEF_1/saison' },
+    { name: "FCM AUBERVILLIERS", url: 'https://epreuves.fff.fr/competition/club/527078-aubervilliers-c/equipe/2025_11270_SEM_1/saison' },
+    { name: "FC SAINTE GENEVIEVE", url: 'https://epreuves.fff.fr/competition/club/500710-sainte-genevieve-football-club/equipe/2025_675_SEM_2/saison' },
+    { name: "ESA LINAS MONTLHERY", url: 'https://epreuves.fff.fr/competition/club/518884-linas-montlhery-e-s-a/equipe/2025_6071_SEM_2/saison' },
+    { name: "US IVRY", url: 'https://epreuves.fff.fr/competition/club/523411-u-s-ivry-football/equipe/2025_8835_SEM_2/equipe' },
+    { name: "CS BRETIGNY", url: 'https://epreuves.fff.fr/competition/club/500217-bretigny-foot-c-s/equipe/2025_343_SEM_2/saison' },
+    { name: "AS ST OUEN L'AUMONE", url: 'https://epreuves.fff.fr/competition/club/518488-st-ouen-l-aumone-as/equipe/2025_5883_SEM_1/saison' },
+    { name: "PARIS FC", url: 'https://epreuves.fff.fr/competition/club/500568-paris-f-c/equipe/2025_616_SEM_3/saison' }
 ];
 
 const BASKET_URLS = [
-    'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005138535',
-    'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005138551',
-    'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152746',
-    'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152781',
-    'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152783',
-    'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152787',
-    'https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005152397',
-    'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152748',
-    'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152752',
-    'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005138565',
-    'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005138579',
-    'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005138555',
-    'https://competitions.ffbb.com/ligues/idf/comites/0078/clubs/idf0078013/equipes/200000005138581',
-    'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005138577',
-    'https://competitions.ffbb.com/ligues/nor/comites/0076/clubs/nor0076071/equipes/200000005152395',
-    'https://competitions.ffbb.com/ligues/cvl/comites/0045/clubs/cvl0045058/equipes/200000005152388'
+    { name: "C'CHARTRES METROPOLE BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005138535' },
+    { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005138551' },
+    { name: "NANTERRE 92", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152746' },
+    { name: "NANTERRE 92", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152781' },
+    { name: "PARIS BASKETBALL", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152783' },
+    { name: "SAINT QUENTIN BASKET BALL", url: 'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152787' },
+    { name: "ALM EVREUX BASKET", url: 'https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005152397' },
+    { name: "PARIS BASKETBALL", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152748' },
+    { name: "SAINT QUENTIN BASKET BALL", url: 'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152752' },
+    { name: "LEVALLOIS METROPOLITANS", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005138565' },
+    { name: "VAL DE SEINE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005138579' },
+    { name: "C'CHARTRES BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005138555' },
+    { name: "POISSY BASKET ASSOCIATION", url: 'https://competitions.ffbb.com/ligues/idf/comites/0078/clubs/idf0078013/equipes/200000005138581' },
+    { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005138577' },
+    { name: "ROUEN METROPOLE BASKET", url: 'https://competitions.ffbb.com/ligues/nor/comites/0076/clubs/nor0076071/equipes/200000005152395' },
+    { name: "ORLEANS LOIRET BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0045/clubs/cvl0045058/equipes/200000005152388' }
 ];
 
 const HANDBALL_URLS = [
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949484/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949476/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949485/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954490/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/liqui-moly-starligue-2025-26-28399/equipe-1947866/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957555/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/liqui-moly-starligue-2025-26-28399/equipe-1947878/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957557/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957560/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957558/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957562/',
-    'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957562/'
+    { name: "STELLA SAINT-MAUR HANDBALL", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949484/' },
+    { name: "CHAMBRAY TOURAINE HANDBALL", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949476/' },
+    { name: "PARIS 92", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/ligue-butagaz-energie-2025-26-28227/equipe-1949485/' },
+    { name: "PARIS SAINT-GERMAIN HANDBALL", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/nationale-1-masculine-2025-26-28229/equipe-1954490/' },
+    { name: "C'CHARTRES METROPOLE HANDBALL", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/liqui-moly-starligue-2025-26-28399/equipe-1947866/' },
+    { name: "US CRETEIL", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957555/' },
+    { name: "TREMBLAY-EN-FRANCE", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/liqui-moly-starligue-2025-26-28399/equipe-1947878/' },
+    { name: "US IVRY", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957557/' },
+    { name: "PONTAULT-COMBAULT", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957560/' },
+    { name: "MASSY ESSONNE", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957558/' },
+    { name: "SARAN LOIRET", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/proligue-2025-26-28551/equipe-1957562/' },
+    { name: "PARIS SAINT-GERMAIN HANDBALL", url: 'https://www.ffhandball.fr/competitions/saison-2025-2026-21/national/liqui-moly-starligue-2025-26-28399/equipe-1947874/' }
 ];
 
 const OUTPUT_FILE = 'data/matchs.json';
@@ -159,9 +160,9 @@ async function scrapeFootball(page) {
     const limitDate = new Date();
     limitDate.setMonth(now.getMonth() + 2); // Filtre à 2 mois
 
-    for (let url of FOOTBALL_URLS) {
+    for (let teamConfig of FOOTBALL_URLS) {
         try {
-            await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
+            await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 45000 });
 
             // 1. Gestion des cookies
             try {
@@ -228,10 +229,10 @@ async function scrapeFootball(page) {
                 if (isHome && isWithinRange && !futureMatchesMap.has(m.id)) {
                     futureMatchesMap.set(m.id, {
                         sport: "football",
-                        sourceUrl: url,
+                        sourceUrl: teamConfig.url,
                         isoDate: matchDate.toISOString(),
                         date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
-                        home: m.home,
+                        home: teamConfig.name,
                         away: m.away,
                         competition: m.competition,
                         round: m.round,
@@ -244,10 +245,10 @@ async function scrapeFootball(page) {
             }).length;
 
             // 5. Print identique au mode Basketball
-            console.log(`✅ ${targetTeam} : ${filteredCount} matchs trouvés.`);
+            console.log(`✅ ${teamConfig.name} : ${filteredCount} matchs trouvés.`);
 
         } catch (error) {
-            console.error(`❌ Erreur Football sur ${url} :`, error.message);
+            console.error(`❌ Erreur Football sur ${teamConfig.url} :`, error.message);
         }
     }
     return Array.from(futureMatchesMap.values());
@@ -261,9 +262,9 @@ async function scrapeBasketball(page) {
     const limitDate = new Date();
     limitDate.setMonth(now.getMonth() + 2); 
 
-    for (let url of BASKET_URLS) {
+    for (let teamConfig of BASKET_URLS) {
         try {
-            await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+            await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 30000 });
             await page.waitForSelector('h1.font-AgencyFBBlackComp');
 
             const pageData = await page.evaluate(() => {
@@ -292,10 +293,10 @@ async function scrapeBasketball(page) {
                 if (matchDate && matchDate >= now && matchDate <= limitDate) {
                     return {
                         sport: "basketball",
-                        sourceUrl: url,
+                        sourceUrl: teamConfig.url,
                         isoDate: matchDate.toISOString(),
                         date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
-                        home: m.home,
+                        home: teamConfig.name,
                         away: m.away,
                         competition: m.competition,
                         round: m.round,
@@ -307,10 +308,10 @@ async function scrapeBasketball(page) {
             }).filter(m => m !== null);
 
             allBasketMatches.push(...filtered);
-            console.log(`✅ ${pageData.club} : ${filtered.length} matchs trouvés.`);
+            console.log(`✅ ${teamConfig.name} : ${filtered.length} matchs trouvés.`);
 
         } catch (e) {
-            console.error(`❌ Erreur FFBB sur ${url} :`, e.message);
+            console.error(`❌ Erreur FFBB sur ${teamConfig.url} :`, e.message);
         }
     }
     return allBasketMatches;
@@ -323,9 +324,9 @@ async function scrapeHandball(page) {
     const limitDate = new Date();
     limitDate.setMonth(now.getMonth() + 2);
 
-    for (let url of HANDBALL_URLS) {
+    for (let teamConfig of HANDBALL_URLS) {
         try {
-            await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
+            await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 45000 });
             await page.waitForSelector('[class*="block_component__"]', { timeout: 15000 });
 
             const targetTeam = await page.evaluate(() => {
@@ -343,7 +344,7 @@ async function scrapeHandball(page) {
             });
 
             if (!targetTeam) {
-                console.log(`⚠️ Impossible d'identifier le club HB sur ${url}.`);
+                console.log(`⚠️ Impossible d'identifier le club HB sur ${teamConfig.url}.`);
                 continue;
             }
 
@@ -368,10 +369,10 @@ async function scrapeHandball(page) {
                 if (isHome && isWithinRange) {
                     return {
                         sport: "handball",
-                        sourceUrl: url,
+                        sourceUrl: teamConfig.url,
                         isoDate: matchDate.toISOString(),
                         date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
-                        home: m.home,
+                        home: teamConfig.name,
                         away: m.away,
                         competition: m.competition,
                         round: m.round,
@@ -383,10 +384,10 @@ async function scrapeHandball(page) {
             }).filter(m => m !== null);
 
             allHBMatches.push(...filtered);
-            console.log(`✅ ${targetTeam} : ${filtered.length} matchs.`);
+            console.log(`✅ ${teamConfig.name} : ${filtered.length} matchs.`);
 
         } catch (error) {
-            console.error(`❌ Erreur FFHB sur ${url} :`, error.message);
+            console.error(`❌ Erreur FFHB sur ${teamConfig.url} :`, error.message);
         }
     }
     return allHBMatches;
@@ -402,9 +403,9 @@ async function run() {
 
     // Exécution dans l'ordre demandé
 
-    const footballMatches = await scrapeFootball(page);
     const handballMatches = await scrapeHandball(page);
     const basketMatches = await scrapeBasketball(page);
+    const footballMatches = await scrapeFootball(page);
 
     // Fusion et tri par date
     const allMatches = [...footballMatches, ...handballMatches, ...basketMatches]
@@ -417,9 +418,9 @@ async function run() {
     
     console.log(`\n====================================`);
     console.log(`✨ FIN DU SCRAPING GLOBAL`);
-    console.log(`⚽ Football : ${footballMatches.length}`);
     console.log(`🤾 Handball : ${handballMatches.length}`);
     console.log(`🏀 Basketball : ${basketMatches.length}`);
+    console.log(`⚽ Football : ${footballMatches.length}`);
     console.log(`📂 Fichier ${OUTPUT_FILE} mis à jour (${allMatches.length} matchs).`);
     console.log(`====================================`);
 
