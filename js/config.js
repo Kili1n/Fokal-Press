@@ -31,7 +31,8 @@ const ACCRED_LIST = {
     "RED STAR" : "news@redstar.fr",
     "PARIS 13" : "523264@lpiff.fr",
     "CHAMBLY" : "https://fcchamblyoise.com/contact/",
-    "ROUEN" : "secretariat@fcrouen.fr"
+    "ROUEN" : "secretariat@fcrouen.fr",
+    "PARIS SAINT-GERMAIN" : "https://accreditation.psg.fr/",
 };
 
 const CUSTOM_LOGOS = {
@@ -262,6 +263,7 @@ const CUSTOM_LOGOS = {
 };
 
 const STADIUM_COORDS = {
+    // --- LISTE ORIGINALE MISE À JOUR ---
     "AAS SARCELLES": { lat: 48.995, lon: 2.380 },
     "AAS SARCELLES 21": { lat: 48.995, lon: 2.380 },
     "AFC COMPIEGNE": { lat: 49.406, lon: 2.812 },
@@ -294,7 +296,7 @@ const STADIUM_COORDS = {
     "SAINT QUENTIN": { lat: 49.849, lon: 3.280 },
     "SQBB": { lat: 49.849, lon: 3.280 },
     "OLYMPIQUE SAINT QUENTIN": { lat: 49.858, lon: 3.275 },
-    "STADE DE REIMS": { lat: 49.293, lon: 4.053 },
+    "STADE DE REIMS": { lat: 49.293, lon: 4.053 }, // Doublon corrigé plus bas, je garde celui-ci
     "STADE FRANCAIS BASKET": { lat: 48.844, lon: 2.254 },
     "ORLEANS": { lat: 47.839, lon: 1.932 },
     "VERSAILLES 78 FC": { lat: 48.805, lon: 2.138 },
@@ -314,7 +316,6 @@ const STADIUM_COORDS = {
     "RED STAR": { lat: 48.9073, lon: 2.3413 }, 
     "FLEURY 91": { lat: 48.6145, lon: 2.3678 }, 
     "CHAMBLY OISE": { lat: 49.2274, lon: 2.2530 },
-    "STADE DE REIMS": { lat: 49.2474, lon: 4.0252 }, 
     "ORLEANS US": { lat: 47.8443, lon: 1.9360 },
     "ST MAUR LUSITANOS": { lat: 48.8044, lon: 2.4832 }, 
     "CHANTILLY US": { lat: 49.1974, lon: 2.4571 }, 
@@ -326,7 +327,37 @@ const STADIUM_COORDS = {
     "LE MANS FC": { lat: 47.9576, lon: 0.2244 }, 
     "AMIENS SCF": { lat: 49.8936, lon: 2.2633 },
     "MAINVILLIERS" : { lat: 48.4545, lon: 1.4524 },
-    "BOBIGNY" : { lat: 48.8955, lon: 2.2034 }
+    "BOBIGNY" : { lat: 48.8955, lon: 2.2034 },
+
+    // --- CORRECTIONS DES ERREURS LOG (ALIAS & MANQUANTS) ---
+    
+    // Alias (Noms inversés ou variantes trouvés dans tes logs)
+    "AFC CREIL": { lat: 49.256, lon: 2.477 },           // Alias pour AFC CREIL 21
+    "US VIMY": { lat: 50.375, lon: 2.808 },             // Alias pour VIMY US
+    "US PAYS DE CASSEL": { lat: 50.716, lon: 2.538 },   // Alias pour PAYS DE CASSEL US
+    "US IVRY": { lat: 48.812, lon: 2.392 },             // Alias pour IVRY US
+    "SARCELLES AAS": { lat: 48.995, lon: 2.380 },       // Alias pour AAS SARCELLES
+    "CS BRETIGNY": { lat: 48.608, lon: 2.308 },         // Alias pour CS BRETIGNY FOOTBALL
+    "CS BRETIGNY ": { lat: 48.608, lon: 2.308 },        // Gestion de l'espace en fin de chaîne vu dans les logs
+    "NEUILLY MARNE S.F.C.": { lat: 48.882, lon: 2.535 },// Alias ponctuation différente
+    "FC VERSAILLES 78": { lat: 48.805, lon: 2.138 },    // Alias pour VERSAILLES 78 FC
+    "QUEVILLY ROUEN METROPOLE": { lat: 49.4122, lon: 1.0774 }, // Alias pour QRM
+    "AMIENS SC": { lat: 49.8936, lon: 2.2633 },         // Alias pour AMIENS SCF
+    "FC SAINT PRYVE ST HILAIRE": { lat: 47.8864, lon: 1.8675 }, // Alias complet
+    "US LE PAYS DU VALOIS": { lat: 49.141, lon: 3.012 },// Alias pour LE PAYS DU VALOIS US
+    "US CHANTILLY": { lat: 49.1974, lon: 2.4571 },      // Alias pour CHANTILLY US
+    "FC MONTROUGE 92": { lat: 48.814, lon: 2.316 },     // Alias pour MONTROUGE FC 92
+    "FC MANTOIS 78": { lat: 48.979, lon: 1.706 },       // Alias pour MANTOIS 78 FC
+
+    // Nouveaux ajouts (Clubs totalement manquants dans ta liste initiale)
+    "VAL DE SEINE BASKET": { lat: 48.974, lon: 1.989 }, // Vernouillet/Verneuil
+    "POISSY BASKET ASSOCIATION": { lat: 48.923, lon: 2.032 },
+    "FC SAINTE GENEVIEVE": { lat: 48.643, lon: 2.338 },
+    "AS ST OUEN L'AUMONE": { lat: 49.043, lon: 2.119 },
+    "SARAN LOIRET": { lat: 47.937, lon: 1.876 },        // Handball
+    "FCM AUBERVILLIERS": { lat: 48.913, lon: 2.385 },
+    "ROUEN METROPOLE BASKET": { lat: 49.444, lon: 1.076 }, // Kindarena
+    "ESA LINAS MONTLHERY": { lat: 48.632, lon: 2.261 }
 };
 
 const WEATHER_ICONS = {
