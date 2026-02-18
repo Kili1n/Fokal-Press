@@ -906,10 +906,10 @@
         "sourceUrl": "https://epreuves.fff.fr/competition/club/539013-racing-club-de-france-football/equipe/2025_19429_U17_3/saison",
         "isoDate": "2026-03-08T14:00:00.000Z",
         "date": "dimanche 8 mars 2026",
-        "home": "RACING CLUB FRANCE",
-        "away": "VERSAILLES 78 FC",
-        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
-        "round": "Journée 20",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "TOULOUSE FC",
+        "competition": "COUPE NIKE FÉMININE U18 - U18 F - U17 F - U16 F",
+        "round": "1/4 de finale",
         "location": "N/A"
     },
     {
@@ -1119,6 +1119,17 @@
         "away": "CRETEIL US",
         "competition": "PROLIGUE 2025-26",
         "round": "JOURNÉE 22",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0076/clubs/nor0076071/equipes/200000005152395",
+        "isoDate": "2026-03-13T21:00:00.000Z",
+        "date": "vendredi 13 mars 2026",
+        "home": "ROUEN METROPOLE BASKET",
+        "away": "CAEN BASKET CALVADOS",
+        "competition": "ÉLIT2",
+        "round": "J26",
         "location": "N/A"
     },
     {
@@ -1511,6 +1522,8 @@
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152783",
         "isoDate": "2026-03-21T15:00:00.000Z",
         "date": "samedi 21 mars 2026",
+        "home": "PARIS BASKETBALL",
+        "away": "J.L. BOURG BASKET",
         "home": "PARIS BASKETBALL",
         "away": "J.L. BOURG BASKET",
         "competition": "ESPOIRS",
@@ -1909,6 +1922,8 @@
         "date": "samedi 28 mars 2026",
         "home": "NANTERRE 92",
         "away": "SASP - SAINT QUENTIN BASKET BALL",
+        "home": "NANTERRE 92",
+        "away": "SASP - SAINT QUENTIN BASKET BALL",
         "competition": "ESPOIRS",
         "round": "J23",
         "location": "N/A"
@@ -2006,6 +2021,8 @@
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152746",
         "isoDate": "2026-03-28T17:20:00.000Z",
         "date": "samedi 28 mars 2026",
+        "home": "NANTERRE 92",
+        "away": "SASP - SAINT QUENTIN BASKET BALL",
         "home": "NANTERRE 92",
         "away": "SASP - SAINT QUENTIN BASKET BALL",
         "competition": "BETCLICE",

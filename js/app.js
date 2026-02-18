@@ -74,6 +74,7 @@ const formatCompetition = (rawName, sport) => {
     // --- NIVEAU N1 ---
     else if (name.includes("NF1")) { level = "N1"; age = "SENIOR F"; }
     else if (name.includes("ESPOIRS")) { level = "L1"; age = "U21"; }
+    else if (name.includes("NM1")) { level = "N1"; }
     else if (name.includes("NATIONALE 1") || name.includes("NATIONAL 1") || name.includes("NATIONAL - SENIOR")) { level = "N1"; }
 
     // --- LOGIQUE GÉNÉRIQUE ---
@@ -174,7 +175,15 @@ const getAccreditationHTML = (match) => {
     
     let key = null;
     if (isEspoirs) {
-        key = Object.keys(ACCRED_LIST).find(k => k === `${teamName}_U21` || k === `${teamName}_ESPOIRS`);
+        // Recherche souple : On cherche une clé dans la config qui finit par _U21 
+        // et dont la partie principale est incluse dans le nom de l'équipe affichée.
+        key = Object.keys(ACCRED_LIST).find(k => {
+            if (k.includes('_U21') || k.includes('_ESPOIRS')) {
+                const baseKey = k.replace('_U21', '').replace('_ESPOIRS', '');
+                return teamName.includes(baseKey);
+            }
+            return false;
+        });
     }
     if (!key) {
         key = Object.keys(ACCRED_LIST).find(k => teamName.includes(k) && !k.includes("_U21") && !k.includes("_ESPOIRS"));
