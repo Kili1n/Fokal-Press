@@ -26,7 +26,7 @@ const FOOTBALL_URLS = [
     { name: "FC VERSAILLES 78", url: 'https://epreuves.fff.fr/competition/club/500650-versailles-78-f-c/equipe/2025_656_U17_4/saison' },
     { name: "CS MAINVILLIERS", url: 'https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2025_4969_U17_12/saison' },
     { name: "FC MANTOIS 78", url: 'https://epreuves.fff.fr/competition/club/544913-mantois-78-fc/equipe/2025_23013_U17_4/saison' },
-    { name: "CS BRETIGNY ", url: 'https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2025_343_U17_3/saison' },
+    { name: "CS BRETIGNY", url: 'https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2025_343_U17_3/saison' },
     { name: "FC MONTROUGE 92", url: 'https://epreuves.fff.fr/competition/club/550679-montrouge-fc-92/equipe/2025_105489_U17_4/saison' },
     { name: "PARIS FC", url: 'https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2025_616_U17_17/saison' },
     { name: "SARCELLES AAS", url: 'https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2025_670_SEF_1/saison' },
