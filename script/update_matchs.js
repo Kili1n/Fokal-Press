@@ -74,11 +74,11 @@ const BASKET_URLS = [
     { name: "ALM EVREUX BASKET", url: 'https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005152397' },
     { name: "PARIS BASKETBALL", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152748' },
     { name: "SAINT QUENTIN BASKET BALL", url: 'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152752' },
-    { name: "LEVALLOIS METROPOLITANS", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005138565' },
-    { name: "VAL DE SEINE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005138579' },
-    { name: "C'CHARTRES BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005138555' },
-    { name: "POISSY BASKET ASSOCIATION", url: 'https://competitions.ffbb.com/ligues/idf/comites/0078/clubs/idf0078013/equipes/200000005138581' },
-    { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005138577' },
+    { name: "LEVALLOIS METROPOLITANS", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005294950' },
+    { name: "VAL DE SEINE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005294944' },
+    { name: "C'CHARTRES BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005294939' },
+    { name: "POISSY BASKET ASSOCIATION", url: 'https://competitions.ffbb.com/ligues/idf/comites/0078/clubs/idf0078013/equipes/200000005294948' },
+    { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005294952' },
     { name: "ROUEN METROPOLE BASKET", url: 'https://competitions.ffbb.com/ligues/nor/comites/0076/clubs/nor0076071/equipes/200000005152395' },
     { name: "ORLEANS LOIRET BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0045/clubs/cvl0045058/equipes/200000005152388' }
 ];
@@ -162,7 +162,9 @@ async function scrapeFootball(page) {
 
     for (let teamConfig of FOOTBALL_URLS) {
         try {
+            await page.evaluate(() => document.body.innerHTML = '').catch(() => {});
             await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 45000 });
+            await page.waitForSelector('app-match-score', { timeout: 10000 });
 
             // 1. Gestion des cookies
             try {
@@ -210,13 +212,22 @@ async function scrapeFootball(page) {
                 return Array.from(document.querySelectorAll('app-match-score')).map(block => {
                     const compLink = block.querySelector('.match-score-competition a');
                     const scoreLink = block.querySelector('a.score')?.getAttribute('href') || "";
+                    
+                    // On extrait les valeurs AVANT de créer le fallbackId
+                    const dateRaw = block.querySelector('.schedule-match')?.innerText.trim() || "";
+                    const home = block.querySelector('.recevant .equipe-name')?.innerText.trim() || "N/A";
+                    const away = block.querySelector('.visiteur .equipe-name')?.innerText.trim() || "N/A";
+                    
+                    // Maintenant dateRaw, home et away existent bien
+                    const fallbackId = `${dateRaw}-${home}-${away}`.replace(/\s+/g, '');
+                    
                     return {
-                        dateRaw: block.querySelector('.schedule-match')?.innerText.trim() || "",
-                        home: block.querySelector('.recevant .equipe-name')?.innerText.trim() || "N/A",
-                        away: block.querySelector('.visiteur .equipe-name')?.innerText.trim() || "N/A",
+                        dateRaw: dateRaw,
+                        home: home,
+                        away: away,
                         competition: compLink?.childNodes[0]?.textContent.trim() || "Football",
                         round: compLink?.querySelector('.text-xs')?.innerText.trim() || "N/A",
-                        id: scoreLink.split('/').pop() || Math.random().toString()
+                        id: scoreLink ? scoreLink.split('/').pop() : fallbackId
                     };
                 });
             });

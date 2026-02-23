@@ -51,6 +51,22 @@ const getShortComp = (formattedComp, sport) => {
     return `${emoji} - ${level} - ${age}`;
 };
 
+const getCompFilterGroup = (compFormatted) => {
+    if (!compFormatted) return "AUTRE";
+    
+    const parts = compFormatted.split(' - ');
+    // On vérifie qu'on a bien au moins "SPORT" et "NIVEAU"
+    if (parts.length >= 2) {
+        const sportLabel = parts[0]; // ex: "FOOT"
+        const level = parts[1];      // ex: "COUPE" ou "AMICAL"
+        
+        if (level === "COUPE" || level === "AMICAL") {
+            return `${sportLabel} - ${level}`; // Retourne "FOOT - COUPE"
+        }
+    }
+    return compFormatted;
+};
+
 const formatCompetition = (rawName, sport) => {
     if (!rawName) return "MATCH";
     const name = rawName.toUpperCase();
@@ -60,8 +76,8 @@ const formatCompetition = (rawName, sport) => {
     
     let level = "AUTRE", age = "SENIOR";
 
-    // --- NIVEAU L1 ---
-    if (name.includes("BETCLIC") || name.includes("STARLIGUE")) { level = "L1"; }
+    // --- NIVEAU L1 ---<
+    if (name.includes("BETCLIC") || name.includes("STARLIGUE") || name.includes("LIGUE 1") || name.includes("L1")) { level = "L1"; }
     else if (name.includes("BUTAGAZ") || name.includes("LBWL")) { level = "L1"; age = "SENIOR F"; }
     else if (name.includes("ARKEMA") || name.includes("PREMIERE LIGUE")) { level = "L1"; age = "SENIOR F"; }
 
@@ -80,6 +96,9 @@ const formatCompetition = (rawName, sport) => {
     // --- LOGIQUE GÉNÉRIQUE ---
     else {
         const isFeminine = name.includes("FÉMININ") || name.includes("FEMININ") || name.includes(" F ") || name.includes("SEF");
+
+        if (name.includes("COUPE") || name.includes("TROPH") || name.includes("CDF")) level = "COUPE";
+        else if (name.includes("AMICAL") || name.includes("AMICAUX") || name.includes("PRÉPARATION") || name.includes("PREPARATION")) level = "AMICAL";
         
         if (name.includes("N3")) level = "N3";
         else if (name.includes("N2")) level = "N2";
@@ -806,9 +825,10 @@ function populateCompFilter(filteredMatches) {
     const seen = new Set();
     
     filteredMatches.forEach(m => {
-        if (!seen.has(m.compFormatted)) {
-            seen.add(m.compFormatted);
-            uniqueComps.push({ name: m.compFormatted, sport: m.sport.toLowerCase() });
+        const groupName = getCompFilterGroup(m.compFormatted);
+        if (!seen.has(groupName)) {
+            seen.add(groupName);
+            uniqueComps.push({ name: groupName, sport: m.sport.toLowerCase() });
         }
     });
 
@@ -896,7 +916,7 @@ function applyFilters() {
     populateCompFilter(filtered);
 
     if (currentFilters.comp !== "all") {
-        filtered = filtered.filter(m => m.compFormatted === currentFilters.comp);
+        filtered = filtered.filter(m => getCompFilterGroup(m.compFormatted, m.sport) === currentFilters.comp);
     }
 
     if (currentFilters.accredOnly) {
@@ -940,7 +960,7 @@ function applyFilters() {
             return (a.distance || 9999) - (b.distance || 9999);
         }
         if (currentFilters.sortBy === "level") {
-            const priority = { "L1": 1, "L2": 2, "N1": 3, "N2": 4, "N3": 5, "NAT": 6, "REG": 7 };
+            const priority = { "L1": 1, "L2": 2, "N1": 3, "N2": 4, "N3": 5, "NAT": 6, "COUPE": 7, "REG": 8, "AMICAL": 9 };
             const getLevel = (comp) => comp.split(' - ')[1] || "REG";
             return (priority[getLevel(a.compFormatted)] || 99) - (priority[getLevel(b.compFormatted)] || 99);
         }
@@ -1593,7 +1613,6 @@ function updateFilterSlider() {
         document.body.classList.add('loaded');
     }); 
 // --- GESTION STATISTIQUES ---
-// --- GESTION STATISTIQUES ---
     const statsModal = document.getElementById('statsModal');
     const openStatsBtn = document.getElementById('openStatsBtn');
     const closeStatsBtn = document.getElementById('closeStatsBtn');
@@ -2138,12 +2157,33 @@ function updateFilterSlider() {
                 clonedCard.style.boxShadow = 'none';
                 clonedCard.style.border = 'none';
             }
-            }).then(canvas => {
+            }).then(originalCanvas => {
+
+                // On ajoute 15% de marge en largeur pour que la carte "respire"
+                const targetWidth = originalCanvas.width * 1.15; 
+                // Hauteur proportionnelle pour du 9:16 (ex: 1080x1920)
+                const targetHeight = Math.round(targetWidth * (16 / 9)); 
+
+                const storyCanvas = document.createElement('canvas');
+                storyCanvas.width = targetWidth;
+                storyCanvas.height = targetHeight;
+                const ctx = storyCanvas.getContext('2d');
+
+                // Remplissage du fond (clair ou sombre selon le thème)
+                ctx.fillStyle = realBgColor;
+                ctx.fillRect(0, 0, targetWidth, targetHeight);
+
+                // Centrage horizontal
+                const xOffset = (targetWidth - originalCanvas.width) / 2;
+                // Centrage vertical (légèrement remonté à 45% pour ne pas être gêné par les boutons Insta en bas)
+                const yOffset = (targetHeight - originalCanvas.height) * 0.45;
+
+                // On dessine la carte sur le fond 9:16
+                ctx.drawImage(originalCanvas, xOffset, yOffset);
                 
                 // --- CORRECTION MOBILE ICI ---
-                // Si on est sur mobile et que le navigateur supporte le partage (99% des mobiles)
                 if (isMobile() && navigator.share) {
-                    canvas.toBlob(async (blob) => {
+                    storyCanvas.toBlob(async (blob) => { // <-- On utilise storyCanvas
                         if (!blob) return;
                         const file = new File([blob], "FokalPress_Stats.png", { type: "image/png" });
                         
@@ -2153,23 +2193,17 @@ function updateFilterSlider() {
                                 title: 'Mes Stats FokalPress'
                             });
                         } catch (err) {
-                            // L'utilisateur a annulé ou erreur, on ne fait rien
                             console.log("Partage annulé ou erreur", err);
                         }
-                        
-                        // Restauration UI (dans tous les cas)
                         restoreUI();
                     }, 'image/png');
-                } 
-                // --- VERSION ORDINATEUR (Téléchargement direct) ---
-                else {
+                } else {
                     const link = document.createElement('a');
                     link.download = `FokalPress_Stats_${new Date().toISOString().slice(0,10)}.png`;
-                    link.href = canvas.toDataURL('image/png');
+                    link.href = storyCanvas.toDataURL('image/png'); // <-- On utilise storyCanvas
                     link.click();
                     restoreUI();
                 }
-
             }).catch(err => {
                 console.error("Erreur capture :", err);
                 alert("Erreur lors de la création de l'image.");
