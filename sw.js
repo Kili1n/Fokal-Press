@@ -4,7 +4,7 @@ self.addEventListener('push', function(event) {
         const data = event.data.json();
         const options = {
             body: data.body,
-            icon: '/data/logo-IOS.png', // Ton icône existante
+            icon: '/data/notif.png', // Ton icône existante
             badge: '/data/notif.png',
             vibrate: [200, 100, 200],
             data: { url: data.url || '/' }
