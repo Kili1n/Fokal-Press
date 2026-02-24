@@ -2,7 +2,7 @@ name: Daily Push Notifications
 
 on:
   schedule:
-    - cron: '0 8 * * *' # S'exécute tous les jours à 08:00 UTC (soit 9h ou 10h en France selon l'heure d'été/hiver)
+    - cron: '0 9 * * *' # S'exécute tous les jours à 08:00 UTC (soit 9h ou 10h en France selon l'heure d'été/hiver)
   workflow_dispatch: # Permet de lancer le script manuellement depuis GitHub pour tester
 
 jobs:
