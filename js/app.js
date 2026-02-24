@@ -3958,17 +3958,23 @@ function editMatch(id) {
 // --- GESTION PWA (INSTALLATION) ---
 let deferredPrompt; // Pour stocker l'événement Chrome/Android
 
+const isPWA = () => {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+           window.navigator.standalone === true ||
+           document.referrer.includes('android-app://');
+};
+
 // 1. Détection de l'événement d'installation (Android / Chrome Desktop)
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Empêche la mini-barre d'info automatique
     e.preventDefault();
-    // Stocke l'événement pour l'utiliser plus tard
     deferredPrompt = e;
     
-    // Affiche le bouton dans les paramètres
-    const installBtn = document.getElementById('installAppBtn');
-    if (installBtn) {
-        installBtn.style.display = 'block';
+    // SÉCURITÉ : On bloque formellement l'affichage si on est déjà dans la PWA
+    if (!isPWA()) {
+        const installBtn = document.getElementById('installAppBtn');
+        if (installBtn) {
+            installBtn.style.display = 'block';
+        }
     }
 });
 
@@ -3989,15 +3995,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const isInStandaloneMode = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
     
     if (installBtn) {
-        if (isInStandaloneMode) {
-            // Si on est DANS la PWA, on masque définitivement le bouton d'installation
+        if (isPWA()) {
+            // FORCE la disparition dans la PWA
             installBtn.style.display = 'none';
         } else if (isIos()) {
-            // Si on est sur iOS et PAS en PWA, on l'affiche par défaut 
-            // (car Apple ne déclenche pas l'event beforeinstallprompt)
+            // Sur iOS navigateur (Safari), on l'affiche par défaut
             installBtn.style.display = 'block';
         } else {
-            // Sur Android/PC, on le masque par défaut en attendant l'event 'beforeinstallprompt'
+            // Sur Android/PC navigateur, on cache par défaut en attendant l'événement beforeinstallprompt
             installBtn.style.display = 'none';
         }
     }
