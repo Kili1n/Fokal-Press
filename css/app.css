@@ -2305,6 +2305,9 @@ body.dark-mode .stat-badge-row:nth-of-type(3) .stat-icon {
     background-color: #4f46e5 !important;
 }
 
-/* Note pour le mode sombre : 
-Ces deux couleurs (Bleu et Indigo) restent parfaitement lisibles 
-et esthétiques sur fond noir, donc pas besoin de surcharge complexe pour le Dark Mode ! */
+/* --- MASQUER LE BOUTON INSTALLATION DANS LA PWA --- */
+@media all and (display-mode: standalone) {
+    #installAppBtn {
+        display: none !important;
+    }
+}

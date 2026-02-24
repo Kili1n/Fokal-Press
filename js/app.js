@@ -3986,10 +3986,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Si on est sur iOS, on affiche toujours le bouton (car on ne peut pas détecter si c'est déjà installé facilement)
     // Sauf si on est en mode "standalone" (l'app est déjà ouverte comme une app)
-    const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+    const isInStandaloneMode = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
     
-    if (isIos() && !isInStandaloneMode && installBtn) {
-        installBtn.style.display = 'block';
+    if (installBtn) {
+        if (isInStandaloneMode) {
+            // Si on est DANS la PWA, on masque définitivement le bouton d'installation
+            installBtn.style.display = 'none';
+        } else if (isIos()) {
+            // Si on est sur iOS et PAS en PWA, on l'affiche par défaut 
+            // (car Apple ne déclenche pas l'event beforeinstallprompt)
+            installBtn.style.display = 'block';
+        } else {
+            // Sur Android/PC, on le masque par défaut en attendant l'event 'beforeinstallprompt'
+            installBtn.style.display = 'none';
+        }
     }
 
     // Gestion du clic sur le bouton "Installer"
