@@ -336,9 +336,15 @@
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button id="installAppBtn" class="login-submit-btn" style="background: var(--accent); color: #ffffff; display: none; border: none;">
-                    <i class="fa-solid fa-mobile-screen-button"></i> Installer l'application
-                </button>
+                <div class="settings-action-row">
+                    <button id="installAppBtn" class="login-submit-btn btn-install">
+                        <i class="fa-solid fa-mobile-screen-button"></i> Installer
+                    </button>
+                    
+                    <button id="enableNotifsBtn" class="login-submit-btn btn-notif">
+                        <i class="fa-solid fa-bell"></i> Notifications
+                    </button>
+                </div>
                 
                 <button id="settingsLogoutBtn" class="login-submit-btn bg-secondary-adaptive">
                     <i class="fa-solid fa-right-from-bracket"></i> Se déconnecter

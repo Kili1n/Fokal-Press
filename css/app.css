@@ -2265,3 +2265,46 @@ body.dark-mode .stat-badge-row:nth-of-type(3) .stat-icon {
     color: #30D158 !important;
 }
 
+/* --- LIGNE DE BOUTONS (INSTALLER / NOTIFS) --- */
+.settings-action-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    /* On enlève le margin-top ici car il est géré par la div parente dans votre HTML */
+}
+
+/* On ajuste les boutons de cette ligne spécifique */
+.settings-action-row .login-submit-btn {
+    flex: 1;              /* Partage l'espace 50/50 */
+    margin-top: 0;        /* Annule la marge du bouton par défaut */
+    font-size: 13.5px;    /* Légèrement réduit pour éviter que le texte ne déborde */
+    padding: 12px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;             /* Espace propre entre l'icône et le texte */
+}
+
+/* Style spécifique : Installer (Bleu principal) */
+.btn-install {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    border: none;
+}
+.btn-install:hover {
+    background-color: #005bb7 !important;
+}
+
+/* Style spécifique : Notifications (Indigo de votre charte graphique) */
+.btn-notif {
+    background-color: #6366F1 !important; 
+    color: #ffffff !important;
+    border: none;
+}
+.btn-notif:hover {
+    background-color: #4f46e5 !important;
+}
+
+/* Note pour le mode sombre : 
+Ces deux couleurs (Bleu et Indigo) restent parfaitement lisibles 
+et esthétiques sur fond noir, donc pas besoin de surcharge complexe pour le Dark Mode ! */

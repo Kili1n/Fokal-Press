@@ -2486,9 +2486,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (userDoc.exists) {
                     const userData = userDoc.data();
 
+                    const notifBtn = document.getElementById('enableNotifsBtn');
+                    if (notifBtn) {
+                        if (userData.pushSubscription) {
+                            notifBtn.classList.add('active-notifs');
+                            notifBtn.style.backgroundColor = "#34C759";
+                            notifBtn.style.color = "white";
+                            notifBtn.innerHTML = '<i class="fa-solid fa-bell-slash"></i> Désactiver';
+                        } else {
+                            notifBtn.classList.remove('active-notifs');
+                            notifBtn.style.backgroundColor = "";
+                            notifBtn.style.color = "";
+                            notifBtn.innerHTML = '<i class="fa-solid fa-bell"></i> Activer les notifs';
+                        }
+                    }
+
                     const today = new Date().toISOString().slice(0, 10); // Format "YYYY-MM-DD"
                     const lastSyncDate = localStorage.getItem('last_connection_date');
-
                     // On met à jour seulement si la date stockée est différente d'aujourd'hui
                     if (lastSyncDate !== today) {
                         db.collection('users').doc(user.uid).update({
@@ -4140,7 +4154,106 @@ function openSuggestionModal() {
     modal.classList.remove('hidden');
 }
 
+// Fonction utilitaire indispensable pour convertir la clé VAPID (à mettre tout en bas de app.js par exemple)
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+   const enableNotifsBtn = document.getElementById('enableNotifsBtn');
+
+    if (enableNotifsBtn) {
+        enableNotifsBtn.addEventListener('click', async () => {
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                alert("Vous devez être connecté pour gérer les notifications.");
+                return;
+            }
+
+            const isEnabled = enableNotifsBtn.classList.contains('active-notifs');
+            enableNotifsBtn.disabled = true;
+
+            if (isEnabled) {
+                // ==========================================
+                // LOGIQUE DE DÉSACTIVATION
+                // ==========================================
+                enableNotifsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Désactivation...';
+
+                try {
+                    // 1. Désinscrire le navigateur
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        const subscription = await registration.pushManager.getSubscription();
+                        if (subscription) {
+                            await subscription.unsubscribe();
+                        }
+                    }
+
+                    // 2. Supprimer de Firebase
+                    await db.collection('users').doc(user.uid).update({
+                        pushSubscription: firebase.firestore.FieldValue.delete()
+                    });
+
+                    // 3. Mise à jour visuelle
+                    enableNotifsBtn.classList.remove('active-notifs');
+                    enableNotifsBtn.style.backgroundColor = ""; 
+                    enableNotifsBtn.style.color = "";
+                    enableNotifsBtn.innerHTML = '<i class="fa-solid fa-bell"></i> Activer les notifs';
+
+                } catch (err) {
+                    console.error("Erreur de désactivation :", err);
+                    alert("Erreur lors de la désactivation.");
+                    enableNotifsBtn.innerHTML = '<i class="fa-solid fa-bell-slash"></i> Désactiver';
+                } finally {
+                    enableNotifsBtn.disabled = false;
+                }
+
+            } else {
+                // ==========================================
+                // LOGIQUE D'ACTIVATION (Ton code adapté)
+                // ==========================================
+                enableNotifsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Activation...';
+
+                try {
+                    const permission = await Notification.requestPermission();
+                    if (permission !== 'granted') throw new Error('Permission refusée.');
+
+                    const registration = await navigator.serviceWorker.register('sw.js');
+                    const publicVapidKey = 'BHXLM_lvgVjR020rrfglRN31xr3WGaA56uWCBH4U0LGsOlmXXnGqxr3pAS9y6ldn_f7OdRrK8dU4f70jrsniD0c';
+                    
+                    const subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+                    });
+
+                    await db.collection('users').doc(user.uid).update({
+                        pushSubscription: JSON.stringify(subscription)
+                    });
+
+                    // Mise à jour visuelle
+                    enableNotifsBtn.classList.add('active-notifs');
+                    enableNotifsBtn.style.backgroundColor = "#34C759"; 
+                    enableNotifsBtn.style.color = "white";
+                    enableNotifsBtn.innerHTML = '<i class="fa-solid fa-bell-slash"></i> Désactiver';
+
+                } catch (err) {
+                    console.error("Erreur d'activation :", err);
+                    alert("Impossible d'activer les notifications.");
+                    enableNotifsBtn.innerHTML = '<i class="fa-solid fa-bell"></i> Activer les notifs';
+                } finally {
+                    enableNotifsBtn.disabled = false;
+                }
+            }
+        });
+    }
+    
     const suggestModal = document.getElementById('suggestTeamModal');
     const closeSuggestBtn = document.getElementById('closeSuggestBtn');
     const suggestForm = document.getElementById('suggestTeamForm');

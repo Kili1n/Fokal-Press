@@ -1,7 +1,7 @@
 {
-  "name": "Fokal-Press",
+  "name": "fokal-press",
   "version": "1.0.0",
-  "description": "",
+  "description": "Un **outil de planification tout-en-un** conçu spécifiquement pour les **photographes de sport**.",
   "main": "update_matchs.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +11,16 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "puppeteer": "^24.34.0"
-  }
+    "firebase-admin": "^13.6.1",
+    "puppeteer": "^24.34.0",
+    "web-push": "^3.6.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kili1n/Dashboard_presse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kili1n/Dashboard_presse/issues"
+  },
+  "homepage": "https://github.com/Kili1n/Dashboard_presse#readme"
 }
