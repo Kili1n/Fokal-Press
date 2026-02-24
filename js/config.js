@@ -123,7 +123,9 @@ const CUSTOM_LOGOS = {
     "ASA SCEAUX": "https://dagoba-boutiques-01.s3.amazonaws.com/vendor0939/images/0001210962/sceaux_logo_180--0-0--813f7d22-d923-4e57-9ba3-3cccdddf389f.png",
     "LA TRONCHE MEYLAN": "https://media.scorenco.com/media/image/club-logo-1708424981.25292.png",
     "TOULOUSE FENIX" : "https://upload.wikimedia.org/wikipedia/fr/archive/1/1f/20180516111708%21F%C3%A9nix_Toulouse_Handball_2016_logo.svg",
+    "TOULOUSE FC" : "https://upload.wikimedia.org/wikipedia/fr/archive/5/58/20210904001226%21Toulouse_FC_logo_2021.svg",
     "TOULOUSE": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Logo-tmb-Toulouse-basket.png",
+    "AS MONACO FC" : "https://upload.wikimedia.org/wikipedia/fr/thumb/5/58/Logo_AS_Monaco_FC_-_2021.svg/960px-Logo_AS_Monaco_FC_-_2021.svg.png",
     "AS MONACO": "https://upload.wikimedia.org/wikipedia/fr/thumb/f/ff/Logo_AS_Monaco_Basket.svg/1524px-Logo_AS_Monaco_Basket.svg.png",
     "LE MANS SARTHE BASKET": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Le_Mans_Sarthe_Basket_logo_nouveau.png/250px-Le_Mans_Sarthe_Basket_logo_nouveau.png",
     "ASVEL BASKET": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/bf/Logo_ASVEL_Lyon_Villeurbanne_-_2018.svg/330px-Logo_ASVEL_Lyon_Villeurbanne_-_2018.svg.png",
@@ -180,6 +182,7 @@ const CUSTOM_LOGOS = {
     "AUBERVILLIERS" : "https://upload.wikimedia.org/wikipedia/fr/thumb/b/b9/Logo_FCM_Aubervilliers_-_2024.svg/1200px-Logo_FCM_Aubervilliers_-_2024.svg.png",
     "ORVAULT":"https://www.orvault.fr/wp-content/uploads/2025/05/Logo-Com-Saison-2024-2025.png",
     "MONTBRISON" : "https://s2.static-footeo.com/uploads/as-savigneux-montbrison/logo__t1wiaz.png",
+    "RC STRASBOURG" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/70/Racing_Club_de_Strasbourg_Alsace_%28RC_Strasbourg_-_RCS_-_RCSA%29_logo_officiel.svg/1280px-Racing_Club_de_Strasbourg_Alsace_%28RC_Strasbourg_-_RCS_-_RCSA%29_logo_officiel.svg.png",
     "STRASBOURG" : "https://upload.wikimedia.org/wikipedia/fr/b/b0/Logo_SIG_Strasbourg_-_2015.svg",
     "GRAFFENSTADEN" : "https://upload.wikimedia.org/wikipedia/fr/b/b0/Logo_SIG_Strasbourg_-_2015.svg",
     "VERSAILLE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/6/6e/Logo_FC_Versailles_-_2022.svg/960px-Logo_FC_Versailles_-_2022.svg.png",
@@ -250,6 +253,7 @@ const CUSTOM_LOGOS = {
     "HYERES" : "https://upload.wikimedia.org/wikipedia/fr/archive/0/00/20190519234206%21Logo_Hy%C3%A8res_FC_2017.svg",
     "ASTDV" : "https://upload.wikimedia.org/wikipedia/fr/7/76/Logo_ASTDV.png",
     "MONDEVILLE" : "https://upload.wikimedia.org/wikipedia/fr/c/c8/LOGO_USOM.png",
+    "LYONSO" : "https://www.lyonso.com/wp-content/uploads/2025/07/Logo-blanc-10-ANS.png",
     "LYON" : "https://media.ol.fr/uploads/assets/asvel_logo_feminin_64771f904a.png",
     "REST BRETAGNE HANDBALL" : "https://upload.wikimedia.org/wikipedia/fr/thumb/2/26/BBH_Logo_2021.png/250px-BBH_Logo_2021.png",
     "MONTFERMEIL" : "https://fc-montfermeil.com/cdn/shop/files/Logo_Fc_Montfermeil_93_e4a24c6b-4fe7-4446-b74c-83ec707824bc.png?v=1690919901",
@@ -262,6 +266,7 @@ const CUSTOM_LOGOS = {
     "CAMBRAI" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzuMOhNxOtY1CU1mpBHb0_lUQOJ9WBSZJpWQ&s",
     "FC ROUSSET" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1zV15zAx-CUF__uE9dRKJHDQpaHKzZrBcew&s",
     "FRONTIGNAN" : "https://www.frontignanthb.fr/wp-content/uploads/2020/05/FTHB_LOGOPRINCIPAL.png",
+    "MONTPELLIER HSC" : "https://upload.wikimedia.org/wikipedia/commons/6/6a/Logo_-_Montpellier_H%C3%A9rault_Sport_Club_%28MHSC%29.png",
     "MONTPELLIER" : "https://upload.wikimedia.org/wikipedia/fr/thumb/4/42/Montpellier_M%C3%A9diterran%C3%A9e_M%C3%A9tropole_Handball_logo_2018.svg/500px-Montpellier_M%C3%A9diterran%C3%A9e_M%C3%A9tropole_Handball_logo_2018.svg.png",
     "SAINTES US" : "https://upload.wikimedia.org/wikipedia/fr/b/bd/US_Saintes_Handball.svg",
     "FURIANI" : "https://upload.wikimedia.org/wikipedia/fr/thumb/5/52/Logo_AS_Furiani_Agliani_-_2020.svg/1280px-Logo_AS_Furiani_Agliani_-_2020.svg.png",
@@ -290,7 +295,18 @@ const CUSTOM_LOGOS = {
     "UJAP QUIMPER 29" : "https://upload.wikimedia.org/wikipedia/fr/3/34/UJAP_Quimper_%28logo%29.png",
     "DENAIN VOLTAIRE BASKET" : "https://upload.wikimedia.org/wikipedia/fr/thumb/9/90/Logo_ASC_Denain_Voltaire_PH_-_2013.svg/1280px-Logo_ASC_Denain_Voltaire_PH_-_2013.svg.png",
     "ANTIBES" : "https://upload.wikimedia.org/wikipedia/fr/thumb/d/dd/Logo_Sharks_Antibes_Basket.svg/1280px-Logo_Sharks_Antibes_Basket.svg.png",
-};
+    "LEVALLOIS METROPOLITANS" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThXqs-OS7Fezcm-liiUUqHwaziIfGf2p6Itw&s",
+    "BERCK" : "https://upload.wikimedia.org/wikipedia/fr/archive/7/78/20241019205757%21Logo_Avenir_Basket_Berck_Rang-du-Fliers_-_2022.svg",
+    "PAYS SALONAIS" : "https://www.bebasket.fr/_next/image?url=https%3A%2F%2Fcdn.bebasket.fr%2Fresources%2Fimages%2Fteam%2Fpays-salonais-basket-13-logo-1f067275-86f3-6d52-93aa-0778d69d74ce.jpg&w=3840&q=75",
+    "SAINT-VALLIER" : "https://upload.wikimedia.org/wikipedia/fr/thumb/9/94/Logo_Saint-Vallier_Basket_Dr%C3%B4me_-_2011.svg/960px-Logo_Saint-Vallier_Basket_Dr%C3%B4me_-_2011.svg.png",
+    "SCABB" : "https://www.scabbasket.fr/wp-content/uploads/2024/07/scabb_logo_bandeau.png",
+    "BOULOGNE" : "https://upload.wikimedia.org/wikipedia/fr/1/11/Stade_Olympique_Maritime_Boulonnais_%28logo%29.png",
+    "METZ" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7Leuzel9LRUtvbU8FWpSfLffOJiOdEoD_wA&s",
+    "BESAC" : "https://besacbasket.fr/wp-content/uploads/2024/12/Design-sans-titre-26.png",
+    "BYERS" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/7e/Logo_Fos_Provence_Basket_-_2019.svg/960px-Logo_Fos_Provence_Basket_-_2019.svg.png",
+    "LOON PLAGE" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRptNS1sXKbhF_Zardvnw-t293QgtE_I4meLA&s",
+    "ORCHIES" : "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/BCO_LOGO_alxgraphisme.svg/langfr-250px-BCO_LOGO_alxgraphisme.svg.png"
+};  
 
 const STADIUM_COORDS = {
     // --- LISTE ORIGINALE MISE À JOUR ---
