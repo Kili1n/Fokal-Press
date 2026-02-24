@@ -1,6 +1,18 @@
 // .github/scripts/send-notifs.js
 const admin = require('firebase-admin');
 const webpush = require('web-push');
+const fs = require('fs'); // Permet de lire les fichiers locaux
+
+// 1. Charger la base de données locale pour retrouver les vrais noms
+let matchsDb = [];
+try {
+    matchsDb = JSON.parse(fs.readFileSync('./data/matchs.json', 'utf8'));
+} catch (err) {
+    console.warn("Fichier matchs.json introuvable, on utilisera les ID sans espaces.");
+}
+
+// Fonction utilitaire pour faire correspondre les noms (comme dans app.js)
+const cleanStr = (str) => str.replace(/['"\s]/g, '');
 
 // Configuration Firebase via les secrets GitHub
 const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
@@ -16,7 +28,7 @@ webpush.setVapidDetails(
 
 async function run() {
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0]; // "2026-02-24"
+    const todayStr = today.toISOString().split('T')[0]; 
     
     const in3Days = new Date(today);
     in3Days.setDate(today.getDate() + 3);
@@ -26,25 +38,41 @@ async function run() {
 
     for (const doc of usersSnapshot.docs) {
         const userData = doc.data();
-        if (!userData.pushSubscription) continue; // Pas abonné
+        if (!userData.pushSubscription) continue; 
         const subscription = JSON.parse(userData.pushSubscription);
 
-        // 1. Vérifier les matchs "Acceptés" pour AUJOURD'HUI (dans "archives")
+        // 1. Vérifier les matchs "Acceptés" pour AUJOURD'HUI
         if (userData.archives) {
             Object.values(userData.archives).forEach(match => {
                 if (match.dateObj && match.dateObj.startsWith(todayStr)) {
-                    sendPush(subscription, "📸 Jour de match !", `Ton match ${match.home.name} vs ${match.away.name} a lieu aujourd'hui. Prépare ton matériel et bon match !`);
+                    // Ici on utilise déjà l'objet complet, donc les espaces sont présents
+                    sendPush(subscription, "📸 C'est le jour J !", `Ton match ${match.home.name} vs ${match.away.name} a lieu aujourd'hui. Prépare ton matériel !`);
                 }
             });
         }
 
-        // 2. Vérifier les matchs "Envoyés" pour DANS 3 JOURS (dans "favorites" où le statut est 'asked')
+        // 2. Vérifier les matchs "Envoyés" pour DANS 3 JOURS
         if (userData.favorites) {
             Object.entries(userData.favorites).forEach(([matchId, status]) => {
-                // matchId ressemble à "EquipeA_EquipeB_2026-02-27"
                 const matchDate = matchId.split('_').pop(); 
                 if (status === 'asked' && matchDate === in3DaysStr) {
-                    const teams = matchId.split('_').slice(0, 2).join(' vs ');
+                    
+                    let homeName = matchId.split('_')[0];
+                    let awayName = matchId.split('_')[1];
+
+                    // Recherche du vrai nom dans le JSON avec les espaces
+                    const realMatch = matchsDb.find(m => 
+                        cleanStr(m.home) === homeName && 
+                        cleanStr(m.away) === awayName
+                    );
+
+                    // Si on trouve le match, on remplace par les vrais noms
+                    if (realMatch) {
+                        homeName = realMatch.home;
+                        awayName = realMatch.away;
+                    }
+
+                    const teams = `${homeName} vs ${awayName}`;
                     sendPush(subscription, "⚠️ Toujours aucune réponse", `Le match ${teams} est dans 3 jours. N'oublie pas de relancer le club si tu n'as pas eu de réponse !`);
                 }
             });
