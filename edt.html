@@ -48,7 +48,6 @@
             white-space: pre;
         }
 
-        /* Personnalisation du texte indicatif (placeholder) */
         textarea::placeholder {
             color: #999;
             opacity: 1;
@@ -57,7 +56,7 @@
         .button-group {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap; /* Permet aux boutons de passer à la ligne sur très petit écran */
+            flex-wrap: wrap;
         }
 
         button {
@@ -85,19 +84,17 @@
             color: white;
         }
 
-        /* Conteneur pour le scroll sur mobile */
         .scroll-container {
             width: 100%;
             max-width: 1000px;
-            overflow-x: auto; /* Active le scroll horizontal */
-            -webkit-overflow-scrolling: touch; /* Scroll fluide sur iOS */
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* Timetable Styles - Largeur figée pour bloquer les proportions */
         .timetable-wrapper {
-            width: 900px; /* Largeur fixe : ça ne s'écrasera jamais sur mobile */
+            width: 900px; 
             min-width: 900px;
             background: #ffffff; 
             border: 1px solid #777;
@@ -133,7 +130,7 @@
         .body-row {
             display: flex;
             position: relative;
-            height: 720px; /* 12 heures * 60px */
+            height: 720px; 
             background-color: #ffffff;
         }
 
@@ -182,7 +179,6 @@
             border-right: none;
         }
 
-        /* Bloc de cours */
         .class-block {
             position: absolute;
             border-radius: 8px;
@@ -243,7 +239,7 @@
                 <div class="header-cell">Mercredi</div>
                 <div class="header-cell">Jeudi</div>
                 <div class="header-cell">Vendredi</div>
-            </div>
+                </div>
             <div class="body-row" id="schedule-body">
                 <div class="grid-lines" id="grid-lines"></div>
                 <div class="time-column" id="time-column"></div>
@@ -252,7 +248,7 @@
                 <div class="day-column" id="day-3"></div>
                 <div class="day-column" id="day-4"></div>
                 <div class="day-column" id="day-5"></div>
-            </div>
+                </div>
         </div>
     </div>
 
@@ -275,7 +271,7 @@
 
         const daysMap = {
             'LUNDI': 1, 'MARDI': 2, 'MERCREDI': 3,
-            'JEUDI': 4, 'VENDREDI': 5
+            'JEUDI': 4, 'VENDREDI': 5 // Samedi retiré de la logique active
         };
 
         const typeMap = {
@@ -314,14 +310,15 @@
         }
 
         function generateSchedule() {
-            for (let i = 1; i <= 6; i++) {
+            // Nettoyage limité à 5 jours
+            for (let i = 1; i <= 5; i++) {
                 document.getElementById(`day-${i}`).innerHTML = '';
             }
             courseColors = {}; 
             colorIndex = 0;
 
             const rawData = document.getElementById('dataInput').value;
-            if (!rawData.trim()) return; // Ne rien faire si la zone est vide
+            if (!rawData.trim()) return; 
 
             const lines = rawData.split('\n');
             const regex = /([A-Z0-9]{2,4})\s+([CDT])\s+\d+(?:\s+([A-Z]))?\s+([A-Z]+)\.*\s+(\d{2}):(\d{2})-(\d{2}):(\d{2})[^=]*=(.*)/;
@@ -344,7 +341,8 @@
                     const endM = parseInt(match[8], 10);
                     const room = match[9].trim();
 
-                    if (day && day >= 1 && day <= 6) {
+                    // Limité au jour 5 (Vendredi) maximum
+                    if (day && day >= 1 && day <= 5) {
                         const startDecimal = startH + (startM / 60);
                         const endDecimal = endH + (endM / 60);
 
@@ -404,7 +402,6 @@
 
         window.onload = () => {
             initGrid();
-            // L'appel à generateSchedule() est retiré au démarrage pour laisser la grille vide
         };
     </script>
 </body>
