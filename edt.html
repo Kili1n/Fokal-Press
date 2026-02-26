@@ -78,14 +78,14 @@
             color: white;
         }
 
-        /* Timetable Styles (Ancien format gardé intact) */
+        /* Timetable Styles */
         .timetable-wrapper {
             width: 100%;
             max-width: 1000px;
-            background: #ffffff; /* Fond blanc forcé pour le PNG */
+            background: #ffffff; 
             border: 1px solid #777;
             border-radius: 12px;
-            overflow: hidden; /* Les bords arrondis s'appliquent proprement */
+            overflow: hidden; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
@@ -112,7 +112,7 @@
         .time-header {
             width: 60px;
             flex: none;
-            background-color: #fff; /* Fond blanc pour le coin en haut à gauche */
+            background-color: #fff; 
         }
 
         .body-row {
@@ -122,7 +122,6 @@
             background-color: #ffffff;
         }
 
-        /* Lignes horizontales pointillées */
         .grid-lines {
             position: absolute;
             top: 0;
@@ -168,11 +167,9 @@
             border-right: none;
         }
 
-        /* Bloc de cours */
+        /* Bloc de cours (les positions et largeurs seront gérées en JS) */
         .class-block {
             position: absolute;
-            left: 4px;
-            right: 4px;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
@@ -184,11 +181,12 @@
             box-sizing: border-box;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             overflow: hidden;
+            word-break: break-word; /* Évite que le texte déborde si la case est fine */
         }
 
         .class-title {
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             margin-bottom: 4px;
         }
 
@@ -303,7 +301,6 @@
             for (let hour = 8; hour <= 20; hour++) {
                 const percentage = ((hour - 8) / 12) * 100;
                 
-                // Labels d'heures (à part 8h qui serait coupé)
                 if (hour > 8) {
                     const label = document.createElement('div');
                     label.className = 'time-label';
@@ -312,7 +309,6 @@
                     timeCol.appendChild(label);
                 }
 
-                // Lignes horizontales pointillées
                 if(hour > 8 && hour < 20) {
                     const line = document.createElement('div');
                     line.className = 'grid-line';
@@ -327,17 +323,16 @@
         }
 
         function generateSchedule() {
-            // Nettoyage complet
             for (let i = 1; i <= 6; i++) {
                 document.getElementById(`day-${i}`).innerHTML = '';
             }
-            courseColors = {}; // Réinitialise les couleurs
+            courseColors = {}; 
             colorIndex = 0;
 
             const rawData = document.getElementById('dataInput').value;
             const lines = rawData.split('\n');
 
-            // RegEx robuste pour extraire toutes les variables nécessaires
+            // Extraction incluant le sous-groupe (ex: 'A' ou 'B')
             const regex = /([A-Z0-9]{2,4})\s+([CDT])\s+\d+(?:\s+([A-Z]))?\s+([A-Z]+)\.*\s+(\d{2}):(\d{2})-(\d{2}):(\d{2})[^=]*=(.*)/;
 
             lines.forEach(line => {
@@ -345,7 +340,9 @@
                 if (match) {
                     const course = match[1];
                     let type = typeMap[match[2]];
-                    if (match[3]) type += ' ' + match[3]; // TP B, etc.
+                    const subGroup = match[3]; // 'A' ou 'B' (peut être undefined)
+                    
+                    if (subGroup) type += ' ' + subGroup;
                     
                     const dayStr = match[4].replace(/\./g, '');
                     const day = daysMap[dayStr];
@@ -360,7 +357,6 @@
                         const startDecimal = startH + (startM / 60);
                         const endDecimal = endH + (endM / 60);
 
-                        // Calcul en pourcentage (Amplitude de 12h)
                         const topPercent = ((startDecimal - 8) / 12) * 100;
                         const heightPercent = ((endDecimal - startDecimal) / 12) * 100;
 
@@ -370,7 +366,20 @@
                         block.style.height = `${heightPercent}%`;
                         block.style.backgroundColor = getColor(course);
 
-                        // Injection du HTML comme sur l'image cible !
+                        // Gestion de la largeur pour les groupes A ou B (Semaines 1 sur 2)
+                        if (subGroup === 'A') {
+                            block.style.width = 'calc(50% - 6px)'; // Moitié de la largeur
+                            block.style.left = '4px'; // Collé à gauche
+                        } else if (subGroup === 'B') {
+                            block.style.width = 'calc(50% - 6px)'; // Moitié de la largeur
+                            block.style.left = '50%'; // Commence à la moitié (à droite)
+                            block.style.marginLeft = '2px'; // Petit espacement au milieu
+                        } else {
+                            // Cours normal toutes les semaines (Pleine largeur)
+                            block.style.left = '4px';
+                            block.style.right = '4px';
+                        }
+
                         block.innerHTML = `
                             <div class="class-title">${course} - ${type}</div>
                             <div class="class-time">${formatTime(startH, startM)}-${formatTime(endH, endM)}</div>
@@ -385,11 +394,9 @@
 
         function saveAsPng() {
             const wrapper = document.getElementById('timetable-wrapper');
-            
-            // html2canvas capture l'élément DOM et génère une image
             html2canvas(wrapper, {
-                scale: 2, // Pour une meilleure résolution
-                backgroundColor: "#ffffff" // S'assure que le fond transparent devienne blanc
+                scale: 2, 
+                backgroundColor: "#ffffff"
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'mon_emploi_du_temps.png';
