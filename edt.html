@@ -7,46 +7,30 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        :root {
-            --bg-color: #f4f4f9;
-            --timetable-bg: #ffffff;
-            --text-color: #333333;
-            --btn-primary-bg: #1c2b4d; /* Bleu foncé */
-            --btn-secondary-bg: #4c566a; /* Gris foncé */
-            --border-color: #e0e0e0;
-            --header-bg: #f8f9fa;
-        }
-
         body {
             font-family: 'Montserrat', sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Styles de l'interface de saisie */
         .controls {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1000px;
             background: white;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -54,161 +38,177 @@
 
         textarea {
             width: 100%;
-            height: 250px;
+            height: 200px;
             padding: 15px;
-            font-family: 'Courier New', Courier, monospace; /* Police monospace pour aligner le texte */
-            border: 2px solid var(--border-color);
+            font-family: monospace;
+            border: 1px solid #ccc;
             border-radius: 8px;
-            font-size: 14px;
             resize: vertical;
-            white-space: pre; /* Conserver les espaces et retours chariots */
             box-sizing: border-box;
+            white-space: pre;
         }
 
         .button-group {
             display: flex;
             gap: 10px;
-            justify-content: flex-start;
         }
 
         button {
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
             border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.8;
         }
 
         #generateBtn {
-            background-color: var(--btn-secondary-bg);
+            background-color: #333;
             color: white;
-        }
-
-        #generateBtn:hover {
-            background-color: #3b4252;
         }
 
         #savePngBtn {
-            background-color: var(--btn-primary-bg);
+            background-color: #4CAF50;
             color: white;
         }
 
-        #savePngBtn:hover {
-            background-color: #15203a;
-        }
-
-        /* Styles de l'Emploi du Temps */
-        #timetableContainer {
-            background-color: var(--timetable-bg);
-            border: 1px solid #777; /* Bordure foncée comme sur l'image */
+        /* Timetable Styles (Ancien format gardé intact) */
+        .timetable-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            background: #ffffff; /* Fond blanc forcé pour le PNG */
+            border: 1px solid #777;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: hidden; /* Les bords arrondis s'appliquent proprement */
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            position: relative;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* Structure en grille */
-        .timetable-grid {
-            display: grid;
-            grid-template-columns: 60px repeat(6, 1fr); /* 1e col heures, 6 cols jours */
-            grid-template-rows: 40px repeat(12, 60px); /* 1e col jours, 12 cols heures */
-            position: relative;
+        .header-row {
+            display: flex;
+            background-color: #d1d1d1;
+            border-bottom: 1px solid #777;
         }
 
-        /* En-têtes de colonnes (jours) */
-        .day-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #d1d1d1; /* Gris de l'image */
+        .header-cell {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
             font-weight: 700;
             font-size: 14px;
+            color: #000;
             border-right: 1px solid #777;
-            border-bottom: 1px solid #777;
-            color: black;
         }
 
-        .day-header:last-child {
+        .header-cell:last-child {
             border-right: none;
         }
 
-        /* En-têtes de lignes (heures) */
-        .time-label {
-            grid-column: 1;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding-right: 8px;
-            font-weight: 700;
-            font-size: 12px;
-            background-color: white;
-            color: black;
-            border-bottom: 1px solid transparent; /* Pour aligner avec les lignes */
+        .time-header {
+            width: 60px;
+            flex: none;
+            background-color: #fff; /* Fond blanc pour le coin en haut à gauche */
         }
 
-        /* Lignes de la grille */
-        .grid-line-h {
+        .body-row {
+            display: flex;
+            position: relative;
+            height: 720px; /* 12 heures * 60px */
+            background-color: #ffffff;
+        }
+
+        /* Lignes horizontales pointillées */
+        .grid-lines {
             position: absolute;
-            left: 60px; /* Après la col des heures */
+            top: 0;
+            left: 60px;
             right: 0;
-            height: 1px;
-            border-top: 1px dashed #999;
+            bottom: 0;
             pointer-events: none;
         }
 
-        .grid-col {
-            grid-row: 2 / span 12; /* Toute la hauteur après l'en-tête */
-            border-right: 1px solid #777;
-            position: relative;
+        .grid-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px dashed #999;
         }
 
-        .grid-col:last-child {
+        .time-column {
+            width: 60px;
+            flex: none;
+            position: relative;
+            border-right: 1px solid #777;
+            background-color: #fff;
+        }
+
+        .time-label {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            transform: translateY(-50%);
+            font-weight: 700;
+            font-size: 12px;
+            color: #000;
+        }
+
+        .day-column {
+            flex: 1;
+            position: relative;
+            border-right: 1px solid #777;
+        }
+
+        .day-column:last-child {
             border-right: none;
         }
 
-        /* Blocs de cours */
-        .course-block {
+        /* Bloc de cours */
+        .class-block {
             position: absolute;
-            left: 4px; /* Petit padding horizontal */
+            left: 4px;
             right: 4px;
             border-radius: 8px;
-            padding: 8px;
-            color: #000;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             text-align: center;
+            color: #000;
+            padding: 4px;
             box-sizing: border-box;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            font-size: 12px;
+            overflow: hidden;
         }
 
-        .course-title {
+        .class-title {
             font-weight: 700;
+            font-size: 13px;
             margin-bottom: 4px;
         }
 
-        .course-details {
-            font-weight: 400;
-            line-height: 1.2;
+        .class-time {
+            font-weight: 500;
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+
+        .class-room {
+            font-weight: 600;
+            font-size: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="controls">
-            <h1>Générateur d'Emploi du Temps Universitaire</h1>
-            <p>Veuillez coller vos cours ci-dessous et cliquer sur "Générer".</p>
-            <textarea id="courseInput">   GI02       7  AC04  AE01  AI16  AI23  AI27  LH14  SH02 
-
+    <div class="controls">
+        <textarea id="dataInput">
+ GI02       7  AC04  AE01  AI16  AI23  AI27  LH14  SH02 
 
  AC04       C 1     MARDI... 16:30-18:30,F1,S=FA201   
  AC04       D 1     MERCREDI 08:00-10:00,F1,S=FA304   
@@ -229,194 +229,179 @@
  LH14       D 2     JEUDI... 16:30-18:30,F1,S=FA413   
 
  SH02       C 1     VENDREDI 13:00-14:00,F1,S=FA100   
- SH02       D 1     VENDREDI 10:15-12:15,F1,S=FA304</textarea>
-            <div class="button-group">
-                <button id="generateBtn">Générer l'Emploi du Temps</button>
-                <button id="savePngBtn">Enregistrer en PNG</button>
-            </div>
+ SH02       D 1     VENDREDI 10:15-12:15,F1,S=FA304   
+        </textarea>
+        <div class="button-group">
+            <button id="generateBtn" onclick="generateSchedule()">Générer l'emploi du temps</button>
+            <button id="savePngBtn" onclick="saveAsPng()">Enregistrer en PNG</button>
         </div>
+    </div>
 
-        <div id="timetableContainer"></div>
+    <div class="timetable-wrapper" id="timetable-wrapper">
+        <div class="header-row">
+            <div class="header-cell time-header"></div>
+            <div class="header-cell">Lundi</div>
+            <div class="header-cell">Mardi</div>
+            <div class="header-cell">Mercredi</div>
+            <div class="header-cell">Jeudi</div>
+            <div class="header-cell">Vendredi</div>
+            <div class="header-cell">Samedi</div>
+        </div>
+        <div class="body-row" id="schedule-body">
+            <div class="grid-lines" id="grid-lines"></div>
+            
+            <div class="time-column" id="time-column"></div>
+            
+            <div class="day-column" id="day-1"></div>
+            <div class="day-column" id="day-2"></div>
+            <div class="day-column" id="day-3"></div>
+            <div class="day-column" id="day-4"></div>
+            <div class="day-column" id="day-5"></div>
+            <div class="day-column" id="day-6"></div>
+        </div>
     </div>
 
     <script>
-        // Palette de couleurs pour les matières (comme sur l'image)
-        const colors = {
-            'AC04': '#fecaca', // Rouge clair
-            'AI27': '#d9f99d', // Vert clair
-            'AE01': '#c7d2fe', // Bleu/Violet clair
-            'AI16': '#e9d5ff', // Violet clair
-            'AI23': '#fef3c7', // Jaune clair
-            'LH14': '#ddd6fe', // Lavande clair
-            'SH02': '#fbcfe8', // Rose clair
+        // Couleurs par défaut douces
+        const colorPalette = [
+            '#bd92fb', // Violet
+            '#fe9ae7', // Rose
+            '#8ef6a8', // Vert clair
+            '#fbe28a', // Jaune
+            '#87f7fa', // Cyan
+            '#fec998', // Orange clair
+            '#a7c7e7'  // Bleu pastel
+        ];
+
+        let courseColors = {};
+        let colorIndex = 0;
+
+        function getColor(course) {
+            if (!courseColors[course]) {
+                courseColors[course] = colorPalette[colorIndex % colorPalette.length];
+                colorIndex++;
+            }
+            return courseColors[course];
+        }
+
+        const daysMap = {
+            'LUNDI': 1, 'MARDI': 2, 'MERCREDI': 3,
+            'JEUDI': 4, 'VENDREDI': 5, 'SAMEDI': 6
         };
 
-        const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-        const startHour = 8;
-        const totalHours = 12; // De 8h à 20h
-        const rowHeight = 60; // Hauteur d'une heure en pixels
+        const typeMap = {
+            'C': 'CM', 'D': 'TD', 'T': 'TP'
+        };
 
-        function parseTime(timeStr) {
-            const [hours, minutes] = timeStr.split(':').map(Number);
-            return hours + minutes / 60;
-        }
+        function initGrid() {
+            const timeCol = document.getElementById('time-column');
+            const gridLines = document.getElementById('grid-lines');
+            
+            timeCol.innerHTML = '';
+            gridLines.innerHTML = '';
 
-        function formatTime(decimalTime) {
-            const hours = Math.floor(decimalTime);
-            const minutes = Math.round((decimalTime - hours) * 60);
-            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-        }
-
-        // --- Fonction de Parsing ---
-        function parseCourses(inputText) {
-            const courseLines = [];
-            const lines = inputText.split('\n');
-            const courseRegex = /([A-Z0-9]+)\s+([CDT])\s+(\d)(?:\s+([A-Z]))?\s+([A-Z]+)\.*[^0-9]+(\d{2}:\d{2})-(\d{2}:\d{2}),(F\d),S=([A-Z0-9]+)/;
-
-            lines.forEach(line => {
-                const match = line.trim().match(courseRegex);
-                if (match) {
-                    courseLines.push({
-                        matiere: match[1],
-                        type: match[2],
-                        groupe: match[3],
-                        sousGroupe: match[4] || '',
-                        jour: match[5].toLowerCase(),
-                        heureDebutStr: match[6],
-                        heureFinStr: match[7],
-                        frequence: match[8],
-                        salle: match[9]
-                    });
-                }
-            });
-            return courseLines;
-        }
-
-        // --- Fonction de Génération ---
-        function generateTimetable() {
-            const inputText = document.getElementById('courseInput').value;
-            const courses = parseCourses(inputText);
-            const container = document.getElementById('timetableContainer');
-            container.innerHTML = ''; // Vider le conteneur
-
-            // Créer la grille principale
-            const grid = document.createElement('div');
-            grid.className = 'timetable-grid';
-            container.appendChild(grid);
-
-            // 1. En-têtes (Jours)
-            grid.appendChild(document.createElement('div')); // Coin supérieur gauche vide
-            days.forEach((day, index) => {
-                const header = document.createElement('div');
-                header.className = 'day-header';
-                header.style.gridColumn = index + 2; // Commencer à la col 2
-                header.style.gridRow = 1;
-                header.innerText = day;
-                grid.appendChild(header);
-            });
-
-            // 2. Colonnes des jours (pour les lignes pointillées et le positionnement absolu)
-            const dayColumns = [];
-            for (let i = 0; i < 6; i++) {
-                const col = document.createElement('div');
-                col.className = 'grid-col';
-                col.style.gridColumn = i + 2;
-                grid.appendChild(col);
-                dayColumns.push(col);
-            }
-
-            // 3. Heures et Lignes pointillées
-            for (let i = 0; i <= totalHours; i++) {
-                const hour = startHour + i;
-                const topPx = i * rowHeight + 40; // +40px pour l'en-tête jour
-
-                // Label d'heure
-                if (i > 0) { // Ne pas afficher 8h00 en haut
+            for (let hour = 8; hour <= 20; hour++) {
+                const percentage = ((hour - 8) / 12) * 100;
+                
+                // Labels d'heures (à part 8h qui serait coupé)
+                if (hour > 8) {
                     const label = document.createElement('div');
                     label.className = 'time-label';
-                    label.style.gridColumn = 1;
-                    label.style.gridRow = i + 1;
-                    label.innerText = `${hour}:00`;
-                    grid.appendChild(label);
+                    label.style.top = `${percentage}%`;
+                    label.innerText = `${hour}h00`;
+                    timeCol.appendChild(label);
                 }
 
-                // Ligne pointillée
-                if (i > 0 && i < totalHours) {
+                // Lignes horizontales pointillées
+                if(hour > 8 && hour < 20) {
                     const line = document.createElement('div');
-                    line.className = 'grid-line-h';
-                    line.style.top = `${topPx}px`;
-                    grid.appendChild(line);
+                    line.className = 'grid-line';
+                    line.style.top = `${percentage}%`;
+                    gridLines.appendChild(line);
                 }
             }
+        }
 
-            // 4. Positionner les blocs de cours
-            const dayMap = { 'lundi': 0, 'mardi': 1, 'mercredi': 2, 'jeudi': 3, 'vendredi': 4, 'samedi': 5 };
+        function formatTime(h, m) {
+            return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`;
+        }
 
-            courses.forEach(course => {
-                const dayIndex = dayMap[course.jour];
-                if (dayIndex !== undefined) {
-                    const startDecimal = parseTime(course.heureDebutStr);
-                    const endDecimal = parseTime(course.heureFinStr);
+        function generateSchedule() {
+            // Nettoyage complet
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`day-${i}`).innerHTML = '';
+            }
+            courseColors = {}; // Réinitialise les couleurs
+            colorIndex = 0;
 
-                    const topPx = (startDecimal - startHour) * rowHeight + 40; // +40 pour l'en-tête jour
-                    const heightPx = (endDecimal - startDecimal) * rowHeight;
+            const rawData = document.getElementById('dataInput').value;
+            const lines = rawData.split('\n');
 
-                    const block = document.createElement('div');
-                    block.className = 'course-block';
-                    block.style.top = `${topPx}px`;
-                    block.style.height = `${heightPx}px`;
-                    block.style.backgroundColor = colors[course.matiere] || '#e0e0e0';
+            // RegEx robuste pour extraire toutes les variables nécessaires
+            const regex = /([A-Z0-9]{2,4})\s+([CDT])\s+\d+(?:\s+([A-Z]))?\s+([A-Z]+)\.*\s+(\d{2}):(\d{2})-(\d{2}):(\d{2})[^=]*=(.*)/;
 
-                    // Formater le contenu
-                    const typeMap = {'C': 'CM', 'D': 'TD', 'T': 'TP'};
-                    let fullType = typeMap[course.type] || course.type;
-                    if (course.sousGroupe) fullType += ` ${course.sousGroupe}`;
+            lines.forEach(line => {
+                const match = line.trim().match(regex);
+                if (match) {
+                    const course = match[1];
+                    let type = typeMap[match[2]];
+                    if (match[3]) type += ' ' + match[3]; // TP B, etc.
+                    
+                    const dayStr = match[4].replace(/\./g, '');
+                    const day = daysMap[dayStr];
+                    
+                    const startH = parseInt(match[5], 10);
+                    const startM = parseInt(match[6], 10);
+                    const endH = parseInt(match[7], 10);
+                    const endM = parseInt(match[8], 10);
+                    const room = match[9].trim();
 
-                    block.innerHTML = `
-                        <div class="course-title">${course.matiere} ${fullType}</div>
-                        <div class="course-details">
-                            ${course.groupe} ${course.jour.toUpperCase()}<br>
-                            ${course.heureDebutStr}-${course.heureFinStr},${course.frequence},S=${course.salle}
-                        </div>
-                    `;
+                    if (day && day >= 1 && day <= 6) {
+                        const startDecimal = startH + (startM / 60);
+                        const endDecimal = endH + (endM / 60);
 
-                    dayColumns[dayIndex].appendChild(block);
+                        // Calcul en pourcentage (Amplitude de 12h)
+                        const topPercent = ((startDecimal - 8) / 12) * 100;
+                        const heightPercent = ((endDecimal - startDecimal) / 12) * 100;
+
+                        const block = document.createElement('div');
+                        block.className = 'class-block';
+                        block.style.top = `${topPercent}%`;
+                        block.style.height = `${heightPercent}%`;
+                        block.style.backgroundColor = getColor(course);
+
+                        // Injection du HTML comme sur l'image cible !
+                        block.innerHTML = `
+                            <div class="class-title">${course} - ${type}</div>
+                            <div class="class-time">${formatTime(startH, startM)}-${formatTime(endH, endM)}</div>
+                            <div class="class-room">${room}</div>
+                        `;
+
+                        document.getElementById(`day-${day}`).appendChild(block);
+                    }
                 }
             });
         }
 
-        // --- Fonction de Sauvegarde PNG ---
         function saveAsPng() {
-            const timetableElement = document.getElementById('timetableContainer');
-            if (timetableElement.innerHTML === "") {
-                alert("Veuillez d'abord générer l'emploi du temps.");
-                return;
-            }
-
-            // Capturer l'élément avec html2canvas
-            html2canvas(timetableElement, {
-                scale: 2, // Augmenter la résolution pour une meilleure qualité
-                useCORS: true, // Pour gérer les polices web si besoin
+            const wrapper = document.getElementById('timetable-wrapper');
+            
+            // html2canvas capture l'élément DOM et génère une image
+            html2canvas(wrapper, {
+                scale: 2, // Pour une meilleure résolution
+                backgroundColor: "#ffffff" // S'assure que le fond transparent devienne blanc
             }).then(canvas => {
-                // Convertir le canvas en URL de données (DataURL)
-                const dataUrl = canvas.toDataURL("image/png");
-
-                // Créer un lien temporaire pour le téléchargement
                 const link = document.createElement('a');
-                link.download = 'emploi_du_temps.png';
-                link.href = dataUrl;
+                link.download = 'mon_emploi_du_temps.png';
+                link.href = canvas.toDataURL('image/png');
                 link.click();
             });
         }
 
-        // Attacher les événements
-        document.getElementById('generateBtn').addEventListener('click', generateTimetable);
-        document.getElementById('savePngBtn').addEventListener('click', saveAsPng);
-
-        // Générer une première fois au chargement avec les données par défaut
-        window.onload = generateTimetable;
-
+        window.onload = () => {
+            initGrid();
+            generateSchedule();
+        };
     </script>
 </body>
 </html>
-
