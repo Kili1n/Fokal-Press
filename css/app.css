@@ -2311,3 +2311,27 @@ body.dark-mode .stat-badge-row:nth-of-type(3) .stat-icon {
         display: none !important;
     }
 }
+
+/* --- STYLE DU STACK D'AMIS SUR LES CARTES --- */
+.friends-stack img {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--card-bg); /* Bordure de la couleur de fond de la carte pour l'effet de découpe */
+    margin-left: -10px; /* C'est ça qui crée la superposition */
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* Le premier élément ne doit pas avoir de marge négative */
+.friends-stack img:first-child {
+    margin-left: 0;
+}
+
+/* Petit effet au survol */
+.friends-stack img:hover {
+    transform: translateY(-2px);
+    z-index: 10; /* Le passe au-dessus des autres au survol */
+}

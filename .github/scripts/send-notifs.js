@@ -45,7 +45,6 @@ async function run() {
         if (userData.archives) {
             Object.values(userData.archives).forEach(match => {
                 if (match.dateObj && match.dateObj.startsWith(todayStr)) {
-                    // Ici on utilise déjà l'objet complet, donc les espaces sont présents
                     sendPush(subscription, "📸 C'est le jour J !", `Ton match ${match.home.name} vs ${match.away.name} a lieu aujourd'hui. Prépare ton matériel !`);
                 }
             });
@@ -60,13 +59,11 @@ async function run() {
                     let homeName = matchId.split('_')[0];
                     let awayName = matchId.split('_')[1];
 
-                    // Recherche du vrai nom dans le JSON avec les espaces
                     const realMatch = matchsDb.find(m => 
                         cleanStr(m.home) === homeName && 
                         cleanStr(m.away) === awayName
                     );
 
-                    // Si on trouve le match, on remplace par les vrais noms
                     if (realMatch) {
                         homeName = realMatch.home;
                         awayName = realMatch.away;
@@ -76,6 +73,17 @@ async function run() {
                     sendPush(subscription, "⚠️ Toujours aucune réponse", `Le match ${teams} est dans 3 jours. N'oublie pas de relancer le club si tu n'as pas eu de réponse !`);
                 }
             });
+        }
+
+        // 3. NOUVEAU : Vérifier les demandes d'amis en attente
+        if (userData.friendRequests && userData.friendRequests.length > 0) {
+            const reqCount = userData.friendRequests.length;
+            const notifTitle = "Nouvel ami FokalPress 📸";
+            const notifBody = reqCount === 1 
+                ? "Quelqu'un vous a envoyé une demande d'ami. Ouvrez l'application pour l'accepter !" 
+                : `Vous avez ${reqCount} demandes d'amis en attente. Ouvrez l'application pour les accepter !`;
+            
+            sendPush(subscription, notifTitle, notifBody);
         }
     }
 }

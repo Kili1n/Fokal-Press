@@ -11,6 +11,30 @@ let matchToDelete = null;
 let isCalculating = false;
 const travelCache = new Map();
 const logoCache = new Map();
+let myFriends = [];
+let myFriendRequests = [];
+let unsubUserListener = null; 
+const usersCache = new Map();
+
+// Fonction utilitaire pour générer l'avatar robuste (Image + Proxy + Initiale)
+function getAvatarHTML(photoURL, displayName, size = 36) {
+    const initial = (displayName || "U").charAt(0).toUpperCase();
+    
+    // On applique le même principe que fetchInstaProfilePic (Proxy wsrv.nl) 
+    // pour éviter les blocages CORS sur les photos des amis.
+    let safeUrl = photoURL || '';
+    if (safeUrl && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
+        safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
+    }
+    
+    return `
+    <div style="width: ${size}px; height: ${size}px; background: white; color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: ${Math.round(size/2.5)}px; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid var(--border-color);">
+        <img src="${safeUrl}" 
+             crossorigin="anonymous" 
+             style="width: 100%; height: 100%; object-fit: cover;" 
+             onerror="this.style.display='none'; this.parentNode.innerText='${initial}';">
+    </div>`;
+}
 
 const getLogoUrl = (name) => {
     if (logoCache.has(name)) return logoCache.get(name);
@@ -975,7 +999,7 @@ function renderMatches(data) {
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
 
-// Dans app.js, à l'intérieur de renderMatches(data)
+    // Dans app.js, à l'intérieur de renderMatches(data)
 
     if (data.length === 0) {
         const currentSearch = document.getElementById('searchInput').value.trim();
@@ -1099,14 +1123,31 @@ function renderMatches(data) {
             </div>
             <div class="accred-footer">
                 ${getAccreditationHTML(m)}
-                <a href="${m.sourceUrl}" target="_blank" rel="nofollow noopener" class="source-link" title="Voir la source officielle">
-                    <i class="fa-solid fa-link"></i>
-                </a>
+                
+                <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                    
+                    <div class="friends-stack" id="friends-stack-${matchId}" style="display: flex; align-items: center;">
+                        </div>
+
+                    <button onclick="shareMatch(event, '${matchId}', '${m.home.name.replace(/'/g, "\\'")}', '${m.away.name.replace(/'/g, "\\'")}')" 
+                            style="color: var(--text-secondary); border: none; background: transparent; cursor: pointer; font-size: 16px; padding: 4px;" 
+                            title="Inviter un ami à ce match">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
+
+                    <a href="${m.sourceUrl}" target="_blank" rel="nofollow noopener" class="source-link" title="Voir la source officielle" style="margin-left: 0;">
+                        <i class="fa-solid fa-link"></i>
+                    </a>
+                </div>
             </div>
         `;
 
         grid.appendChild(card);
     });
+    
+    if (typeof injectFriendsOnCards === 'function') {
+        injectFriendsOnCards();
+    }
 }
 
 function toggleMobileCard(event, matchId) {
@@ -2432,6 +2473,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const favLoginBtn = document.getElementById('favLoginBtn');
     const favDismissBtn = document.getElementById('favDismissBtn');
 
+    // Gestion du bouton "Inviter un extérieur"
+    const inviteOutsiderBtn = document.getElementById('inviteOutsiderBtn');
+    if (inviteOutsiderBtn) {
+        inviteOutsiderBtn.addEventListener('click', (e) => {
+            const user = auth.currentUser;
+            if (!user) return;
+            
+            // On génère un texte sympa avec le lien de l'application
+            const inviteText = `Rejoins-moi sur FokalPress, l'outil indispensable pour organiser nos matchs et accréditations photos ! 📸\n\nCrée ton compte ici : https://fokalpress.fr`;
+
+            // On utilise ta fonction existante (qui gère PC et Mobile) pour copier
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(inviteText)
+                    .then(() => {
+                        const originalHtml = inviteOutsiderBtn.innerHTML;
+                        inviteOutsiderBtn.innerHTML = '<i class="fa-solid fa-check"></i> Lien copié !';
+                        inviteOutsiderBtn.style.color = "#34C759";
+                        inviteOutsiderBtn.style.borderColor = "#34C759";
+                        
+                        setTimeout(() => {
+                            inviteOutsiderBtn.innerHTML = originalHtml;
+                            inviteOutsiderBtn.style.color = "var(--accent)";
+                            inviteOutsiderBtn.style.borderColor = "var(--accent)";
+                        }, 2000);
+                    })
+                    .catch(err => console.error("Erreur copie", err));
+            } else {
+                // Fallback si le clipboard natif n'est pas dispo
+                fallbackCopy(inviteText, inviteOutsiderBtn, inviteOutsiderBtn.innerHTML);
+            }
+        });
+    }
+
     // 1. Clic sur "Me connecter maintenant"
     if (favLoginBtn) {
         favLoginBtn.addEventListener('click', () => {
@@ -2609,6 +2683,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     loginView.style.display = 'none';
                     profileView.style.display = 'block';
                 }
+
+                // --- ÉCOUTE TEMPS RÉEL DU PROFIL (AMIS & NOTIFS) ---
+                if (unsubUserListener) unsubUserListener(); // Nettoyage au cas où
+                
+                unsubUserListener = db.collection('users').doc(user.uid).onSnapshot(async (docSnap) => {
+                    if (docSnap.exists) {
+                        const data = docSnap.data();
+                        myFriends = data.friends || [];
+                        myFriendRequests = data.friendRequests || [];
+                        
+                        // 1. Mise à jour de la pastille de notification
+                        const badge = document.getElementById('friendsNotifBadge');
+                        const headerBtn = document.getElementById('loginBtnDesktop'); // ou loginBtnMobile
+                        
+                        if (myFriendRequests.length > 0) {
+                            if(badge) {
+                                badge.style.display = 'flex';
+                                badge.textContent = myFriendRequests.length;
+                            }
+                            // Ajout d'un point rouge sur la photo de profil du menu principal
+                            if (headerBtn) headerBtn.style.boxShadow = "0 0 0 2px #FF3B30"; 
+                        } else {
+                            if(badge) badge.style.display = 'none';
+                            if (headerBtn) headerBtn.style.boxShadow = "none";
+                        }
+
+                        // 2. Mise à jour de l'interface de la modale Amis (si elle est générée)
+                        updateFriendsUI();
+                        
+                        // 3. Rafraichir les cartes de match pour afficher les têtes des amis
+                        renderMatches(currentlyFiltered);
+                    }
+                });
             } catch (error) {
                 console.error("Erreur chargement données:", error);
             }
@@ -2635,6 +2742,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // On vide aussi la grille d'historique au cas où elle est ouverte
             const historyGrid = document.getElementById('historyGrid');
             if(historyGrid) historyGrid.innerHTML = '';
+
+            if (unsubUserListener) {
+                unsubUserListener();
+                unsubUserListener = null;
+            }
+            myFriends = [];
+            myFriendRequests = [];
 
             renderMatches(currentlyFiltered);
         }
@@ -2923,6 +3037,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     instagram: insta,
                     portfolio: portfolio,
                     favorites: {},
+                    friends: [],
+                    friendRequests: [],
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     last_connection: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -3855,14 +3971,10 @@ async function fetchInstaProfilePic(username) {
 const cleanInstagramInput = (input) => {
     if (!input) return "";
     let username = input.trim();
-    // Supprime l'URL complète si présente
     username = username.replace(/^(https?:\/\/)?(www\.)?instagram\.com\//i, "");
-    // Supprime le slash final si présent
     username = username.replace(/\/$/, "");
-    // Supprime le @ au début s'il existe pour éviter les doubles @@
     username = username.replace(/^@/, "");
-    // On garde uniquement le premier segment (cas d'une URL avec paramètres)
-    return username.split('?')[0];
+    return username.split('?')[0].toLowerCase();
 };
 
 function editMatch(id) {
@@ -4335,3 +4447,472 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==========================================
+// SYSTÈME SOCIAL : AMIS ET INVITATIONS
+// ==========================================
+
+// Fonction utilitaire pour récupérer un profil (avec cache pour économiser Firebase)
+async function fetchUserProfile(uid) {
+    if (usersCache.has(uid)) return usersCache.get(uid);
+    try {
+        const doc = await db.collection('users').doc(uid).get();
+        if (doc.exists) {
+            const data = doc.data();
+            usersCache.set(uid, data);
+            return data;
+        }
+    } catch (e) { console.error("Erreur fetch user", e); }
+    return null;
+}
+
+// Mettre à jour l'affichage de la Modale "Mes Amis"
+async function updateFriendsUI() {
+    const friendsList = document.getElementById('friendsList');
+    const pendingList = document.getElementById('pendingRequestsList');
+    const pendingSection = document.getElementById('pendingRequestsSection');
+    const friendsCount = document.getElementById('friendsCount');
+    const pendingCount = document.getElementById('pendingCount');
+
+    if (!friendsList || !pendingList) return;
+
+    // --- 1. GESTION DES DEMANDES EN ATTENTE ---
+    if (myFriendRequests.length > 0) {
+        pendingSection.style.display = 'block';
+        pendingCount.textContent = myFriendRequests.length;
+        pendingList.innerHTML = ''; // On vide
+
+        for (const reqUid of myFriendRequests) {
+            const reqUser = await fetchUserProfile(reqUid);
+            if (reqUser) {
+                pendingList.innerHTML += `
+                    <div class="friend-request-item">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            ${getAvatarHTML(reqUser.photoURL, reqUser.displayName, 36)}
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: 600; font-size: 13px;">${reqUser.displayName}</span>
+                                <span style="font-size: 11px; color: var(--text-secondary);">@${reqUser.instagram}</span>
+                            </div>
+                        </div>
+                        </div>`;
+            }
+        }
+    } else {
+        pendingSection.style.display = 'none';
+    }
+
+    // --- 2. GESTION DE LA LISTE D'AMIS ---
+    friendsCount.textContent = myFriends.length;
+    friendsList.innerHTML = '';
+
+    if (myFriends.length === 0) {
+        friendsList.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Vous n'avez pas encore ajouté d'amis.</div>`;
+    } else {
+        for (const friendUid of myFriends) {
+            const friend = await fetchUserProfile(friendUid);
+            if (friend) {
+                friendsList.innerHTML += `
+                    <div class="friend-item">
+                        <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="openFriendProfile('${friendUid}')">
+                            ${getAvatarHTML(friend.photoURL, friend.displayName, 36)}
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-weight: 600; font-size: 13px;">${friend.displayName}</span>
+                                <span style="font-size: 11px; color: var(--text-secondary);">@${friend.instagram}</span>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>`;
+            }
+        }
+    }
+}
+
+// Étape 3.1 : Recherche et Demande d'ami
+document.addEventListener('DOMContentLoaded', () => {
+    const searchBtn = document.getElementById('searchFriendBtn');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', async () => {
+            const inputVal = document.getElementById('friendSearchInput').value;
+            // On nettoie et on force les minuscules
+            const cleanVal = cleanInstagramInput(inputVal); 
+            const resultDiv = document.getElementById('friendSearchResult');
+
+            if (!cleanVal) return;
+
+            const currentUser = auth.currentUser;
+            const myInsta = localStorage.getItem('userInsta') ? localStorage.getItem('userInsta').toLowerCase() : "";
+
+            if (cleanVal === myInsta) {
+                resultDiv.innerHTML = "Vous ne pouvez pas vous ajouter vous-même !";
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            // Affichage chargement
+            resultDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Recherche...';
+            resultDiv.style.display = 'block';
+
+            try {
+                // Recherche exacte (minuscules) dans Firestore
+                const query = await db.collection('users').where('instagram', '==', cleanVal).limit(1).get();
+                
+                if (query.empty) {
+                    resultDiv.innerHTML = "<span style='color: #FF3B30;'><i class='fa-solid fa-circle-xmark'></i> Aucun compte FokalPress trouvé avec ce pseudo.</span>";
+                } else {
+                    const targetUser = query.docs[0];
+                    const targetData = targetUser.data();
+                    const targetUid = targetUser.id;
+
+                    // Vérification de l'état actuel de la relation
+                    if (myFriends.includes(targetUid)) {
+                        resultDiv.innerHTML = "Vous êtes déjà amis sur FokalPress !";
+                    } else if (targetData.friendRequests && targetData.friendRequests.includes(currentUser.uid)) {
+                        resultDiv.innerHTML = "Vous avez déjà envoyé une demande FokalPress.";
+                    } else if (myFriendRequests.includes(targetUid)) {
+                         resultDiv.innerHTML = "Cette personne vous a déjà envoyé une demande. Regardez au-dessus !";
+                    } else {
+                        // Bouton pour ajouter (Utilisation du nouvel avatar robuste)
+                        // app.js - Modifie la ligne 1812
+                    resultDiv.innerHTML = `
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                ${getAvatarHTML(targetData.photoURL, targetData.displayName, 36)}
+                                <span style="font-weight: 600; font-size: 13px;">@${targetData.instagram}</span>
+                            </div>
+                            <button onclick="sendFriendRequest('${targetUid}')" class="login-submit-btn" style="width:auto; padding:6px 12px; margin:0; background:var(--accent); color:white; font-size: 12px;">
+                                <i class="fa-solid fa-user-plus"></i> Ajouter
+                            </button>
+                        </div>
+                    `;
+                    }
+                }
+            } catch(e) {
+                console.error(e);
+                resultDiv.innerHTML = "Erreur de recherche.";
+            }
+        });
+    }
+
+    // app.js - Autour de la ligne 1764
+    const friendSearchInput = document.getElementById('friendSearchInput');
+
+    if (friendSearchInput) {
+        friendSearchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Évite tout comportement par défaut
+                searchBtn.click();  // Déclenche le clic du bouton de recherche
+            }
+        });
+    }
+
+    // Gestion de l'ouverture / Fermeture de la modale Amis
+    const openFriendsBtn = document.getElementById('openFriendsBtn');
+    const closeFriendsBtn = document.getElementById('closeFriendsBtn');
+    const friendsModal = document.getElementById('friendsModal');
+
+    if (openFriendsBtn) {
+        openFriendsBtn.addEventListener('click', () => {
+            document.getElementById('settingsModal').classList.add('hidden'); // Ferme settings
+            friendsModal.classList.remove('hidden'); // Ouvre amis
+            updateFriendsUI(); // Force le rafraichissement visuel
+        });
+    }
+
+    if (closeFriendsBtn) {
+        closeFriendsBtn.addEventListener('click', () => {
+            friendsModal.classList.add('hidden');
+        });
+    }
+});
+
+// Fonctions appelées depuis le HTML généré (Ajout, Acceptation, Refus)
+window.sendFriendRequest = async (targetUid) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+        await db.collection('users').doc(targetUid).update({
+            // arrayUnion s'assure qu'on n'ajoute pas de doublons
+            friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
+        });
+        document.getElementById('friendSearchResult').innerHTML = "<span style='color: #34C759;'><i class='fa-solid fa-check'></i> Demande envoyée !</span>";
+    } catch(e) { console.error("Erreur envoi demande", e); }
+};
+
+window.acceptFriend = async (requesterUid) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+        // Opération par lot (batch) pour que les deux profils soient mis à jour simultanément
+        const batch = db.batch();
+        const myRef = db.collection('users').doc(user.uid);
+        const requesterRef = db.collection('users').doc(requesterUid);
+
+        // Moi : Je l'ajoute en ami et j'enlève la demande
+        batch.update(myRef, {
+            friendRequests: firebase.firestore.FieldValue.arrayRemove(requesterUid),
+            friends: firebase.firestore.FieldValue.arrayUnion(requesterUid)
+        });
+        
+        // Lui : Il m'ajoute en ami
+        batch.update(requesterRef, {
+            friends: firebase.firestore.FieldValue.arrayUnion(user.uid)
+        });
+
+        await batch.commit();
+        // UI se mettra à jour automatiquement grâce au onSnapshot !
+    } catch(e) { console.error("Erreur acceptation", e); }
+};
+
+window.declineFriend = async (requesterUid) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+        await db.collection('users').doc(user.uid).update({
+            friendRequests: firebase.firestore.FieldValue.arrayRemove(requesterUid)
+        });
+    } catch(e) { console.error("Erreur refus", e); }
+};
+
+// ==========================================
+// AFFICHAGE DU PROFIL DE L'AMI
+// ==========================================
+
+window.openFriendProfile = async (friendUid) => {
+    const friend = await fetchUserProfile(friendUid);
+    if (!friend) return;
+
+    // 1. Remplir l'en-tête avec notre avatar sécurisé
+    const picContainer = document.getElementById('friendProfilePic');
+    if (picContainer) picContainer.innerHTML = getAvatarHTML(friend.photoURL, friend.displayName, 60);
+    
+    document.getElementById('friendProfileName').textContent = friend.displayName;
+    document.getElementById('friendProfileInsta').innerHTML = `<i class="fa-brands fa-instagram"></i> @${friend.instagram || 'inconnu'}`;
+
+    // Bouton de suppression
+    const removeBtn = document.getElementById('removeFriendBtn');
+    if (removeBtn) removeBtn.onclick = () => removeFriend(friendUid);
+
+    // 2. Calcul des Stats de base
+    const friendArchives = friend.archives || {};
+    const friendFavorites = friend.favorites || {};
+    
+    let asked = 0, received = Object.keys(friendArchives).length, refused = 0;
+    Object.values(friendFavorites).forEach(status => {
+        if (status === 'asked') asked++;
+        if (status === 'refused') refused++;
+    });
+    
+    const totalReq = asked + refused + received;
+    const rate = totalReq > 0 ? Math.round((received / totalReq) * 100) : 0;
+
+    document.getElementById('friendStatRequests').textContent = totalReq;
+    document.getElementById('friendStatAccreds').textContent = received;
+    document.getElementById('friendStatRate').textContent = `${rate}%`;
+
+    // 3. Calcul des Matchs couverts ensemble
+    const commonMatchesList = document.getElementById('friendCommonMatchesList');
+    const noCommonMsg = document.getElementById('noCommonMatchMsg');
+    const commonCount = document.getElementById('friendCommonCount');
+    
+    commonMatchesList.innerHTML = '';
+    let common = 0;
+
+    // On compare les clés de MON historique avec le SIEN
+    Object.keys(matchArchives).forEach(myMatchId => {
+        if (friendArchives[myMatchId]) {
+            common++;
+            const m = matchArchives[myMatchId];
+            const dateStr = new Date(m.dateObj).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+            
+            commonMatchesList.innerHTML += `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:10px; border-radius:8px; border: 1px solid rgba(0,0,0,0.05);">
+                    <span style="font-size:13px; font-weight:600; color:var(--text-primary);">${m.home.name} <span style="font-weight:400; opacity:0.6;">vs</span> ${m.away.name}</span>
+                    <span style="font-size:11px; color:var(--text-secondary); background:var(--bg-color); padding:2px 6px; border-radius:4px;">${dateStr}</span>
+                </div>
+            `;
+        }
+    });
+
+    commonCount.textContent = common;
+    if (common > 0) {
+        if (noCommonMsg) noCommonMsg.style.display = 'none';
+    } else {
+        if (noCommonMsg) noCommonMsg.style.display = 'block';
+        commonMatchesList.appendChild(noCommonMsg);
+    }
+
+    // 4. Générer l'Historique de l'ami (en lecture seule)
+    renderFriendHistory(friendArchives);
+
+    // 5. Afficher la modale
+    document.getElementById('friendsModal').classList.add('hidden');
+    document.getElementById('friendProfileModal').classList.remove('hidden');
+};
+
+// Fonction pour retirer un ami
+window.removeFriend = async (friendUid) => {
+    if(!confirm("Voulez-vous vraiment retirer cet ami de votre réseau ?")) return;
+    const user = auth.currentUser;
+    if(!user) return;
+    
+    try {
+        const batch = db.batch();
+        // On supprime la relation des deux côtés
+        batch.update(db.collection('users').doc(user.uid), {
+            friends: firebase.firestore.FieldValue.arrayRemove(friendUid)
+        });
+        batch.update(db.collection('users').doc(friendUid), {
+            friends: firebase.firestore.FieldValue.arrayRemove(user.uid)
+        });
+        await batch.commit();
+        
+        // Retour à la liste d'amis
+        document.getElementById('friendProfileModal').classList.add('hidden');
+        document.getElementById('friendsModal').classList.remove('hidden');
+    } catch(e) { console.error("Erreur suppression ami", e); }
+};
+
+// Fonction pour générer la grille d'historique de l'ami
+function renderFriendHistory(archivesObj) {
+    const grid = document.getElementById('friendHistoryGrid');
+    grid.innerHTML = '';
+    
+    const historyList = Object.entries(archivesObj).map(([key, data]) => ({ ...data, id: key }));
+    
+    if (historyList.length === 0) {
+        grid.innerHTML = `<div style="text-align:center; width:100%; color:var(--text-muted); font-size:13px; padding:20px;">Aucun match couvert pour le moment.</div>`;
+        return;
+    }
+
+    // Tri par date décroissante
+    historyList.sort((a,b) => new Date(b.dateObj) - new Date(a.dateObj));
+
+    historyList.forEach(m => {
+        const homeName = m.home?.name || "Inconnu";
+        const awayName = m.away?.name || "Inconnu";
+        let dateDisplay = "Date inconnue";
+        let time = "--h--";
+        
+        if (m.dateObj && m.dateObj !== "UNKNOWN") {
+            const d = new Date(m.dateObj);
+            dateDisplay = d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: 'short' });
+            time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h');
+        }
+        
+        const homeLogo = m.home.logo || getLogoUrl(homeName);
+        const awayLogo = m.away.logo || getLogoUrl(awayName);
+
+        // Identique à ta carte historique, mais SANS le bouton d'édition
+        grid.innerHTML += `
+            <article class="card history-card" style="position:relative;">
+                <div class="match-header">
+                    <div class="team">
+                        <img src="${homeLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
+                        <span class="team-name">${homeName}</span>
+                    </div>
+                    <div class="match-center">
+                        <div class="match-time">${time}</div>
+                        <div class="vs">VS</div>
+                    </div>
+                    <div class="team">
+                        <img src="${awayLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
+                        <span class="team-name">${awayName}</span>
+                    </div>
+                </div>
+                <div class="match-meta" style="border-top: 1px solid var(--border-color); margin-top: 10px; padding-top: 10px;">
+                    <span class="badge badge-short">${m.compFormatted || 'Match'}</span>
+                    <span class="date-time">${dateDisplay}</span>
+                </div>
+            </article>
+        `;
+    });
+}
+
+// Bouton retour de la modale Profil Ami
+document.addEventListener('DOMContentLoaded', () => {
+    const closeFriendProfileBtn = document.getElementById('closeFriendProfileBtn');
+    if (closeFriendProfileBtn) {
+        closeFriendProfileBtn.addEventListener('click', () => {
+            document.getElementById('friendProfileModal').classList.add('hidden');
+            // On réaffiche la modale amis (effet de retour)
+            document.getElementById('friendsModal').classList.remove('hidden');
+        });
+    }
+});
+
+// ==========================================
+// INJECTION DES AMIS SUR LES CARTES DE MATCH
+// ==========================================
+
+window.injectFriendsOnCards = async function() {
+    // Si l'utilisateur n'est pas connecté ou n'a pas d'amis, on arrête.
+    if (!auth.currentUser || myFriends.length === 0) return;
+
+    // 1. Récupérer les données à jour de tous les amis (Utilise le cache pour être ultra rapide)
+    const friendsData = [];
+    for (const uid of myFriends) {
+        const f = await fetchUserProfile(uid);
+        if (f) {
+            f.uid = uid; // On garde l'UID pour pouvoir cliquer sur le profil
+            friendsData.push(f);
+        }
+    }
+
+    // 2. Parcourir toutes les zones d'avatars (.friends-stack) générées sur l'écran
+    const stacks = document.querySelectorAll('.friends-stack');
+    
+    stacks.forEach(stack => {
+        // L'ID de la stack est au format "friends-stack-MATCH_ID"
+        const matchId = stack.id.replace('friends-stack-', '');
+        let html = '';
+        let count = 0;
+        let friendsHere = [];
+
+        // 3. Vérifier quels amis vont à ce match
+        friendsData.forEach(friend => {
+            const favStatus = friend.favorites ? friend.favorites[matchId] : null;
+            const isArchived = friend.archives ? !!friend.archives[matchId] : false;
+
+            // Condition : S'il a le match en favori (et pas refusé) OU s'il l'a déjà archivé (couvert)
+            if ((favStatus && favStatus !== 'refused') || isArchived) {
+                friendsHere.push(friend);
+                
+                // On affiche un maximum de 3 photos empilées
+                if (count < 3) {
+                    const marginLeft = count === 0 ? '0' : '-10px';
+                    const zIndex = 10 - count;
+                    const initial = (friend.displayName || "U").charAt(0).toUpperCase();
+                    
+                    // Sécurisation de l'image (Proxy anti-CORS)
+                    let safeUrl = friend.photoURL || '';
+                    if (safeUrl && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
+                        safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
+                    }
+
+                    // Création de l'avatar avec un onclick pour ouvrir son profil !
+                    html += `
+                    <div onclick="event.stopPropagation(); openFriendProfile('${friend.uid}')" 
+                         style="width: 26px; height: 26px; background: white; color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; border: 2px solid var(--card-bg); margin-left: ${marginLeft}; z-index: ${zIndex}; cursor: pointer; transition: transform 0.2s ease;"
+                         onmouseover="this.style.transform='translateY(-2px)'"
+                         onmouseout="this.style.transform='translateY(0)'"
+                         title="${friend.displayName} a prévu d'y aller">
+                        <img src="${safeUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerText='${initial}';">
+                    </div>`;
+                }
+                count++;
+            }
+        });
+
+        // 4. S'il y a plus de 3 amis, on ajoute une petite pastille "+X"
+        if (count > 3) {
+            const extraNames = friendsHere.map(f => f.displayName).join(', ');
+            html += `
+            <div style="width: 26px; height: 26px; border-radius: 50%; background: var(--bg-secondary); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid var(--card-bg); margin-left: -10px; z-index: 1; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="${extraNames}">
+                +${count - 3}
+            </div>`;
+        }
+
+        // On injecte le tout dans la carte
+        stack.innerHTML = html;
+    });
+};
