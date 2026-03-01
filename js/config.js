@@ -183,7 +183,7 @@ const CUSTOM_LOGOS = {
     "ORVAULT":"https://www.orvault.fr/wp-content/uploads/2025/05/Logo-Com-Saison-2024-2025.png",
     "MONTBRISON" : "https://s2.static-footeo.com/uploads/as-savigneux-montbrison/logo__t1wiaz.png",
     "RC STRASBOURG" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/70/Racing_Club_de_Strasbourg_Alsace_%28RC_Strasbourg_-_RCS_-_RCSA%29_logo_officiel.svg/1280px-Racing_Club_de_Strasbourg_Alsace_%28RC_Strasbourg_-_RCS_-_RCSA%29_logo_officiel.svg.png",
-    "STRASBOURG" : "https://upload.wikimedia.org/wikipedia/fr/b/b0/Logo_SIG_Strasbourg_-_2015.svg",
+    "STRASBOURG" : "https://upload.wikimedia.org/wikipedia/fr/thumb/0/06/Ancien_Logo_SIG_Strasbourg.svg/500px-Ancien_Logo_SIG_Strasbourg.svg.png",
     "GRAFFENSTADEN" : "https://upload.wikimedia.org/wikipedia/fr/b/b0/Logo_SIG_Strasbourg_-_2015.svg",
     "VERSAILLE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/6/6e/Logo_FC_Versailles_-_2022.svg/960px-Logo_FC_Versailles_-_2022.svg.png",
     "FEIGNIES" : "https://upload.wikimedia.org/wikipedia/fr/b/bd/Logo_Entente_Feignies-Aulnoye_FC_2016.svg",
@@ -305,7 +305,14 @@ const CUSTOM_LOGOS = {
     "BESAC" : "https://besacbasket.fr/wp-content/uploads/2024/12/Design-sans-titre-26.png",
     "BYERS" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/7e/Logo_Fos_Provence_Basket_-_2019.svg/960px-Logo_Fos_Provence_Basket_-_2019.svg.png",
     "LOON PLAGE" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRptNS1sXKbhF_Zardvnw-t293QgtE_I4meLA&s",
-    "ORCHIES" : "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/BCO_LOGO_alxgraphisme.svg/langfr-250px-BCO_LOGO_alxgraphisme.svg.png"
+    "ORCHIES" : "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/BCO_LOGO_alxgraphisme.svg/langfr-250px-BCO_LOGO_alxgraphisme.svg.png",
+    "SAINT" : "https://upload.wikimedia.org/wikipedia/commons/9/9d/Blason-SaintRaphaelVarHandball-2024.png",
+    "LIMOGES" : "https://upload.wikimedia.org/wikipedia/fr/e/ea/Logo_Limoges_Handball.png",
+    "DIJON METROPOLE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/5/52/Dijon_M%C3%A9tropole_handball_logo.png/250px-Dijon_M%C3%A9tropole_handball_logo.png",
+    "FOLSCHVILLER" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHtit7RxbnFAQhTk309QZutdHaaeuBwiPylA&s",
+    "NANTES BASKET HERMINE" : "https://upload.wikimedia.org/wikipedia/fr/8/83/Logo_Nantes_Basket_Hermine_-_2017.svg",
+    "FC NANTES" :"https://upload.wikimedia.org/wikipedia/commons/6/68/FC-Nantes-blason-rvb.png",
+    "AJ AUXERRE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/e/ed/Logo_AJ_Auxerre_-_1997.svg/960px-Logo_AJ_Auxerre_-_1997.svg.png?_=20241201051351"
 };  
 
 const STADIUM_COORDS = {
@@ -403,7 +410,8 @@ const STADIUM_COORDS = {
     "SARAN LOIRET": { lat: 47.937, lon: 1.876 },        // Handball
     "FCM AUBERVILLIERS": { lat: 48.913, lon: 2.385 },
     "ROUEN METROPOLE BASKET": { lat: 49.444, lon: 1.076 }, // Kindarena
-    "ESA LINAS MONTLHERY": { lat: 48.632, lon: 2.261 }
+    "ESA LINAS MONTLHERY": { lat: 48.632, lon: 2.261 },
+    "LEVALLOIS METROPOLITANS": { lat: 48.896, lon: 2.278 }
 };
 
 const WEATHER_ICONS = {
