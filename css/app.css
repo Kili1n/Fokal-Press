@@ -2335,3 +2335,10 @@ body.dark-mode .stat-badge-row:nth-of-type(3) .stat-icon {
     transform: translateY(-2px);
     z-index: 10; /* Le passe au-dessus des autres au survol */
 }
+
+/* --- MASQUER LE BOUTON PARTAGER EN VUE LISTE MOBILE --- */
+@media (max-width: 768px) {
+    .list-view .share-match-btn {
+        display: none !important;
+    }
+}

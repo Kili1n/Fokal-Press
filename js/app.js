@@ -16,6 +16,43 @@ let myFriendRequests = [];
 let unsubUserListener = null; 
 const usersCache = new Map();
 
+function updateProfileBadge(count) {
+    // 1. Pastille dans la modale Paramètres (sur le bouton "Mes Amis")
+    const settingsBadge = document.getElementById('friendsNotifBadge');
+    if (settingsBadge) {
+        settingsBadge.style.display = count > 0 ? 'flex' : 'none';
+        settingsBadge.textContent = count;
+    }
+
+    // 2. Pastille rouge sur les boutons de profil (Mobile et Desktop)
+    document.querySelectorAll('.login-trigger').forEach(btn => {
+        // On nettoie d'abord l'ancienne pastille si elle existe
+        const oldBadge = btn.querySelector('.profile-notif-badge');
+        if (oldBadge) oldBadge.remove();
+
+        if (count > 0) {
+            // Force le parent en relative pour que la pastille absolue se place bien
+            btn.style.position = 'relative';
+            
+            // Création de la pastille
+            const badge = document.createElement('div');
+            badge.className = 'profile-notif-badge';
+            badge.style.position = 'absolute';
+            badge.style.top = '-2px';
+            badge.style.right = '-2px';
+            badge.style.width = '12px';
+            badge.style.height = '12px';
+            badge.style.backgroundColor = '#FF3B30'; // Rouge notification
+            badge.style.borderRadius = '50%';
+            badge.style.border = '2px solid var(--bg-color)'; // Fait un effet de détourage
+            badge.style.zIndex = '10';
+            badge.title = `${count} demande(s) d'ami`;
+
+            btn.appendChild(badge);
+        }
+    });
+}
+
 // Fonction utilitaire pour générer l'avatar robuste (Image + Proxy + Initiale)
 function getAvatarHTML(photoURL, displayName, size = 36) {
     const initial = (displayName || "U").charAt(0).toUpperCase();
@@ -1129,7 +1166,7 @@ function renderMatches(data) {
                     <div class="friends-stack" id="friends-stack-${matchId}" style="display: flex; align-items: center;">
                         </div>
 
-                    <button onclick="shareMatch(event, '${matchId}', '${m.home.name.replace(/'/g, "\\'")}', '${m.away.name.replace(/'/g, "\\'")}')" 
+                    <button class="share-match-btn" onclick="shareMatch(event, '${matchId}', '${m.home.name.replace(/'/g, "\\'")}', '${m.away.name.replace(/'/g, "\\'")}')" 
                             style="color: var(--text-secondary); border: none; background: transparent; cursor: pointer; font-size: 16px; padding: 4px;" 
                             title="Inviter un ami à ce match">
                         <i class="fa-solid fa-share-nodes"></i>
@@ -1144,7 +1181,7 @@ function renderMatches(data) {
 
         grid.appendChild(card);
     });
-    
+
     if (typeof injectFriendsOnCards === 'function') {
         injectFriendsOnCards();
     }
@@ -2687,34 +2724,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 // --- ÉCOUTE TEMPS RÉEL DU PROFIL (AMIS & NOTIFS) ---
                 if (unsubUserListener) unsubUserListener(); // Nettoyage au cas où
                 
-                unsubUserListener = db.collection('users').doc(user.uid).onSnapshot(async (docSnap) => {
-                    if (docSnap.exists) {
-                        const data = docSnap.data();
-                        myFriends = data.friends || [];
-                        myFriendRequests = data.friendRequests || [];
-                        
-                        // 1. Mise à jour de la pastille de notification
-                        const badge = document.getElementById('friendsNotifBadge');
-                        const headerBtn = document.getElementById('loginBtnDesktop'); // ou loginBtnMobile
-                        
-                        if (myFriendRequests.length > 0) {
-                            if(badge) {
-                                badge.style.display = 'flex';
-                                badge.textContent = myFriendRequests.length;
+                unsubUserListener = db.collection('users').doc(user.uid).onSnapshot((docSnap) => {
+                        if (docSnap.exists) {
+                            const data = docSnap.data();
+                            myFriends = data.friends || [];
+                            myFriendRequests = data.friendRequests || [];
+                            
+                            // 1. Mise à jour de toutes les pastilles rouges (Menu + Paramètres)
+                            updateProfileBadge(myFriendRequests.length);
+                            
+                            // 2. Rafraîchir l'interface de la modale Amis (si elle est générée)
+                            if (typeof updateFriendsUI === 'function') {
+                                updateFriendsUI();
                             }
-                            // Ajout d'un point rouge sur la photo de profil du menu principal
-                            if (headerBtn) headerBtn.style.boxShadow = "0 0 0 2px #FF3B30"; 
-                        } else {
-                            if(badge) badge.style.display = 'none';
-                            if (headerBtn) headerBtn.style.boxShadow = "none";
+                            
+                            // 3. Rafraîchir les cartes pour voir les avatars des amis en direct
+                            if (typeof injectFriendsOnCards === 'function') {
+                                injectFriendsOnCards();
+                            } else {
+                                // Fallback de sécurité au cas où l'injection n'est pas encore chargée
+                                renderMatches(currentlyFiltered);
+                            }
                         }
-
-                        // 2. Mise à jour de l'interface de la modale Amis (si elle est générée)
-                        updateFriendsUI();
-                        
-                        // 3. Rafraichir les cartes de match pour afficher les têtes des amis
-                        renderMatches(currentlyFiltered);
-                    }
                 });
             } catch (error) {
                 console.error("Erreur chargement données:", error);
@@ -2749,6 +2780,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             myFriends = [];
             myFriendRequests = [];
+            updateProfileBadge(0);
 
             renderMatches(currentlyFiltered);
         }
