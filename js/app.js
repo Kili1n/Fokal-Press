@@ -4732,17 +4732,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Fonctions appelées depuis le HTML généré (Ajout, Acceptation, Refus)
 window.sendFriendRequest = async (targetUid) => {
     const user = auth.currentUser;
     if (!user) return;
+
+    // --- SÉCURITÉ : VÉRIFICATIONS AVANT ENVOI ---
+    if (myFriends.includes(targetUid)) {
+        alert("Vous êtes déjà amis avec ce photographe !");
+        return;
+    }
+    if (myFriendRequests.includes(targetUid)) {
+        alert("Cette personne vous a déjà envoyé une demande. Acceptez-la dans vos demandes reçues !");
+        return;
+    }
+
     try {
         await db.collection('users').doc(targetUid).update({
-            // arrayUnion s'assure qu'on n'ajoute pas de doublons
             friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
         });
-        document.getElementById('friendSearchResult').innerHTML = "<span style='color: #34C759;'><i class='fa-solid fa-check'></i> Demande envoyée !</span>";
-        loadSentRequests();
+        
+        const resultDiv = document.getElementById('friendSearchResult');
+        if(resultDiv) resultDiv.innerHTML = "<span style='color: #34C759;'><i class='fa-solid fa-check'></i> Demande envoyée !</span>";
+        
+        // Met à jour la liste des demandes envoyées immédiatement (si la fonction existe)
+        if (typeof loadSentRequests === 'function') loadSentRequests();
+        
     } catch(e) { console.error("Erreur envoi demande", e); }
 };
 
@@ -5130,19 +5144,37 @@ window.checkPendingInvitations = async function() {
 
     // A. Traitement du lien d'ajout d'ami générique (?addFriend=...)
     if (addFriendUid && addFriendUid !== user.uid) {
-        try {
-            // Envoi automatique de la demande d'ami à l'hôte !
-            await db.collection('users').doc(addFriendUid).update({
-                friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
-            });
-        } catch (e) {
-            console.error("Erreur auto-add friend", e);
-        }
         
-        // S'il n'y a pas d'invitation match liée, on s'arrête là
-        if (!inviteMatchId) {
-            cleanUrlParameters();
-            return;
+        // On vérifie d'abord si on est déjà amis ou si on a déjà une demande en attente
+        if (myFriends.includes(addFriendUid) || myFriendRequests.includes(addFriendUid)) {
+            if (!inviteMatchId) cleanUrlParameters(); // Si pas de match prévu derrière, on nettoie
+        } else {
+            const hostUser = await fetchUserProfile(addFriendUid);
+            if (hostUser) {
+                // On prépare et affiche la nouvelle Modale
+                const friendModal = document.getElementById('inviteFriendModal');
+                document.getElementById('inviteFriendName').textContent = hostUser.displayName || "Un ami";
+                document.getElementById('inviteFriendPicContainer').innerHTML = getAvatarHTML(hostUser.photoURL, hostUser.displayName, 80);
+                
+                friendModal.classList.remove('hidden');
+
+                const closeAndCleanFriend = () => {
+                    friendModal.classList.add('hidden');
+                    if (!inviteMatchId) cleanUrlParameters();
+                };
+
+                document.getElementById('closeInviteFriendBtn').onclick = closeAndCleanFriend;
+                document.getElementById('declineFriendInviteBtn').onclick = closeAndCleanFriend;
+
+                document.getElementById('acceptFriendInviteBtn').onclick = () => {
+                    // On utilise notre fonction sécurisée qui s'occupe de l'envoi Firebase !
+                    sendFriendRequest(addFriendUid);
+                    closeAndCleanFriend();
+                };
+                
+                // Si l'URL ne contient qu'une invitation d'ami (pas de match), on s'arrête ici
+                if (!inviteMatchId) return; 
+            }
         }
     }
 
@@ -5155,9 +5187,11 @@ window.checkPendingInvitations = async function() {
 
         // On auto-envoie aussi une demande d'ami si on rejoint le match de quelqu'un !
         try {
-            await db.collection('users').doc(fromUid).update({
-                friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
-            });
+            if (!myFriends.includes(fromUid) && !myFriendRequests.includes(fromUid)) {
+                await db.collection('users').doc(fromUid).update({
+                    friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
+                });
+            }
         } catch(e) {}
 
         // Récupération du profil de l'ami qui invite

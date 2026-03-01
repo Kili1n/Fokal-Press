@@ -591,6 +591,33 @@
         </div>
     </div>
 
+    <div id="inviteFriendModal" class="map-modal hidden" style="z-index: 6000;">
+        <div class="login-card" style="max-width: 400px; text-align: center; position: relative; padding: 30px 20px;">
+            <button class="close-map" id="closeInviteFriendBtn" style="position: absolute; top: 15px; right: 15px;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div id="inviteFriendPicContainer" style="display: flex; justify-content: center; margin-bottom: 15px;"></div>
+
+            <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+                <span id="inviteFriendName">Un ami</span> vous invite !
+            </h2>
+            
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.5;">
+                Il souhaite vous ajouter à son réseau de photographes sur <strong style="color: var(--text-primary);">FokalPress</strong>.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="acceptFriendInviteBtn" class="login-submit-btn" style="background: var(--accent); color: white; margin: 0; font-weight: 700; font-size: 15px;">
+                    <i class="fa-solid fa-user-plus"></i> Envoyer une demande
+                </button>
+                <button id="declineFriendInviteBtn" class="login-submit-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); margin: 0; font-weight: 600;">
+                    Décliner
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="addMatchModal" class="modal hidden" style="z-index: 3000;">
         <div class="modal-content login-card" style="max-width: 500px; position: relative; overflow: hidden;">
             
