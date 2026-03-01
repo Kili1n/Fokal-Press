@@ -3000,6 +3000,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.style.backgroundColor = "";
                     submitBtn.style.borderColor = "";
                     submitBtn.disabled = false;
+
+                    // NOUVEAU : On relance la lecture de l'URL pour afficher l'invitation !
+                    if (typeof checkPendingInvitations === 'function') {
+                        checkPendingInvitations();
+                    }
                 }, 1500);
 
             } catch (error) {
