@@ -4510,7 +4510,6 @@ async function loadSentRequests() {
                     <div style="display: flex; align-items: center; gap: 10px;">
                         ${getAvatarHTML(targetData.photoURL, targetData.displayName, 36)}
                         <div style="display: flex; flex-direction: column;">
-                            <span style="font-weight: 600; font-size: 13px; color: var(--text-primary);">${targetData.displayName}</span>
                             <span style="font-size: 11px; color: var(--text-secondary);">@${targetData.instagram}</span>
                         </div>
                     </div>
@@ -4588,7 +4587,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultDiv.innerHTML = `
                         <div style="display:flex; align-items:center; justify-content:space-between;">
                             <div style="display:flex; align-items:center; gap:10px;">
-                                ${getAvatarHTML(targetData.photoURL, targetData.displayName, 36)}
                                 <span style="font-weight: 600; font-size: 13px;">@${targetData.instagram}</span>
                             </div>
                             <button onclick="sendFriendRequest('${targetUid}')" class="login-submit-btn" style="width:auto; padding:6px 12px; margin:0; background:var(--accent); color:white; font-size: 12px;">
@@ -4984,7 +4982,7 @@ window.injectFriendsOnCards = async function() {
                          style="width: 26px; height: 26px; background: white; color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; border: 2px solid var(--card-bg); margin-left: ${marginLeft}; z-index: ${zIndex}; cursor: pointer; transition: transform 0.2s ease;"
                          onmouseover="this.style.transform='translateY(-2px)'"
                          onmouseout="this.style.transform='translateY(0)'"
-                         title="${friend.displayName} a prévu d'y aller">
+                         title="${friend.instagram} a prévu d'y aller">
                         <img src="${safeUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerText='${initial}';">
                     </div>`;
                 }
@@ -5074,7 +5072,7 @@ window.checkPendingInvitations = async function() {
                 const doc = await db.collection('users').doc(hostUid).get();
                 if (doc.exists) {
                     const data = doc.data();
-                    hostName = data.displayName || "Un ami";
+                    hostName = data.instagram || "Un ami";
                     hostPicHtml = getAvatarHTML(data.photoURL, hostName, 80);
                 }
             } catch(e) {
@@ -5140,7 +5138,7 @@ window.checkPendingInvitations = async function() {
             const hostUser = await fetchUserProfile(addFriendUid);
             if (hostUser) {
                 const friendModal = document.getElementById('inviteFriendModal');
-                document.getElementById('inviteFriendName').textContent = hostUser.displayName || "Un ami";
+                document.getElementById('inviteFriendName').textContent = hostUser.instagram || "Un ami";
                 document.getElementById('inviteFriendPicContainer').innerHTML = getAvatarHTML(hostUser.photoURL, hostUser.displayName, 80);
                 
                 friendModal.classList.remove('hidden');
@@ -5189,7 +5187,7 @@ window.checkPendingInvitations = async function() {
         }
 
         const modal = document.getElementById('inviteMatchModal');
-        document.getElementById('inviteHostName').textContent = hostUser.displayName || "Un ami";
+        document.getElementById('inviteHostName').textContent = hostUser.instagram || "Un ami";
         
         let safeUrl = hostUser.photoURL || 'data/default-team.png';
         if (safeUrl !== 'data/default-team.png' && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
