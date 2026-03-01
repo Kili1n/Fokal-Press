@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'Emploi du Temps</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            font-family: monospace;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: vertical;
+            box-sizing: border-box;
+            white-space: pre;
+        }
+
+        textarea::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        #generateBtn {
+            background-color: #333;
+            color: white;
+        }
+
+        #savePngBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .scroll-container {
+            width: 100%;
+            max-width: 1000px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .timetable-wrapper {
+            width: 900px; 
+            min-width: 900px;
+            background: #ffffff; 
+            border: 1px solid #777;
+            overflow: hidden; 
+        }
+
+        .header-row {
+            display: flex;
+            background-color: #d1d1d1;
+            border-bottom: 1px solid #777;
+        }
+
+        .header-cell {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: 700;
+            font-size: 14px;
+            color: #000;
+            border-right: 1px solid #777;
+        }
+
+        .header-cell:last-child {
+            border-right: none;
+        }
+
+        .time-header {
+            width: 60px;
+            flex: none;
+            background-color: #fff; 
+        }
+
+        .body-row {
+            display: flex;
+            position: relative;
+            height: 720px; 
+            background-color: #ffffff;
+        }
+
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 60px;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .grid-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px dashed #999;
+        }
+
+        .time-column {
+            width: 60px;
+            flex: none;
+            position: relative;
+            border-right: 1px solid #777;
+            background-color: #fff;
+        }
+
+        .time-label {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            transform: translateY(-50%);
+            font-weight: 700;
+            font-size: 12px;
+            color: #000;
+        }
+
+        .day-column {
+            flex: 1;
+            position: relative;
+            border-right: 1px solid #777;
+        }
+
+        .day-column:last-child {
+            border-right: none;
+        }
+
+        .class-block {
+            position: absolute;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #000;
+            padding: 4px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+            word-break: break-word;
+        }
+
+        .class-title {
+            font-weight: 700;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .class-time {
+            font-weight: 500;
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+
+        .class-room {
+            font-weight: 600;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <textarea id="dataInput" placeholder="Collez vos cours ici... Exemple :
+
+ GI02       7  AC04  AE01  AI16  AI23  AI27  LH14  SH02 
+
+ AC04       C 1     MARDI... 16:30-18:30,F1,S=FA201   
+ AC04       D 1     MERCREDI 08:00-10:00,F1,S=FA304   
+ AC04       T 1 B   MERCREDI 10:15-12:15,F2,S=FA505   
+ ..."></textarea>
+        <div class="button-group">
+            <button id="generateBtn" onclick="generateSchedule()">Générer l'emploi du temps</button>
+            <button id="savePngBtn" onclick="saveAsPng()">Enregistrer en PNG</button>
+        </div>
+    </div>
+
+    <div class="scroll-container">
+        <div class="timetable-wrapper" id="timetable-wrapper">
+            <div class="header-row">
+                <div class="header-cell time-header"></div>
+                <div class="header-cell">Lundi</div>
+                <div class="header-cell">Mardi</div>
+                <div class="header-cell">Mercredi</div>
+                <div class="header-cell">Jeudi</div>
+                <div class="header-cell">Vendredi</div>
+                </div>
+            <div class="body-row" id="schedule-body">
+                <div class="grid-lines" id="grid-lines"></div>
+                <div class="time-column" id="time-column"></div>
+                <div class="day-column" id="day-1"></div>
+                <div class="day-column" id="day-2"></div>
+                <div class="day-column" id="day-3"></div>
+                <div class="day-column" id="day-4"></div>
+                <div class="day-column" id="day-5"></div>
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const colorPalette = [
+            '#bd92fb', '#fe9ae7', '#8ef6a8', '#fbe28a', 
+            '#87f7fa', '#fec998', '#a7c7e7'
+        ];
+
+        let courseColors = {};
+        let colorIndex = 0;
+
+        function getColor(course) {
+            if (!courseColors[course]) {
+                courseColors[course] = colorPalette[colorIndex % colorPalette.length];
+                colorIndex++;
+            }
+            return courseColors[course];
+        }
+
+        const daysMap = {
+            'LUNDI': 1, 'MARDI': 2, 'MERCREDI': 3,
+            'JEUDI': 4, 'VENDREDI': 5 // Samedi retiré de la logique active
+        };
+
+        const typeMap = {
+            'C': 'CM', 'D': 'TD', 'T': 'TP'
+        };
+
+        function initGrid() {
+            const timeCol = document.getElementById('time-column');
+            const gridLines = document.getElementById('grid-lines');
+            
+            timeCol.innerHTML = '';
+            gridLines.innerHTML = '';
+
+            for (let hour = 8; hour <= 20; hour++) {
+                const percentage = ((hour - 8) / 12) * 100;
+                
+                if (hour > 8) {
+                    const label = document.createElement('div');
+                    label.className = 'time-label';
+                    label.style.top = `${percentage}%`;
+                    label.innerText = `${hour}h00`;
+                    timeCol.appendChild(label);
+                }
+
+                if(hour > 8 && hour < 20) {
+                    const line = document.createElement('div');
+                    line.className = 'grid-line';
+                    line.style.top = `${percentage}%`;
+                    gridLines.appendChild(line);
+                }
+            }
+        }
+
+        function formatTime(h, m) {
+            return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`;
+        }
+
+        function generateSchedule() {
+            // Nettoyage limité à 5 jours
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`day-${i}`).innerHTML = '';
+            }
+            courseColors = {}; 
+            colorIndex = 0;
+
+            const rawData = document.getElementById('dataInput').value;
+            if (!rawData.trim()) return; 
+
+            const lines = rawData.split('\n');
+            const regex = /([A-Z0-9]{2,4})\s+([CDT])\s+\d+(?:\s+([A-Z]))?\s+([A-Z]+)\.*\s+(\d{2}):(\d{2})-(\d{2}):(\d{2})[^=]*=(.*)/;
+
+            lines.forEach(line => {
+                const match = line.trim().match(regex);
+                if (match) {
+                    const course = match[1];
+                    let type = typeMap[match[2]];
+                    const subGroup = match[3]; 
+                    
+                    if (subGroup) type += ' ' + subGroup;
+                    
+                    const dayStr = match[4].replace(/\./g, '');
+                    const day = daysMap[dayStr];
+                    
+                    const startH = parseInt(match[5], 10);
+                    const startM = parseInt(match[6], 10);
+                    const endH = parseInt(match[7], 10);
+                    const endM = parseInt(match[8], 10);
+                    const room = match[9].trim();
+
+                    // Limité au jour 5 (Vendredi) maximum
+                    if (day && day >= 1 && day <= 5) {
+                        const startDecimal = startH + (startM / 60);
+                        const endDecimal = endH + (endM / 60);
+
+                        const topPercent = ((startDecimal - 8) / 12) * 100;
+                        const heightPercent = ((endDecimal - startDecimal) / 12) * 100;
+
+                        const block = document.createElement('div');
+                        block.className = 'class-block';
+                        block.style.top = `${topPercent}%`;
+                        block.style.height = `${heightPercent}%`;
+                        block.style.backgroundColor = getColor(course);
+
+                        if (subGroup === 'A') {
+                            block.style.width = 'calc(50% - 6px)';
+                            block.style.left = '4px';
+                        } else if (subGroup === 'B') {
+                            block.style.width = 'calc(50% - 6px)';
+                            block.style.left = '50%';
+                            block.style.marginLeft = '2px';
+                        } else {
+                            block.style.left = '4px';
+                            block.style.right = '4px';
+                        }
+
+                        block.innerHTML = `
+                            <div class="class-title">${course} - ${type}</div>
+                            <div class="class-time">${formatTime(startH, startM)}-${formatTime(endH, endM)}</div>
+                            <div class="class-room">${room}</div>
+                        `;
+
+                        document.getElementById(`day-${day}`).appendChild(block);
+                    }
+                }
+            });
+        }
+
+        function saveAsPng() {
+            const rawData = document.getElementById('dataInput').value;
+            if (!rawData.trim()) {
+                alert("Veuillez générer un emploi du temps avant d'enregistrer.");
+                return;
+            }
+
+            const wrapper = document.getElementById('timetable-wrapper');
+            html2canvas(wrapper, {
+                scale: 2, 
+                backgroundColor: "#ffffff",
+                scrollX: 0,
+                scrollY: 0
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'mon_emploi_du_temps.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        window.onload = () => {
+            initGrid();
+        };
+    </script>
+</body>
+</html>
