@@ -1710,106 +1710,6 @@ function updateFilterSlider() {
         'NAT': 8, 'REG': 5, 'AUTRE': 0
     };
 
-    // Fonction utilitaire pour générer le SVG du camembert
-// --- NOUVELLE FONCTION DOUBLE DONUT (SUNBURST) ---
-// --- NOUVELLE FONCTION DOUBLE DONUT (SUNBURST) CORRIGÉE ---
-    function getPieChartSVG(data, colors) {
-        const size = 100; 
-        const center = size / 2;
-        
-        // Configuration des rayons
-        const r1_in = 20; // Trou central
-        const r1_out = 35; // Fin étage 1 (Sport)
-        const gap = 2;     // Espace blanc
-        const r2_in = r1_out + gap; // Début étage 2 (Niveaux)
-        const r2_out = 50; // Fin étage 2
-
-        let total = 0;
-        ['football', 'basketball', 'handball'].forEach(sport => {
-            if(data[sport]) Object.values(data[sport]).forEach(val => total += val);
-        });
-
-        if (total === 0) {
-            return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-                        <circle cx="${center}" cy="${center}" r="${r2_out}" fill="#F2F2F7" />
-                        <circle cx="${center}" cy="${center}" r="${r1_in}" fill="var(--card-bg)" />
-                    </svg>`;
-        }
-
-        let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform: rotate(-90deg);">`;
-        
-        // Helper amélioré pour gérer le 360° (Cercle complet)
-        const createArc = (startA, endA, rIn, rOut, color, opacity = 1) => {
-            // FIX : Si l'angle est un tour complet (2*PI), on le réduit infimement 
-            // pour éviter que point de départ == point d'arrivée (sinon le SVG ne s'affiche pas)
-            if (endA - startA >= 2 * Math.PI) {
-                endA -= 0.0001;
-            }
-
-            const x1_out = center + rOut * Math.cos(startA);
-            const y1_out = center + rOut * Math.sin(startA);
-            const x2_out = center + rOut * Math.cos(endA);
-            const y2_out = center + rOut * Math.sin(endA);
-
-            const x1_in = center + rIn * Math.cos(startA);
-            const y1_in = center + rIn * Math.sin(startA);
-            const x2_in = center + rIn * Math.cos(endA);
-            const y2_in = center + rIn * Math.sin(endA);
-
-            // Large Arc Flag : 1 si l'angle est > 180 degrés
-            const largeArc = (endA - startA) > Math.PI ? 1 : 0;
-
-            const d = [
-                `M ${x1_out} ${y1_out}`,
-                `A ${rOut} ${rOut} 0 ${largeArc} 1 ${x2_out} ${y2_out}`,
-                `L ${x2_in} ${y2_in}`,
-                `A ${rIn} ${rIn} 0 ${largeArc} 0 ${x1_in} ${y1_in}`,
-                `Z`
-            ].join(' ');
-
-            return `<path d="${d}" fill="${color}" fill-opacity="${opacity}" stroke="var(--card-bg)" stroke-width="1" />`;
-        };
-
-        let currentAngle = 0;
-
-        ['football', 'basketball', 'handball'].forEach(sport => {
-            const comps = data[sport];
-            if (!comps || Object.keys(comps).length === 0) return;
-
-            const baseColor = colors[sport];
-            
-            let sportTotal = 0;
-            Object.values(comps).forEach(v => sportTotal += v);
-            
-            const sportSliceAngle = (sportTotal / total) * 2 * Math.PI;
-            const sportEndAngle = currentAngle + sportSliceAngle;
-
-            // --- ÉTAGE 1 : SPORT ---
-            // Dessine le sport (ex: Vert pour Foot)
-            svg += createArc(currentAngle, sportEndAngle, r1_in, r1_out, baseColor, 1);
-
-            // --- ÉTAGE 2 : NIVEAUX ---
-            let levelCurrentAngle = currentAngle;
-            const sortedComps = Object.entries(comps).sort((a, b) => b[1] - a[1]);
-
-            sortedComps.forEach(([compName, count], index) => {
-                const levelSliceAngle = (count / sportTotal) * sportSliceAngle;
-                const levelEndAngle = levelCurrentAngle + levelSliceAngle;
-                
-                // Opacité dégressive
-                const opacity = 0.5 + (0.5 * (1 - (index / sortedComps.length)));
-
-                svg += createArc(levelCurrentAngle, levelEndAngle, r2_in, r2_out, baseColor, opacity);
-                
-                levelCurrentAngle = levelEndAngle;
-            });
-
-            currentAngle = sportEndAngle;
-        });
-
-        svg += `</svg>`;
-        return svg;
-    }
 
     // --- FONCTION PRINCIPALE ---
     async function calculateAndShowStats(e) {
@@ -5281,3 +5181,101 @@ function cleanUrlParameters() {
     url.searchParams.delete('addFriend'); // <-- Ajout du nettoyage du paramètre ami
     window.history.replaceState({}, document.title, url);
 }
+
+    function getPieChartSVG(data, colors) {
+        const size = 100; 
+        const center = size / 2;
+        
+        // Configuration des rayons
+        const r1_in = 20; // Trou central
+        const r1_out = 35; // Fin étage 1 (Sport)
+        const gap = 2;     // Espace blanc
+        const r2_in = r1_out + gap; // Début étage 2 (Niveaux)
+        const r2_out = 50; // Fin étage 2
+
+        let total = 0;
+        ['football', 'basketball', 'handball'].forEach(sport => {
+            if(data[sport]) Object.values(data[sport]).forEach(val => total += val);
+        });
+
+        if (total === 0) {
+            return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+                        <circle cx="${center}" cy="${center}" r="${r2_out}" fill="#F2F2F7" />
+                        <circle cx="${center}" cy="${center}" r="${r1_in}" fill="var(--card-bg)" />
+                    </svg>`;
+        }
+
+        let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform: rotate(-90deg);">`;
+        
+        // Helper amélioré pour gérer le 360° (Cercle complet)
+        const createArc = (startA, endA, rIn, rOut, color, opacity = 1) => {
+            // FIX : Si l'angle est un tour complet (2*PI), on le réduit infimement 
+            // pour éviter que point de départ == point d'arrivée (sinon le SVG ne s'affiche pas)
+            if (endA - startA >= 2 * Math.PI) {
+                endA -= 0.0001;
+            }
+
+            const x1_out = center + rOut * Math.cos(startA);
+            const y1_out = center + rOut * Math.sin(startA);
+            const x2_out = center + rOut * Math.cos(endA);
+            const y2_out = center + rOut * Math.sin(endA);
+
+            const x1_in = center + rIn * Math.cos(startA);
+            const y1_in = center + rIn * Math.sin(startA);
+            const x2_in = center + rIn * Math.cos(endA);
+            const y2_in = center + rIn * Math.sin(endA);
+
+            // Large Arc Flag : 1 si l'angle est > 180 degrés
+            const largeArc = (endA - startA) > Math.PI ? 1 : 0;
+
+            const d = [
+                `M ${x1_out} ${y1_out}`,
+                `A ${rOut} ${rOut} 0 ${largeArc} 1 ${x2_out} ${y2_out}`,
+                `L ${x2_in} ${y2_in}`,
+                `A ${rIn} ${rIn} 0 ${largeArc} 0 ${x1_in} ${y1_in}`,
+                `Z`
+            ].join(' ');
+
+            return `<path d="${d}" fill="${color}" fill-opacity="${opacity}" stroke="var(--card-bg)" stroke-width="1" />`;
+        };
+
+        let currentAngle = 0;
+
+        ['football', 'basketball', 'handball'].forEach(sport => {
+            const comps = data[sport];
+            if (!comps || Object.keys(comps).length === 0) return;
+
+            const baseColor = colors[sport];
+            
+            let sportTotal = 0;
+            Object.values(comps).forEach(v => sportTotal += v);
+            
+            const sportSliceAngle = (sportTotal / total) * 2 * Math.PI;
+            const sportEndAngle = currentAngle + sportSliceAngle;
+
+            // --- ÉTAGE 1 : SPORT ---
+            // Dessine le sport (ex: Vert pour Foot)
+            svg += createArc(currentAngle, sportEndAngle, r1_in, r1_out, baseColor, 1);
+
+            // --- ÉTAGE 2 : NIVEAUX ---
+            let levelCurrentAngle = currentAngle;
+            const sortedComps = Object.entries(comps).sort((a, b) => b[1] - a[1]);
+
+            sortedComps.forEach(([compName, count], index) => {
+                const levelSliceAngle = (count / sportTotal) * sportSliceAngle;
+                const levelEndAngle = levelCurrentAngle + levelSliceAngle;
+                
+                // Opacité dégressive
+                const opacity = 0.5 + (0.5 * (1 - (index / sortedComps.length)));
+
+                svg += createArc(levelCurrentAngle, levelEndAngle, r2_in, r2_out, baseColor, opacity);
+                
+                levelCurrentAngle = levelEndAngle;
+            });
+
+            currentAngle = sportEndAngle;
+        });
+
+        svg += `</svg>`;
+        return svg;
+    }
