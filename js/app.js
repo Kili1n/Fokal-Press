@@ -4525,15 +4525,22 @@ async function updateFriendsUI() {
             const reqUser = await fetchUserProfile(reqUid);
             if (reqUser) {
                 pendingList.innerHTML += `
-                    <div class="friend-request-item">
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 5px;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             ${getAvatarHTML(reqUser.photoURL, reqUser.displayName, 36)}
                             <div style="display: flex; flex-direction: column;">
-                                <span style="font-weight: 600; font-size: 13px;">${reqUser.displayName}</span>
                                 <span style="font-size: 11px; color: var(--text-secondary);">@${reqUser.instagram}</span>
                             </div>
                         </div>
-                        </div>`;
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="acceptFriend('${reqUid}')" class="login-submit-btn" style="width: 32px; height: 32px; padding: 0; margin: 0; background: #34C759; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button onclick="declineFriend('${reqUid}')" class="login-submit-btn" style="width: 32px; height: 32px; padding: 0; margin: 0; background: transparent; border: 1px solid #FF3B30; color: #FF3B30; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>`;
             }
         }
     } else {
