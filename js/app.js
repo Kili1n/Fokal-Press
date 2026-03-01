@@ -4807,35 +4807,40 @@ window.openFriendProfile = async (friendUid) => {
     const picContainer = document.getElementById('friendProfilePic');
     if (picContainer) picContainer.innerHTML = getAvatarHTML(friend.photoURL, friend.instagram, 60);
     
-    // On remplace le nom par le pseudo en gros
     document.getElementById('friendProfileName').innerHTML = `<i class="fa-brands fa-instagram"></i> @${friend.instagram || 'inconnu'}`;
-    
-    // On cache le petit texte en dessous puisqu'il faisait doublon
     const instaDiv = document.getElementById('friendProfileInsta');
     if (instaDiv) instaDiv.style.display = 'none';
 
-    // Bouton de suppression
     const removeBtn = document.getElementById('removeFriendBtn');
     if (removeBtn) removeBtn.onclick = () => removeFriend(friendUid);
 
-    // 2. Calcul des Stats de base
+    // 2. Calcul des Stats de base et Camembert
     const friendArchives = friend.archives || {};
     const friendFavorites = friend.favorites || {};
     
     let asked = 0, received = Object.keys(friendArchives).length, refused = 0;
     
-    // Nouveau : Comptage pour le camembert
-    let sportCounts = { "football": 0, "basketball": 0, "handball": 0 };
+    // Structure requise pour le camembert Sunburst
+    let compBreakdown = { football: {}, basketball: {}, handball: {} };
 
     Object.values(friendFavorites).forEach(status => {
         if (status === 'asked') asked++;
         if (status === 'refused') refused++;
     });
     
-    // On parcourt les archives pour les stats et le camembert
     Object.values(friendArchives).forEach(m => {
-        let sport = m.sport || "football"; // Foot par défaut pour les très vieux matchs
-        if (sportCounts[sport] !== undefined) sportCounts[sport]++;
+        const s = (m.sport || "football").toLowerCase();
+        const compStr = m.compFormatted || "AUTRE - AUTRE - SENIOR";
+        const parts = compStr.split(' - ');
+        
+        let compName = parts[1] || "Autre";
+        const ageCat = parts[2];
+        if (ageCat && !ageCat.includes("SENIOR") && !ageCat.includes("S")) {
+            compName += ` ${ageCat}`;
+        }
+        
+        if (!compBreakdown[s]) compBreakdown[s] = {};
+        compBreakdown[s][compName] = (compBreakdown[s][compName] || 0) + 1;
     });
 
     const totalReq = asked + refused + received;
@@ -4845,62 +4850,78 @@ window.openFriendProfile = async (friendUid) => {
     document.getElementById('friendStatAccreds').textContent = received;
     document.getElementById('friendStatRate').textContent = `${rate}%`;
 
-    // 3. Génération du Camembert (SVG dynamique)
+    // 3. Génération du Camembert (Double Donut)
     const pieChartDiv = document.getElementById('friendSportPieChart');
     const pieLegendDiv = document.getElementById('friendPieLegend');
     
     if (pieChartDiv && pieLegendDiv) {
+        // Utilisation de la même fonction que pour tes propres stats !
+        pieChartDiv.innerHTML = getPieChartSVG(compBreakdown, { 'football': '#34C759', 'basketball': '#FF9500', 'handball': '#0071E3' });
+        
+        let legendHtml = '';
         if (received === 0) {
-            pieChartDiv.innerHTML = '<div style="color:var(--text-muted); font-size:11px; text-align:center;">Aucun<br>match</div>';
-            pieLegendDiv.innerHTML = '';
+            legendHtml = '<span style="font-size:11px; color:gray; display:block; text-align:center; margin-top:10px;">Aucune donnée</span>';
         } else {
-            const colors = { "football": "#34C759", "basketball": "#FF9500", "handball": "#0071E3" };
-            const labels = { "football": "Foot", "basketball": "Basket", "handball": "Hand" };
-            
-            let svgContent = '';
-            let legendContent = '';
-            let cumulativePercent = 0;
+            // Création de la légende (Top 2 par sport)
+            ['football', 'basketball', 'handball'].forEach(sport => {
+                const comps = compBreakdown[sport];
+                if (!comps || Object.keys(comps).length === 0) return;
+                const baseColor = { 'football': '#34C759', 'basketball': '#FF9500', 'handball': '#0071E3' }[sport];
+                const sortedComps = Object.entries(comps).sort((a,b) => b[1] - a[1]);
 
-            Object.keys(sportCounts).forEach(sport => {
-                const count = sportCounts[sport];
-                if (count > 0) {
-                    const percent = count / received;
-                    const startAngle = cumulativePercent * 2 * Math.PI;
-                    cumulativePercent += percent;
-                    const endAngle = cumulativePercent * 2 * Math.PI;
-
-                    const startX = 50 + 50 * Math.cos(startAngle);
-                    const startY = 50 + 50 * Math.sin(startAngle);
-                    const endX = 50 + 50 * Math.cos(endAngle);
-                    const endY = 50 + 50 * Math.sin(endAngle);
-                    const largeArcFlag = percent > 0.5 ? 1 : 0;
-
-                    let pathData;
-                    if (percent === 1) { // 100% sur un seul sport
-                        pathData = `M 50 0 A 50 50 0 1 1 49.9 0 Z`;
-                    } else {
-                        pathData = `M 50 50 L ${startX} ${startY} A 50 50 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
-                    }
-
-                    svgContent += `<path d="${pathData}" fill="${colors[sport]}" />`;
-                    legendContent += `
-                        <div class="legend-item">
-                            <div><span class="legend-color" style="background:${colors[sport]}"></span> ${labels[sport]}</div>
-                            <span>${Math.round(percent * 100)}%</span>
-                        </div>
-                    `;
-                }
+                sortedComps.slice(0, 2).forEach(([cName, count], index) => {
+                    const percent = (count / received) * 100;
+                    const opacity = 0.5 + (0.5 * (1 - (index / sortedComps.length)));
+                    legendHtml += `
+                        <div class="legend-item" style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 2px; padding: 0 10px; color: var(--text-secondary);">
+                            <span style="display: flex; align-items: center; gap: 6px;">
+                                <span class="legend-color" style="width:5px; height:5px; border-radius:2px; background:${baseColor}; opacity:${opacity}"></span> 
+                                ${cName}
+                            </span>
+                            <span style="font-weight:600; opacity:0.8;">${Math.round(percent)}%</span>
+                        </div>`;
+                });
             });
+        }
+        pieLegendDiv.innerHTML = legendHtml;
+    }
 
-            pieChartDiv.innerHTML = `<svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width: 100%; height: 100%; border-radius: 50%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">${svgContent}</svg>`;
-            pieLegendDiv.innerHTML = legendContent;
+    // 4. Calcul des Matchs couverts ensemble
+    const commonMatchesList = document.getElementById('friendCommonMatchesList');
+    const noCommonMsg = document.getElementById('noCommonMatchMsg');
+    const commonCount = document.getElementById('friendCommonCount');
+    
+    if (commonMatchesList && commonCount) {
+        commonMatchesList.innerHTML = '';
+        let common = 0;
+
+        Object.keys(matchArchives).forEach(myMatchId => {
+            if (friendArchives[myMatchId]) {
+                common++;
+                const m = matchArchives[myMatchId];
+                const dateStr = new Date(m.dateObj).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+                
+                commonMatchesList.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:10px; border-radius:8px; border: 1px solid var(--border-color); margin-bottom: 5px;">
+                        <span style="font-size:12px; font-weight:600; color:var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">${m.home.name} <span style="font-weight:400; opacity:0.6;">vs</span> ${m.away.name}</span>
+                        <span style="font-size:11px; color:var(--text-secondary); background:var(--tag-bg); padding:2px 6px; border-radius:4px; flex-shrink: 0;">${dateStr}</span>
+                    </div>
+                `;
+            }
+        });
+
+        commonCount.textContent = common;
+        if (common > 0) {
+            if (noCommonMsg) noCommonMsg.style.display = 'none';
+        } else {
+            if (noCommonMsg) noCommonMsg.style.display = 'block';
         }
     }
 
-    // 4. Générer l'Historique de l'ami (en lecture seule)
+    // 5. Générer l'Historique de l'ami
     renderFriendHistory(friendArchives);
 
-    // 5. Afficher la modale
+    // 6. Afficher la modale
     document.getElementById('friendsModal').classList.add('hidden');
     document.getElementById('friendProfileModal').classList.remove('hidden');
 };
@@ -4928,9 +4949,10 @@ window.removeFriend = async (friendUid) => {
     } catch(e) { console.error("Erreur suppression ami", e); }
 };
 
-// Fonction pour générer la grille d'historique de l'ami
+// Fonction pour générer la grille d'historique de l'ami (Façon Vue Liste)
 function renderFriendHistory(archivesObj) {
     const grid = document.getElementById('friendHistoryGrid');
+    if (!grid) return;
     grid.innerHTML = '';
     
     const historyList = Object.entries(archivesObj).map(([key, data]) => ({ ...data, id: key }));
@@ -4946,39 +4968,45 @@ function renderFriendHistory(archivesObj) {
     historyList.forEach(m => {
         const homeName = m.home?.name || "Inconnu";
         const awayName = m.away?.name || "Inconnu";
-        let dateDisplay = "Date inconnue";
+        let dateShort = "00/00";
         let time = "--h--";
         
         if (m.dateObj && m.dateObj !== "UNKNOWN") {
             const d = new Date(m.dateObj);
-            dateDisplay = d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: 'short' });
+            dateShort = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' });
             time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h');
         }
         
-        const homeLogo = m.home.logo || getLogoUrl(homeName);
-        const awayLogo = m.away.logo || getLogoUrl(awayName);
+        const homeLogo = m.home.logo || getLogoUrl(homeName) || 'data/default-team.png';
+        const awayLogo = m.away.logo || getLogoUrl(awayName) || 'data/default-team.png';
+        const compShort = getShortComp(m.compFormatted || "AUTRE", m.sport || "football");
 
-        // Identique à ta carte historique, mais SANS le bouton d'édition
+        // Layout compact : Équipe | Heure | Équipe | Date & Compétition
         grid.innerHTML += `
-            <article class="card history-card" style="position:relative;">
-                <div class="match-header">
-                    <div class="team">
-                        <img src="${homeLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
-                        <span class="team-name">${homeName}</span>
+            <article class="card" style="flex-direction: row; align-items: center; padding: 10px 12px; gap: 10px; border-radius: 12px; margin-bottom: 8px; min-height: 50px;">
+                
+                <div class="match-header" style="flex: 2; display: flex; justify-content: flex-start; align-items: center; gap: 8px; margin-bottom: 0; width: auto;">
+                    
+                    <div class="team" style="display: flex; flex-direction: row-reverse; align-items: center; width: auto; gap: 8px; margin: 0;">
+                        <img src="${homeLogo}" class="team-logo" style="width: 28px; height: 28px; object-fit: contain;">
+                        <span class="team-name" style="font-size: 12px; text-align: right; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">${homeName}</span>
                     </div>
-                    <div class="match-center">
-                        <div class="match-time">${time}</div>
-                        <div class="vs">VS</div>
+                    
+                    <div class="match-center" style="display: flex; flex-direction: column; align-items: center; min-width: auto;">
+                        <div class="match-time" style="font-size: 11px; background: var(--tag-bg); padding: 2px 6px; border-radius: 4px; font-weight: 700;">${time}</div>
                     </div>
-                    <div class="team">
-                        <img src="${awayLogo}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
-                        <span class="team-name">${awayName}</span>
+                    
+                    <div class="team" style="display: flex; flex-direction: row; align-items: center; width: auto; gap: 8px; margin: 0;">
+                        <img src="${awayLogo}" class="team-logo" style="width: 28px; height: 28px; object-fit: contain;">
+                        <span class="team-name" style="font-size: 12px; text-align: left; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">${awayName}</span>
                     </div>
                 </div>
-                <div class="match-meta" style="border-top: 1px solid var(--border-color); margin-top: 10px; padding-top: 10px;">
-                    <span class="badge badge-short">${m.compFormatted || 'Match'}</span>
-                    <span class="date-time">${dateDisplay}</span>
+                
+                <div class="match-meta" style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; border-top: none; padding-top: 0;">
+                    <span class="badge" style="font-size: 9px; padding: 3px 6px; margin: 0;">${compShort}</span>
+                    <span class="date-time" style="font-size: 11px; color: var(--text-secondary);">${dateShort}</span>
                 </div>
+
             </article>
         `;
     });
@@ -5124,34 +5152,26 @@ window.checkPendingInvitations = async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const inviteMatchId = urlParams.get('inviteMatch');
     const fromUid = urlParams.get('from');
-    const addFriendUid = urlParams.get('addFriend'); // <-- NOUVEAU PARAMÈTRE
+    const addFriendUid = urlParams.get('addFriend');
 
-    // Si aucun paramètre d'invitation, on arrête
     if (!inviteMatchId && !fromUid && !addFriendUid) return; 
 
     const user = auth.currentUser;
 
-    // --- CAS 1 : UTILISATEUR DÉCONNECTÉ ---
     if (!user) {
-        // On force l'ouverture de la modale Login
         document.getElementById('loginModal').classList.remove('hidden');
         document.getElementById('loginView').style.display = 'block';
         document.getElementById('completeProfileView').style.display = 'none';
-        return; // On attend qu'il se connecte
+        return; 
     }
-
-    // --- CAS 2 : UTILISATEUR CONNECTÉ ---
 
     // A. Traitement du lien d'ajout d'ami générique (?addFriend=...)
     if (addFriendUid && addFriendUid !== user.uid) {
-        
-        // On vérifie d'abord si on est déjà amis ou si on a déjà une demande en attente
         if (myFriends.includes(addFriendUid) || myFriendRequests.includes(addFriendUid)) {
-            if (!inviteMatchId) cleanUrlParameters(); // Si pas de match prévu derrière, on nettoie
+            if (!inviteMatchId) cleanUrlParameters(); 
         } else {
             const hostUser = await fetchUserProfile(addFriendUid);
             if (hostUser) {
-                // On prépare et affiche la nouvelle Modale
                 const friendModal = document.getElementById('inviteFriendModal');
                 document.getElementById('inviteFriendName').textContent = hostUser.displayName || "Un ami";
                 document.getElementById('inviteFriendPicContainer').innerHTML = getAvatarHTML(hostUser.photoURL, hostUser.displayName, 80);
@@ -5165,14 +5185,10 @@ window.checkPendingInvitations = async function() {
 
                 document.getElementById('closeInviteFriendBtn').onclick = closeAndCleanFriend;
                 document.getElementById('declineFriendInviteBtn').onclick = closeAndCleanFriend;
-
                 document.getElementById('acceptFriendInviteBtn').onclick = () => {
-                    // On utilise notre fonction sécurisée qui s'occupe de l'envoi Firebase !
                     sendFriendRequest(addFriendUid);
                     closeAndCleanFriend();
                 };
-                
-                // Si l'URL ne contient qu'une invitation d'ami (pas de match), on s'arrête ici
                 if (!inviteMatchId) return; 
             }
         }
@@ -5185,43 +5201,42 @@ window.checkPendingInvitations = async function() {
             return;
         }
 
-        // On auto-envoie aussi une demande d'ami si on rejoint le match de quelqu'un !
+        // CORRECTION ANTI-BOUCLE : On interroge la BDD directement pour être 100% sûr de la relation
         try {
-            if (!myFriends.includes(fromUid) && !myFriendRequests.includes(fromUid)) {
+            const myDoc = await db.collection('users').doc(user.uid).get();
+            const myData = myDoc.exists ? myDoc.data() : {};
+            const myCurrentFriends = myData.friends || [];
+            const myCurrentRequests = myData.friendRequests || [];
+
+            if (!myCurrentFriends.includes(fromUid) && !myCurrentRequests.includes(fromUid)) {
                 await db.collection('users').doc(fromUid).update({
                     friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
                 });
             }
         } catch(e) {}
 
-        // Récupération du profil de l'ami qui invite
         const hostUser = await fetchUserProfile(fromUid);
         if (!hostUser) {
             cleanUrlParameters();
             return;
         }
 
-        // Préparation de la modale d'invitation
         const modal = document.getElementById('inviteMatchModal');
         document.getElementById('inviteHostName').textContent = hostUser.displayName || "Un ami";
         
-        // Application du proxy sécurisé pour sa photo
         let safeUrl = hostUser.photoURL || 'data/default-team.png';
         if (safeUrl !== 'data/default-team.png' && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
             safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
         }
         document.getElementById('inviteHostPic').src = safeUrl;
 
-        // Récupération des noms d'équipes
         const parts = inviteMatchId.split('_');
         const home = parts[0] || "Domicile";
         const away = parts[1] || "Extérieur";
         document.getElementById('inviteMatchTitle').textContent = `${home} vs ${away}`;
 
-        // Affichage de la modale
         modal.classList.remove('hidden');
 
-        // Gestion des actions (Rejoindre / Décliner)
         const joinBtn = document.getElementById('joinMatchBtn');
         const declineBtn = document.getElementById('declineMatchBtn');
         const closeBtn = document.getElementById('closeInviteModalBtn');
@@ -5247,6 +5262,11 @@ window.checkPendingInvitations = async function() {
                     btn.querySelector('i').className = getStatusIcon('envie');
                 }
                 if (typeof injectFriendsOnCards === 'function') injectFriendsOnCards();
+                
+                // NOUVEAU : ALERTE POUR RAPPELER L'ACCRÉDITATION
+                setTimeout(() => {
+                    alert("✅ Match ajouté à vos favoris !\n\n⚠️ Attention : rejoindre ce match ne vaut pas accréditation. N'oubliez pas de générer votre demande mail auprès du club.");
+                }, 300);
             }
             closeAndClean();
         };
