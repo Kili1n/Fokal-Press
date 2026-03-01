@@ -5150,9 +5150,11 @@ window.checkPendingInvitations = async function() {
 
                 document.getElementById('closeInviteFriendBtn').onclick = closeAndCleanFriend;
                 document.getElementById('declineFriendInviteBtn').onclick = closeAndCleanFriend;
-                document.getElementById('acceptFriendInviteBtn').onclick = () => {
-                    sendFriendRequest(addFriendUid);
+                document.getElementById('acceptFriendInviteBtn').onclick = async () => {
+                    await acceptFriend(addFriendUid);
                     closeAndCleanFriend();
+
+                    alert(`Vous êtes maintenant ami avec @${hostUser.instagram} !`);
                 };
                 if (!inviteMatchId) return; 
             }
