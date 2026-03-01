@@ -2518,7 +2518,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!user) return;
             
             // On génère un texte sympa avec le lien de l'application
-            const inviteText = `Rejoins-moi sur FokalPress, l'outil indispensable pour organiser nos matchs et accréditations photos ! 📸\n\nCrée ton compte ici : https://fokalpress.fr`;
+            const inviteText = `Rejoins-moi sur FokalPress, l'outil indispensable pour organiser nos matchs et accréditations photos ! 📸\n\nCrée ton compte ici : https://fokalpress.fr/app.html?addFriend=${user.uid}`;
 
             // On utilise ta fonction existante (qui gère PC et Mobile) pour copier
             if (navigator.clipboard && window.isSecureContext) {
@@ -5014,8 +5014,10 @@ window.checkPendingInvitations = async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const inviteMatchId = urlParams.get('inviteMatch');
     const fromUid = urlParams.get('from');
+    const addFriendUid = urlParams.get('addFriend'); // <-- NOUVEAU PARAMÈTRE
 
-    if (!inviteMatchId || !fromUid) return; // Pas d'invitation dans l'URL, on arrête.
+    // Si aucun paramètre d'invitation, on arrête
+    if (!inviteMatchId && !fromUid && !addFriendUid) return; 
 
     const user = auth.currentUser;
 
@@ -5025,84 +5027,107 @@ window.checkPendingInvitations = async function() {
         document.getElementById('loginModal').classList.remove('hidden');
         document.getElementById('loginView').style.display = 'block';
         document.getElementById('completeProfileView').style.display = 'none';
-        return; // On attend qu'il se connecte (la fonction sera rappelée après le login)
+        return; // On attend qu'il se connecte
     }
 
     // --- CAS 2 : UTILISATEUR CONNECTÉ ---
-    // Si l'utilisateur clique sur son propre lien, on nettoie juste l'URL
-    if (user.uid === fromUid) {
-        cleanUrlParameters();
-        return;
-    }
 
-    // Récupération du profil de l'ami qui invite
-    const hostUser = await fetchUserProfile(fromUid);
-    if (!hostUser) {
-        cleanUrlParameters();
-        return;
-    }
-
-    // Préparation de la modale d'invitation
-    const modal = document.getElementById('inviteMatchModal');
-    document.getElementById('inviteHostName').textContent = hostUser.displayName || "Un ami";
-    
-    // Application du proxy sécurisé pour sa photo
-    let safeUrl = hostUser.photoURL || 'data/default-team.png';
-    if (safeUrl !== 'data/default-team.png' && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
-        safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
-    }
-    document.getElementById('inviteHostPic').src = safeUrl;
-
-    // Récupération des noms d'équipes depuis l'ID du match (Ex: FCX_PSG_2026-03-10)
-    const parts = inviteMatchId.split('_');
-    const home = parts[0] || "Domicile";
-    const away = parts[1] || "Extérieur";
-    document.getElementById('inviteMatchTitle').textContent = `${home} vs ${away}`;
-
-    // Affichage de la modale
-    modal.classList.remove('hidden');
-
-    // Gestion des actions (Rejoindre / Décliner)
-    const joinBtn = document.getElementById('joinMatchBtn');
-    const declineBtn = document.getElementById('declineMatchBtn');
-    const closeBtn = document.getElementById('closeInviteModalBtn');
-
-    const closeAndClean = () => {
-        modal.classList.add('hidden');
-        cleanUrlParameters();
-    };
-
-    declineBtn.onclick = closeAndClean;
-    closeBtn.onclick = closeAndClean;
-
-    joinBtn.onclick = () => {
-        // On ajoute le match dans ses statuts avec "envie" (étoile pleine)
-        if (!matchStatuses[inviteMatchId]) {
-            matchStatuses[inviteMatchId] = 'envie';
-            localStorage.setItem('matchStatuses', JSON.stringify(matchStatuses));
-            
-            // Envoi dans Firebase
-            syncFavoriteToFirebase(inviteMatchId, 'envie', null);
-            
-            // Mise à jour visuelle si la carte est affichée
-            const btn = document.querySelector(`#match-card-${inviteMatchId} .fav-btn`);
-            if (btn) {
-                btn.classList.remove('status-envie', 'status-asked', 'status-received', 'status-refused');
-                btn.classList.add('status-envie');
-                btn.querySelector('i').className = getStatusIcon('envie');
-            }
-            
-            // Mise à jour des petits avatars sur les cartes (pour qu'il apparaisse dessus)
-            if (typeof injectFriendsOnCards === 'function') injectFriendsOnCards();
+    // A. Traitement du lien d'ajout d'ami générique (?addFriend=...)
+    if (addFriendUid && addFriendUid !== user.uid) {
+        try {
+            // Envoi automatique de la demande d'ami à l'hôte !
+            await db.collection('users').doc(addFriendUid).update({
+                friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
+            });
+        } catch (e) {
+            console.error("Erreur auto-add friend", e);
         }
-        closeAndClean();
-    };
+        
+        // S'il n'y a pas d'invitation match liée, on s'arrête là
+        if (!inviteMatchId) {
+            cleanUrlParameters();
+            return;
+        }
+    }
+
+    // B. Traitement du lien de match (?inviteMatch=...&from=...)
+    if (inviteMatchId && fromUid) {
+        if (user.uid === fromUid) {
+            cleanUrlParameters();
+            return;
+        }
+
+        // On auto-envoie aussi une demande d'ami si on rejoint le match de quelqu'un !
+        try {
+            await db.collection('users').doc(fromUid).update({
+                friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
+            });
+        } catch(e) {}
+
+        // Récupération du profil de l'ami qui invite
+        const hostUser = await fetchUserProfile(fromUid);
+        if (!hostUser) {
+            cleanUrlParameters();
+            return;
+        }
+
+        // Préparation de la modale d'invitation
+        const modal = document.getElementById('inviteMatchModal');
+        document.getElementById('inviteHostName').textContent = hostUser.displayName || "Un ami";
+        
+        // Application du proxy sécurisé pour sa photo
+        let safeUrl = hostUser.photoURL || 'data/default-team.png';
+        if (safeUrl !== 'data/default-team.png' && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
+            safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
+        }
+        document.getElementById('inviteHostPic').src = safeUrl;
+
+        // Récupération des noms d'équipes
+        const parts = inviteMatchId.split('_');
+        const home = parts[0] || "Domicile";
+        const away = parts[1] || "Extérieur";
+        document.getElementById('inviteMatchTitle').textContent = `${home} vs ${away}`;
+
+        // Affichage de la modale
+        modal.classList.remove('hidden');
+
+        // Gestion des actions (Rejoindre / Décliner)
+        const joinBtn = document.getElementById('joinMatchBtn');
+        const declineBtn = document.getElementById('declineMatchBtn');
+        const closeBtn = document.getElementById('closeInviteModalBtn');
+
+        const closeAndClean = () => {
+            modal.classList.add('hidden');
+            cleanUrlParameters();
+        };
+
+        declineBtn.onclick = closeAndClean;
+        closeBtn.onclick = closeAndClean;
+
+        joinBtn.onclick = () => {
+            if (!matchStatuses[inviteMatchId]) {
+                matchStatuses[inviteMatchId] = 'envie';
+                localStorage.setItem('matchStatuses', JSON.stringify(matchStatuses));
+                syncFavoriteToFirebase(inviteMatchId, 'envie', null);
+                
+                const btn = document.querySelector(`#match-card-${inviteMatchId} .fav-btn`);
+                if (btn) {
+                    btn.classList.remove('status-envie', 'status-asked', 'status-received', 'status-refused');
+                    btn.classList.add('status-envie');
+                    btn.querySelector('i').className = getStatusIcon('envie');
+                }
+                if (typeof injectFriendsOnCards === 'function') injectFriendsOnCards();
+            }
+            closeAndClean();
+        };
+    }
 };
 
-// Fonction utilitaire pour nettoyer l'URL après traitement (pour ne pas rouvrir la popup à chaque actualisation)
+// Fonction utilitaire pour nettoyer l'URL après traitement
 function cleanUrlParameters() {
     const url = new URL(window.location);
     url.searchParams.delete('inviteMatch');
     url.searchParams.delete('from');
+    url.searchParams.delete('addFriend'); // <-- Ajout du nettoyage du paramètre ami
     window.history.replaceState({}, document.title, url);
 }
