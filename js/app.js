@@ -2705,6 +2705,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         }, 1000);
                     }
 
+                    if (typeof checkPendingInvitations === 'function') {
+                        checkPendingInvitations();
+                    }
+
                 } else {
                     // Nouveau compte (Pas encore en base)
                     // On nettoie tout par sécurité pour partir sur une base vierge
@@ -2755,6 +2759,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // PARTIE DÉCONNEXION (C'est ici que la correction opère)
             // ---------------------------------------------------------
             console.log("Utilisateur déconnecté");
+            if (typeof checkPendingInvitations === 'function') {
+                checkPendingInvitations();
+            }
             updateLoginUI(false);
             
             // 1. Nettoyage des FAVORIS
@@ -4948,3 +4955,147 @@ window.injectFriendsOnCards = async function() {
         stack.innerHTML = html;
     });
 };
+
+// ==========================================
+// MÉCANIQUE VIRALE : PARTAGE ET INVITATION
+// ==========================================
+
+// 5.1 Génération du lien de partage
+window.shareMatch = function(event, matchId, homeName, awayName) {
+    event.stopPropagation(); // Évite d'ouvrir la carte sur mobile quand on clique sur partager
+    
+    const user = auth.currentUser;
+    if (!user) {
+        // S'il n'est pas connecté, on l'invite à se connecter
+        document.getElementById('featureAuthModal').classList.remove('hidden');
+        return;
+    }
+
+    // Création de l'URL avec les paramètres
+    const inviteUrl = `https://fokalpress.fr/app.html?inviteMatch=${matchId}&from=${user.uid}`;
+    const shareText = `Rejoins-moi pour photographier le match ${homeName} vs ${awayName} !`;
+
+    // Utilisation du partage natif (Web Share API) sur mobile/tablette
+    if (navigator.share && window.isSecureContext) {
+        navigator.share({
+            title: 'Invitation FokalPress',
+            text: shareText,
+            url: inviteUrl
+        }).catch(err => {
+            console.log("Partage annulé ou erreur", err);
+            fallbackShareCopy(inviteUrl, event.currentTarget);
+        });
+    } else {
+        // Sur PC, on copie le lien dans le presse-papier
+        fallbackShareCopy(inviteUrl, event.currentTarget);
+    }
+};
+
+// Fonction de secours pour copier le lien dans le presse-papier (bouton partager de la carte)
+function fallbackShareCopy(url, btnElement) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(() => {
+            const originalHtml = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fa-solid fa-check" style="color:#34C759;"></i>';
+            setTimeout(() => { btnElement.innerHTML = originalHtml; }, 2000);
+        });
+    }
+}
+
+// 5.2 et 5.3 Interception et Traitement du lien d'invitation
+window.checkPendingInvitations = async function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteMatchId = urlParams.get('inviteMatch');
+    const fromUid = urlParams.get('from');
+
+    if (!inviteMatchId || !fromUid) return; // Pas d'invitation dans l'URL, on arrête.
+
+    const user = auth.currentUser;
+
+    // --- CAS 1 : UTILISATEUR DÉCONNECTÉ ---
+    if (!user) {
+        // On force l'ouverture de la modale Login
+        document.getElementById('loginModal').classList.remove('hidden');
+        document.getElementById('loginView').style.display = 'block';
+        document.getElementById('completeProfileView').style.display = 'none';
+        return; // On attend qu'il se connecte (la fonction sera rappelée après le login)
+    }
+
+    // --- CAS 2 : UTILISATEUR CONNECTÉ ---
+    // Si l'utilisateur clique sur son propre lien, on nettoie juste l'URL
+    if (user.uid === fromUid) {
+        cleanUrlParameters();
+        return;
+    }
+
+    // Récupération du profil de l'ami qui invite
+    const hostUser = await fetchUserProfile(fromUid);
+    if (!hostUser) {
+        cleanUrlParameters();
+        return;
+    }
+
+    // Préparation de la modale d'invitation
+    const modal = document.getElementById('inviteMatchModal');
+    document.getElementById('inviteHostName').textContent = hostUser.displayName || "Un ami";
+    
+    // Application du proxy sécurisé pour sa photo
+    let safeUrl = hostUser.photoURL || 'data/default-team.png';
+    if (safeUrl !== 'data/default-team.png' && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
+        safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
+    }
+    document.getElementById('inviteHostPic').src = safeUrl;
+
+    // Récupération des noms d'équipes depuis l'ID du match (Ex: FCX_PSG_2026-03-10)
+    const parts = inviteMatchId.split('_');
+    const home = parts[0] || "Domicile";
+    const away = parts[1] || "Extérieur";
+    document.getElementById('inviteMatchTitle').textContent = `${home} vs ${away}`;
+
+    // Affichage de la modale
+    modal.classList.remove('hidden');
+
+    // Gestion des actions (Rejoindre / Décliner)
+    const joinBtn = document.getElementById('joinMatchBtn');
+    const declineBtn = document.getElementById('declineMatchBtn');
+    const closeBtn = document.getElementById('closeInviteModalBtn');
+
+    const closeAndClean = () => {
+        modal.classList.add('hidden');
+        cleanUrlParameters();
+    };
+
+    declineBtn.onclick = closeAndClean;
+    closeBtn.onclick = closeAndClean;
+
+    joinBtn.onclick = () => {
+        // On ajoute le match dans ses statuts avec "envie" (étoile pleine)
+        if (!matchStatuses[inviteMatchId]) {
+            matchStatuses[inviteMatchId] = 'envie';
+            localStorage.setItem('matchStatuses', JSON.stringify(matchStatuses));
+            
+            // Envoi dans Firebase
+            syncFavoriteToFirebase(inviteMatchId, 'envie', null);
+            
+            // Mise à jour visuelle si la carte est affichée
+            const btn = document.querySelector(`#match-card-${inviteMatchId} .fav-btn`);
+            if (btn) {
+                btn.classList.remove('status-envie', 'status-asked', 'status-received', 'status-refused');
+                btn.classList.add('status-envie');
+                btn.querySelector('i').className = getStatusIcon('envie');
+            }
+            
+            // Mise à jour des petits avatars sur les cartes (pour qu'il apparaisse dessus)
+            if (typeof injectFriendsOnCards === 'function') injectFriendsOnCards();
+        }
+        closeAndClean();
+    };
+};
+
+// Fonction utilitaire pour nettoyer l'URL après traitement (pour ne pas rouvrir la popup à chaque actualisation)
+function cleanUrlParameters() {
+    const url = new URL(window.location);
+    url.searchParams.delete('inviteMatch');
+    url.searchParams.delete('from');
+    window.history.replaceState({}, document.title, url);
+}

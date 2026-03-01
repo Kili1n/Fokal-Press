@@ -2338,7 +2338,13 @@ body.dark-mode .stat-badge-row:nth-of-type(3) .stat-icon {
 
 /* --- MASQUER LE BOUTON PARTAGER EN VUE LISTE MOBILE --- */
 @media (max-width: 768px) {
-    .list-view .share-match-btn {
+    /* 1. On masque sur les cartes fermées */
+    .list-view .card:not(.mobile-expanded) .share-match-btn {
         display: none !important;
+    }
+    
+    /* 2. On s'assure de l'afficher quand la carte est ouverte */
+    .list-view .card.mobile-expanded .share-match-btn {
+        display: inline-block !important;
     }
 }
