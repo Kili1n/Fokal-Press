@@ -5059,10 +5059,72 @@ window.checkPendingInvitations = async function() {
     const user = auth.currentUser;
 
     if (!user) {
-        document.getElementById('loginModal').classList.remove('hidden');
-        document.getElementById('loginView').style.display = 'block';
-        document.getElementById('completeProfileView').style.display = 'none';
-        return; 
+        const hostUid = fromUid || addFriendUid;
+        let hostName = "Un photographe";
+        let hostPicHtml = `<div style="width: 80px; height: 80px; background: var(--tag-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px;"><i class="fa-solid fa-user"></i></div>`;
+
+        // On tente de récupérer les infos publiques de l'hôte
+        if (hostUid) {
+            try {
+                const doc = await db.collection('users').doc(hostUid).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    hostName = data.displayName || "Un ami";
+                    hostPicHtml = getAvatarHTML(data.photoURL, hostName, 80);
+                }
+            } catch(e) {
+                console.warn("Lecture du profil public bloquée ou impossible", e);
+            }
+        }
+
+        // Préparation de la modale d'accueil
+        const onboardingModal = document.getElementById('inviteOnboardingModal');
+        document.getElementById('onboardingHostName').textContent = hostName;
+        document.getElementById('onboardingHostPic').innerHTML = hostPicHtml;
+
+        const textEl = document.getElementById('onboardingText');
+        
+        if (inviteMatchId) {
+            // C'est une invitation à un match
+            const parts = inviteMatchId.split('_');
+            const home = parts[0] || "Domicile";
+            const away = parts[1] || "Extérieur";
+            textEl.innerHTML = `Il vous invite à venir photographier le match <strong style="color:var(--text-primary);">${home} vs ${away}</strong> avec lui !<br><br>Créez votre compte pour accepter l'invitation.`;
+        } else {
+            // C'est une invitation générique au réseau
+            textEl.innerHTML = `Il souhaite vous ajouter à son réseau sur <strong style="color:var(--text-primary);">FokalPress</strong>, l'outil de planification des photographes de sport.<br><br>Créez votre compte pour voir ses matchs.`;
+        }
+
+        onboardingModal.classList.remove('hidden');
+
+        // Gestion de la fermeture (On nettoie l'URL pour ne pas le harceler)
+        document.getElementById('closeInviteOnboardingBtn').onclick = () => {
+            onboardingModal.classList.add('hidden');
+            cleanUrlParameters();
+        };
+
+        // Gestion du Clic sur "Créer mon compte Google"
+        const onboardingBtn = document.getElementById('onboardingLoginBtn');
+        onboardingBtn.onclick = async () => {
+            const originalHtml = onboardingBtn.innerHTML;
+            onboardingBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Connexion...</span>';
+            onboardingBtn.disabled = true;
+
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await auth.signInWithPopup(provider);
+                onboardingModal.classList.add('hidden');
+                // Note : On NE NETTOIE PAS l'URL ici !
+                // Comme ça, dès qu'il est connecté, `checkPendingInvitations` sera relancée 
+                // automatiquement par Firebase et passera au CAS 2 pour finaliser l'ajout !
+            } catch (err) {
+                console.error("Erreur login via onboarding :", err);
+                onboardingBtn.innerHTML = originalHtml;
+                onboardingBtn.disabled = false;
+            }
+        };
+
+        return; // On arrête l'exécution ici car il n'est pas connecté
     }
 
     // A. Traitement du lien d'ajout d'ami générique (?addFriend=...)
