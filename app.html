@@ -440,9 +440,18 @@
                         </div>
                 </div>
 
+                <div id="sentRequestsSection" style="display: none; margin-bottom: 25px; background: rgba(0, 113, 227, 0.05); border: 1px solid rgba(0, 113, 227, 0.2); border-radius: 8px; padding: 15px;">
+                    <h3 style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+                        Demandes envoyées
+                        <span id="sentCount" style="background: var(--accent); color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px;">0</span>
+                    </h3>
+                    <div id="sentRequestsList" style="display: flex; flex-direction: column; gap: 5px;">
+                        </div>
+                </div>
+
                 <div style="margin-bottom: 10px;">
                     <h3 style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px;">
-                        Mes contacts (<span id="friendsCount">0</span>)
+                        Mes amis (<span id="friendsCount">0</span>)
                     </h3>
                     <div id="friendsList" style="display: flex; flex-direction: column; gap: 10px;">
                         <div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">
@@ -507,6 +516,12 @@
                         <span class="stat-val" id="friendStatRate">0%</span>
                         <span class="stat-label">Réussite</span>
                     </div>
+
+                    <div class="stat-section-title" style="margin-top: 0; margin-bottom: 10px;">Diversité des sports</div>
+                    <div class="pie-container" style="padding: 10px; width: 100%; justify-content: center; margin-bottom: 25px; border: 1px solid var(--border-color);">
+                        <div class="pie-chart" id="friendSportPieChart" style="width: 70px; height: 70px;"></div>
+                        <div class="pie-legend" id="friendPieLegend"></div>
+                    </div>
                 </div>
 
                 <div style="background: var(--bg-secondary); border-radius: 12px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border-color);">
@@ -557,7 +572,7 @@
             </h2>
             
             <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.5;">
-                Il a prévu d'aller photographier le match <br>
+                J'ai prévu d'aller photographier le match <br>
                 <strong id="inviteMatchTitle" style="color: var(--text-primary); font-size: 15px; display: block; margin-top: 5px; padding: 10px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);">
                     Équipe A vs Équipe B
                 </strong>
@@ -565,7 +580,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button id="joinMatchBtn" class="login-submit-btn" style="background: #34C759; color: white; margin: 0; font-weight: 700; font-size: 15px;">
-                    <i class="fa-solid fa-check"></i> Rejoindre le match
+                    <i class="fa-solid fa-check"></i> J'ai envie de venir !
                 </button>
                 
                 <button id="declineMatchBtn" class="login-submit-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); margin: 0; font-weight: 600;">

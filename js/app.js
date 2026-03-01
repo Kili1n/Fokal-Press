@@ -4558,20 +4558,81 @@ async function updateFriendsUI() {
             const friend = await fetchUserProfile(friendUid);
             if (friend) {
                 friendsList.innerHTML += `
-                    <div class="friend-item">
-                        <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="openFriendProfile('${friendUid}')">
-                            ${getAvatarHTML(friend.photoURL, friend.displayName, 36)}
-                            <div style="display: flex; flex-direction: column;">
-                                <span style="font-weight: 600; font-size: 13px;">${friend.displayName}</span>
-                                <span style="font-size: 11px; color: var(--text-secondary);">@${friend.instagram}</span>
-                            </div>
+                    <div onclick="openFriendProfile('${friendUid}')" style="display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); cursor: pointer; margin-bottom: 5px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            ${getAvatarHTML(friend.photoURL, friend.instagram, 36)}
+                            <span style="font-weight: 600; font-size: 14px; color: var(--text-primary);">@${friend.instagram}</span>
                         </div>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>`;
+                        <i class="fa-solid fa-chevron-right" style="color: var(--text-secondary); font-size: 14px;"></i>
+                    </div>
+                `;
             }
         }
     }
+    loadSentRequests();
 }
+
+// NOUVEAU : Fonction pour récupérer et afficher les demandes envoyées
+async function loadSentRequests() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const sentSection = document.getElementById('sentRequestsSection');
+    const sentList = document.getElementById('sentRequestsList');
+    const sentCount = document.getElementById('sentCount');
+
+    if (!sentSection || !sentList) return;
+
+    try {
+        // Requête magique : Trouve tous les users qui ont MON uid en attente
+        const querySnapshot = await db.collection('users').where('friendRequests', 'array-contains', user.uid).get();
+        
+        if (querySnapshot.empty) {
+            sentSection.style.display = 'none';
+            return;
+        }
+
+        sentSection.style.display = 'block';
+        sentCount.textContent = querySnapshot.docs.length;
+        sentList.innerHTML = '';
+
+        querySnapshot.docs.forEach(doc => {
+            const targetData = doc.data();
+            const targetUid = doc.id;
+
+            sentList.innerHTML += `
+                <div style="display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        ${getAvatarHTML(targetData.photoURL, targetData.displayName, 36)}
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 600; font-size: 13px; color: var(--text-primary);">${targetData.displayName}</span>
+                            <span style="font-size: 11px; color: var(--text-secondary);">@${targetData.instagram}</span>
+                        </div>
+                    </div>
+                    <button onclick="cancelFriendRequest('${targetUid}')" class="login-submit-btn" style="width: auto; padding: 6px 12px; margin: 0; background: transparent; border: 1px solid #FF3B30; color: #FF3B30; font-size: 12px; border-radius: 6px;">
+                        Annuler
+                    </button>
+                </div>`;
+        });
+    } catch (e) {
+        console.error("Erreur chargement demandes envoyées", e);
+    }
+}
+
+// NOUVEAU : Fonction pour annuler une demande envoyée
+window.cancelFriendRequest = async (targetUid) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+        await db.collection('users').doc(targetUid).update({
+            friendRequests: firebase.firestore.FieldValue.arrayRemove(user.uid)
+        });
+        
+        // On recharge la liste instantanément pour voir la ligne disparaître
+        loadSentRequests();
+        
+    } catch(e) { console.error("Erreur annulation demande", e); }
+};
 
 // Étape 3.1 : Recherche et Demande d'ami
 document.addEventListener('DOMContentLoaded', () => {
@@ -4681,6 +4742,7 @@ window.sendFriendRequest = async (targetUid) => {
             friendRequests: firebase.firestore.FieldValue.arrayUnion(user.uid)
         });
         document.getElementById('friendSearchResult').innerHTML = "<span style='color: #34C759;'><i class='fa-solid fa-check'></i> Demande envoyée !</span>";
+        loadSentRequests();
     } catch(e) { console.error("Erreur envoi demande", e); }
 };
 
@@ -4727,12 +4789,16 @@ window.openFriendProfile = async (friendUid) => {
     const friend = await fetchUserProfile(friendUid);
     if (!friend) return;
 
-    // 1. Remplir l'en-tête avec notre avatar sécurisé
+    // 1. Remplir l'en-tête (Uniquement Pseudo Insta)
     const picContainer = document.getElementById('friendProfilePic');
-    if (picContainer) picContainer.innerHTML = getAvatarHTML(friend.photoURL, friend.displayName, 60);
+    if (picContainer) picContainer.innerHTML = getAvatarHTML(friend.photoURL, friend.instagram, 60);
     
-    document.getElementById('friendProfileName').textContent = friend.displayName;
-    document.getElementById('friendProfileInsta').innerHTML = `<i class="fa-brands fa-instagram"></i> @${friend.instagram || 'inconnu'}`;
+    // On remplace le nom par le pseudo en gros
+    document.getElementById('friendProfileName').innerHTML = `<i class="fa-brands fa-instagram"></i> @${friend.instagram || 'inconnu'}`;
+    
+    // On cache le petit texte en dessous puisqu'il faisait doublon
+    const instaDiv = document.getElementById('friendProfileInsta');
+    if (instaDiv) instaDiv.style.display = 'none';
 
     // Bouton de suppression
     const removeBtn = document.getElementById('removeFriendBtn');
@@ -4743,11 +4809,21 @@ window.openFriendProfile = async (friendUid) => {
     const friendFavorites = friend.favorites || {};
     
     let asked = 0, received = Object.keys(friendArchives).length, refused = 0;
+    
+    // Nouveau : Comptage pour le camembert
+    let sportCounts = { "football": 0, "basketball": 0, "handball": 0 };
+
     Object.values(friendFavorites).forEach(status => {
         if (status === 'asked') asked++;
         if (status === 'refused') refused++;
     });
     
+    // On parcourt les archives pour les stats et le camembert
+    Object.values(friendArchives).forEach(m => {
+        let sport = m.sport || "football"; // Foot par défaut pour les très vieux matchs
+        if (sportCounts[sport] !== undefined) sportCounts[sport]++;
+    });
+
     const totalReq = asked + refused + received;
     const rate = totalReq > 0 ? Math.round((received / totalReq) * 100) : 0;
 
@@ -4755,36 +4831,56 @@ window.openFriendProfile = async (friendUid) => {
     document.getElementById('friendStatAccreds').textContent = received;
     document.getElementById('friendStatRate').textContent = `${rate}%`;
 
-    // 3. Calcul des Matchs couverts ensemble
-    const commonMatchesList = document.getElementById('friendCommonMatchesList');
-    const noCommonMsg = document.getElementById('noCommonMatchMsg');
-    const commonCount = document.getElementById('friendCommonCount');
+    // 3. Génération du Camembert (SVG dynamique)
+    const pieChartDiv = document.getElementById('friendSportPieChart');
+    const pieLegendDiv = document.getElementById('friendPieLegend');
     
-    commonMatchesList.innerHTML = '';
-    let common = 0;
-
-    // On compare les clés de MON historique avec le SIEN
-    Object.keys(matchArchives).forEach(myMatchId => {
-        if (friendArchives[myMatchId]) {
-            common++;
-            const m = matchArchives[myMatchId];
-            const dateStr = new Date(m.dateObj).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    if (pieChartDiv && pieLegendDiv) {
+        if (received === 0) {
+            pieChartDiv.innerHTML = '<div style="color:var(--text-muted); font-size:11px; text-align:center;">Aucun<br>match</div>';
+            pieLegendDiv.innerHTML = '';
+        } else {
+            const colors = { "football": "#34C759", "basketball": "#FF9500", "handball": "#0071E3" };
+            const labels = { "football": "Foot", "basketball": "Basket", "handball": "Hand" };
             
-            commonMatchesList.innerHTML += `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:10px; border-radius:8px; border: 1px solid rgba(0,0,0,0.05);">
-                    <span style="font-size:13px; font-weight:600; color:var(--text-primary);">${m.home.name} <span style="font-weight:400; opacity:0.6;">vs</span> ${m.away.name}</span>
-                    <span style="font-size:11px; color:var(--text-secondary); background:var(--bg-color); padding:2px 6px; border-radius:4px;">${dateStr}</span>
-                </div>
-            `;
-        }
-    });
+            let svgContent = '';
+            let legendContent = '';
+            let cumulativePercent = 0;
 
-    commonCount.textContent = common;
-    if (common > 0) {
-        if (noCommonMsg) noCommonMsg.style.display = 'none';
-    } else {
-        if (noCommonMsg) noCommonMsg.style.display = 'block';
-        commonMatchesList.appendChild(noCommonMsg);
+            Object.keys(sportCounts).forEach(sport => {
+                const count = sportCounts[sport];
+                if (count > 0) {
+                    const percent = count / received;
+                    const startAngle = cumulativePercent * 2 * Math.PI;
+                    cumulativePercent += percent;
+                    const endAngle = cumulativePercent * 2 * Math.PI;
+
+                    const startX = 50 + 50 * Math.cos(startAngle);
+                    const startY = 50 + 50 * Math.sin(startAngle);
+                    const endX = 50 + 50 * Math.cos(endAngle);
+                    const endY = 50 + 50 * Math.sin(endAngle);
+                    const largeArcFlag = percent > 0.5 ? 1 : 0;
+
+                    let pathData;
+                    if (percent === 1) { // 100% sur un seul sport
+                        pathData = `M 50 0 A 50 50 0 1 1 49.9 0 Z`;
+                    } else {
+                        pathData = `M 50 50 L ${startX} ${startY} A 50 50 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
+                    }
+
+                    svgContent += `<path d="${pathData}" fill="${colors[sport]}" />`;
+                    legendContent += `
+                        <div class="legend-item">
+                            <div><span class="legend-color" style="background:${colors[sport]}"></span> ${labels[sport]}</div>
+                            <span>${Math.round(percent * 100)}%</span>
+                        </div>
+                    `;
+                }
+            });
+
+            pieChartDiv.innerHTML = `<svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width: 100%; height: 100%; border-radius: 50%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">${svgContent}</svg>`;
+            pieLegendDiv.innerHTML = legendContent;
+        }
     }
 
     // 4. Générer l'Historique de l'ami (en lecture seule)
