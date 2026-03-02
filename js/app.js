@@ -4790,11 +4790,11 @@ window.openFriendProfile = async (friendUid) => {
     }
 
     // 4. Calcul des Matchs couverts ensemble
+    const commonSection = document.getElementById('friendCommonSection');
     const commonMatchesList = document.getElementById('friendCommonMatchesList');
-    const noCommonMsg = document.getElementById('noCommonMatchMsg');
     const commonCount = document.getElementById('friendCommonCount');
     
-    if (commonMatchesList && commonCount) {
+    if (commonMatchesList && commonCount && commonSection) {
         commonMatchesList.innerHTML = '';
         let common = 0;
 
@@ -4814,10 +4814,12 @@ window.openFriendProfile = async (friendUid) => {
         });
 
         commonCount.textContent = common;
+        
+        // On affiche la section uniquement s'il y a au moins 1 match en commun
         if (common > 0) {
-            if (noCommonMsg) noCommonMsg.style.display = 'none';
+            commonSection.style.display = 'block';
         } else {
-            if (noCommonMsg) noCommonMsg.style.display = 'block';
+            commonSection.style.display = 'none';
         }
     }
 

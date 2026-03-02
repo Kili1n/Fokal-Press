@@ -524,19 +524,6 @@
                     </div>
                 </div>
 
-                <div style="background: var(--bg-secondary); border-radius: 12px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border-color);">
-                    <h3 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-handshake-angle" style="color: #FF9500;"></i> 
-                        Matchs couverts ensemble (<span id="friendCommonCount">0</span>)
-                    </h3>
-                    
-                    <div id="friendCommonMatchesList" style="display: flex; flex-direction: column; gap: 10px;">
-                        <div id="noCommonMatchMsg" style="text-align: center; color: var(--text-muted); font-size: 12px; padding: 10px 0;">
-                            Aucun match en commun pour le moment.
-                        </div>
-                    </div>
-                </div>
-
                 <div id="friendUpcomingSection" style="display: none; background: var(--bg-secondary); border-radius: 12px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border-color);">
                     <h3 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-calendar-day" style="color: var(--accent);"></i> 
@@ -545,6 +532,16 @@
                     
                     <div id="friendUpcomingMatchesList" style="display: flex; flex-direction: column; gap: 10px;">
                     </div>
+                </div>
+
+                <div id="friendCommonSection" style="display: none; background: var(--bg-secondary); border-radius: 12px; padding: 15px; margin-bottom: 25px; border: 1px solid var(--border-color);">
+                    <h3 style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-handshake-angle" style="color: #FF9500;"></i> 
+                        Matchs couverts ensemble (<span id="friendCommonCount">0</span>)
+                    </h3>
+                    
+                    <div id="friendCommonMatchesList" style="display: flex; flex-direction: column; gap: 10px;">
+                        </div>
                 </div>
 
                 <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
