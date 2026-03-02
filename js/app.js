@@ -3831,19 +3831,33 @@ function exportHistoryToCSV() {
 }
 
 // --- FONCTION NAVIGATION TUTO ---
-window.nextTutoStep = function() {
+window.nextTutoStep = function(currentStep = 1) {
     const step1 = document.getElementById('tutoStep1');
     const step2 = document.getElementById('tutoStep2');
+    const step3 = document.getElementById('tutoStep3');
     const dot1 = document.getElementById('dot1');
     const dot2 = document.getElementById('dot2');
+    const dot3 = document.getElementById('dot3');
 
-    if(step1 && step2) {
-        step1.style.display = 'none';
-        step2.style.display = 'block';
+    // Passage Étape 1 -> Étape 2
+    if (currentStep === 1) {
+        if(step1) step1.style.display = 'none';
+        if(step2) step2.style.display = 'block';
+        if(step3) step3.style.display = 'none';
         
-        // Mise à jour des points
         if(dot1) dot1.style.background = 'var(--border-color)';
         if(dot2) dot2.style.background = 'var(--accent)';
+        if(dot3) dot3.style.background = 'var(--border-color)';
+    } 
+    // Passage Étape 2 -> Étape 3
+    else if (currentStep === 2) {
+        if(step1) step1.style.display = 'none';
+        if(step2) step2.style.display = 'none';
+        if(step3) step3.style.display = 'block';
+        
+        if(dot1) dot1.style.background = 'var(--border-color)';
+        if(dot2) dot2.style.background = 'var(--border-color)';
+        if(dot3) dot3.style.background = 'var(--accent)';
     }
 };
 
