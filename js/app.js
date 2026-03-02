@@ -5030,8 +5030,8 @@ window.injectFriendsOnCards = async function() {
             const favStatus = friend.favorites ? friend.favorites[matchId] : null;
             const isArchived = friend.archives ? !!friend.archives[matchId] : false;
 
-            // Condition : S'il a le match en favori (et pas refusé) OU s'il l'a déjà archivé (couvert)
-            if ((favStatus && favStatus !== 'refused') || isArchived) {
+            // --- CORRECTION ICI : Condition explicite pour les 3 statuts ---
+            if (favStatus === 'envie' || favStatus === 'asked' || favStatus === 'received' || isArchived) {
                 friendsHere.push(friend);
                 
                 // On affiche un maximum de 3 photos empilées
@@ -5046,14 +5046,41 @@ window.injectFriendsOnCards = async function() {
                         safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
                     }
 
-                    // Création de l'avatar avec un onclick pour ouvrir son profil !
+                    // Détermination du statut exact
+                    let currentStatus = 'envie'; // Par défaut
+                    let statusTitle = "a prévu d'y aller";
+
+                    if (isArchived || favStatus === 'received') {
+                        currentStatus = 'received';
+                        statusTitle = "est accrédité(e)";
+                    } else if (favStatus === 'asked') {
+                        currentStatus = 'asked';
+                        statusTitle = "a fait la demande";
+                    }
+
+                    // Génération de la pastille de statut
+                    let statusIconHtml = '';
+                    if (currentStatus === 'received') {
+                        statusIconHtml = '<div style="position: absolute; bottom: -2px; right: -4px; background: white; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #34C759; box-shadow: 0 1px 3px rgba(0,0,0,0.3); z-index: 2;"><i class="fa-solid fa-circle-check"></i></div>';
+                    } else if (currentStatus === 'asked') {
+                        statusIconHtml = '<div style="position: absolute; bottom: -2px; right: -4px; background: white; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #0071E3; box-shadow: 0 1px 3px rgba(0,0,0,0.3); z-index: 2;"><i class="fa-solid fa-paper-plane"></i></div>';
+                    } else if (currentStatus === 'envie') {
+                        statusIconHtml = '<div style="position: absolute; bottom: -2px; right: -4px; background: white; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #FF9500; box-shadow: 0 1px 3px rgba(0,0,0,0.3); z-index: 2;"><i class="fa-solid fa-star"></i></div>';
+                    }
+
+                    // Création de l'avatar avec un conteneur parent relatif pour que la pastille sorte du cadre
                     html += `
                     <div onclick="event.stopPropagation(); openFriendProfile('${friend.uid}')" 
-                         style="width: 26px; height: 26px; background: white; color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; border: 2px solid var(--card-bg); margin-left: ${marginLeft}; z-index: ${zIndex}; cursor: pointer; transition: transform 0.2s ease;"
+                         style="position: relative; width: 26px; height: 26px; margin-left: ${marginLeft}; z-index: ${zIndex}; cursor: pointer; transition: transform 0.2s ease;"
                          onmouseover="this.style.transform='translateY(-2px)'"
                          onmouseout="this.style.transform='translateY(0)'"
-                         title="${friend.instagram} a prévu d'y aller">
-                        <img src="${safeUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerText='${initial}';">
+                         title="${friend.instagram} ${statusTitle}">
+                        
+                        <div style="width: 100%; height: 100%; background: white; color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; border: 2px solid var(--card-bg);">
+                            <img src="${safeUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerText='${initial}';">
+                        </div>
+                        
+                        ${statusIconHtml}
                     </div>`;
                 }
                 count++;
