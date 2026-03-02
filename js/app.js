@@ -3001,8 +3001,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.style.borderColor = "";
                     submitBtn.disabled = false;
 
-                    const tutoModal = document.getElementById('tutorialModal');
-                    if(tutoModal) tutoModal.classList.remove('hidden');
+                    setTimeout(() => {
+                        const tutoModal = document.getElementById('tutorialModal');
+                        if (tutoModal) tutoModal.classList.remove('hidden');
+                    }, 1200);
 
                     // NOUVEAU : On relance la lecture de l'URL pour afficher l'invitation !
                     if (typeof checkPendingInvitations === 'function') {
