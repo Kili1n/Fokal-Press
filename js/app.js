@@ -4821,6 +4821,74 @@ window.openFriendProfile = async (friendUid) => {
         }
     }
 
+    const upcomingList = document.getElementById('friendUpcomingMatchesList');
+    const upcomingSection = document.getElementById('friendUpcomingSection');
+    const upcomingCount = document.getElementById('friendUpcomingCount');
+    
+    if (upcomingList && upcomingSection && upcomingCount) {
+        upcomingList.innerHTML = '';
+        let upcomingMatches = [];
+        const now = new Date();
+
+        // On cherche dans ses favoris ceux qui ont le statut 'envie', 'asked' ou 'received'
+        Object.keys(friendFavorites).forEach(matchId => {
+            const status = friendFavorites[matchId];
+            if (status === 'envie' || status === 'asked' || status === 'received') {
+                // On croise avec la base globale des matchs pour récupérer les infos
+                const matchObj = allMatches.find(m => getMatchId(m) === matchId);
+                
+                // On s'assure que le match existe et qu'il est dans le futur
+                if (matchObj && matchObj.dateObj >= now) {
+                    // On clone l'objet pour lui attacher son statut spécifique
+                    upcomingMatches.push({ ...matchObj, friendStatus: status });
+                }
+            }
+        });
+
+        if (upcomingMatches.length > 0) {
+            upcomingCount.textContent = upcomingMatches.length;
+            upcomingSection.style.display = 'block'; // On affiche la section
+
+            // Tri par date de match (le plus proche en premier)
+            upcomingMatches.sort((a, b) => a.dateObj - b.dateObj);
+
+            // Définition de l'apparence selon le statut
+            const statusVisuals = {
+                'envie': { icon: 'fa-star', color: '#FF9500', text: 'Envie d\'y aller' },
+                'asked': { icon: 'fa-paper-plane', color: '#0071E3', text: 'Demande envoyée' },
+                'received': { icon: 'fa-circle-check', color: '#34C759', text: 'Validé' }
+            };
+
+            upcomingMatches.forEach(m => {
+                const dateStr = m.dateObj.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+                const timeStr = m.time; 
+                const compBadge = getShortComp(m.compFormatted, m.sport); 
+                
+                // On génère la petite pastille avec la bonne icône/couleur
+                const visual = statusVisuals[m.friendStatus];
+                const statusHtml = `<span style="font-size:10px; color:${visual.color}; display:flex; align-items:center; gap:4px; font-weight:600;"><i class="fa-solid ${visual.icon}"></i> ${visual.text}</span>`;
+                
+                upcomingList.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:10px; border-radius:8px; border: 1px solid var(--border-color);">
+                        <div style="display: flex; flex-direction: column; gap: 4px; overflow: hidden; padding-right: 10px;">
+                            <span style="font-size:12px; font-weight:600; color:var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.home.name} <span style="font-weight:400; opacity:0.6;">vs</span> ${m.away.name}</span>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:10px; color:var(--text-muted); background:var(--bg-secondary); padding:2px 4px; border-radius:4px;">${compBadge}</span>
+                                ${statusHtml}
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;">
+                            <span style="font-size:11px; color:var(--text-secondary); background:var(--tag-bg); padding:2px 6px; border-radius:4px;">${dateStr}</span>
+                            <span style="font-size:10px; color:var(--text-muted); font-weight: 600;">${timeStr}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            upcomingSection.style.display = 'none'; // On cache s'il n'y a rien
+        }
+    }
+
     // 5. Générer l'Historique de l'ami
     renderFriendHistory(friendArchives);
 
