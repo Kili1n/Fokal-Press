@@ -5272,6 +5272,30 @@ window.checkPendingInvitations = async function() {
         const away = parts[1] || "Extérieur";
         document.getElementById('inviteMatchTitle').textContent = `${home} vs ${away}`;
 
+        // --- NOUVEAU : SCROLL ET FOCUS SUR LA CARTE ---
+        // On cherche la carte correspondante dans la grille
+        const targetCard = document.getElementById(`match-card-${inviteMatchId}`);
+        
+        if (targetCard) {
+            // 1. Scroll doux pour centrer la carte à l'écran
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 2. Application d'un effet visuel de focus (surbrillance)
+            const originalBorder = targetCard.style.borderColor;
+            const originalShadow = targetCard.style.boxShadow;
+            
+            targetCard.style.transition = 'all 0.5s ease';
+            targetCard.style.borderColor = 'var(--accent)'; // Utilise la couleur principale du site
+            targetCard.style.boxShadow = '0 0 15px rgba(255, 45, 85, 0.4)'; // Halo coloré
+
+            // 3. On retire l'effet au bout de 3 secondes pour que ça redevienne normal
+            setTimeout(() => {
+                targetCard.style.borderColor = originalBorder;
+                targetCard.style.boxShadow = originalShadow;
+            }, 3000);
+        }
+        // ----------------------------------------------
+
         modal.classList.remove('hidden');
 
         const joinBtn = document.getElementById('joinMatchBtn');
