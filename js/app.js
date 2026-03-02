@@ -4597,10 +4597,10 @@ document.addEventListener('DOMContentLoaded', () => {
                          resultDiv.innerHTML = "Cette personne vous a déjà envoyé une demande. Regardez au-dessus !";
                     } else {
                         // Bouton pour ajouter (Utilisation du nouvel avatar robuste)
-                        // app.js - Modifie la ligne 1812
-                    resultDiv.innerHTML = `
+                        resultDiv.innerHTML = `
                         <div style="display:flex; align-items:center; justify-content:space-between;">
                             <div style="display:flex; align-items:center; gap:10px;">
+                                ${getAvatarHTML(targetData.photoURL, targetData.instagram, 36)}
                                 <span style="font-weight: 600; font-size: 13px;">@${targetData.instagram}</span>
                             </div>
                             <button onclick="sendFriendRequest('${targetUid}')" class="login-submit-btn" style="width:auto; padding:6px 12px; margin:0; background:var(--accent); color:white; font-size: 12px;">
