@@ -4604,7 +4604,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Bouton pour ajouter (Utilisation du nouvel avatar robuste)
                         resultDiv.innerHTML = `
                         <div style="display:flex; align-items:center; justify-content:space-between;">
-                            <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="display:flex; align-items:center; gap:10px;" onclick="openFriendProfile('${targetUid}')" title="Voir le profil">
                                 ${getAvatarHTML(targetData.photoURL, targetData.instagram, 36)}
                                 <span style="font-weight: 600; font-size: 13px;">@${targetData.instagram}</span>
                             </div>
@@ -4733,8 +4733,57 @@ window.openFriendProfile = async (friendUid) => {
     const instaDiv = document.getElementById('friendProfileInsta');
     if (instaDiv) instaDiv.style.display = 'none';
 
-    const removeBtn = document.getElementById('removeFriendBtn');
-    if (removeBtn) removeBtn.onclick = () => removeFriend(friendUid);
+    const actionBtn = document.getElementById('removeFriendBtn');
+        if (actionBtn) {
+            const currentUser = firebase.auth() ? firebase.auth().currentUser : null;
+            
+            // Helper pour changer l'apparence et l'action du bouton facilement
+            const setBtn = (text, icon, bg, color, border, onClick) => {
+                actionBtn.innerHTML = `<i class="fa-solid ${icon}"></i> ${text}`;
+                actionBtn.style.background = bg;
+                actionBtn.style.color = color;
+                actionBtn.style.border = border;
+                actionBtn.onclick = onClick;
+                actionBtn.style.display = 'inline-flex';
+            };
+
+            if (!currentUser) {
+                // CAS 1 : Inconnu (Non connecté)
+                setBtn("Se connecter pour l'ajouter", "fa-user-astronaut", "var(--accent)", "white", "none", () => {
+                    document.getElementById('friendProfileModal').classList.add('hidden');
+                    document.getElementById('loginModal').classList.remove('hidden');
+                    document.getElementById('loginView').style.display = 'block';
+                });
+            } else if (currentUser.uid === friendUid) {
+                // CAS 2 : C'est son propre profil (Il s'est auto-cherché)
+                actionBtn.style.display = 'none';
+            } else {
+                // CAS 3 : Utilisateur connecté regarde un autre profil
+                // Sécurité au cas où les tableaux ne sont pas encore chargés
+                const safeMyFriends = typeof myFriends !== 'undefined' ? myFriends : [];
+                const safeMyRequests = typeof myFriendRequests !== 'undefined' ? myFriendRequests : [];
+                
+                const isFriend = safeMyFriends.includes(friendUid);
+                const sentReq = friend.friendRequests && friend.friendRequests.includes(currentUser.uid);
+                const receivedReq = safeMyRequests.includes(friendUid);
+
+                if (isFriend) {
+                    setBtn("Retirer cet ami", "fa-user-minus", "transparent", "#FF3B30", "1px solid #FF3B30", () => removeFriend(friendUid));
+                } else if (sentReq) {
+                    setBtn("Demande envoyée", "fa-clock", "transparent", "var(--text-secondary)", "1px solid var(--border-color)", () => cancelFriendRequest(friendUid));
+                } else if (receivedReq) {
+                    setBtn("Accepter la demande", "fa-check", "#34C759", "white", "none", async () => {
+                        await acceptFriend(friendUid);
+                        openFriendProfile(friendUid); // Rafraîchit visuellement
+                    });
+                } else {
+                    setBtn("Ajouter en ami", "fa-user-plus", "var(--accent)", "white", "none", async () => {
+                        await sendFriendRequest(friendUid);
+                        openFriendProfile(friendUid); // Rafraîchit visuellement
+                    });
+                }
+            }
+        }
 
     // 2. Calcul des Stats de base et Camembert
     const friendArchives = friend.archives || {};
@@ -4815,30 +4864,49 @@ window.openFriendProfile = async (friendUid) => {
     
     if (commonMatchesList && commonCount && commonSection) {
         commonMatchesList.innerHTML = '';
-        let common = 0;
-
-        Object.keys(matchArchives).forEach(myMatchId => {
-            if (friendArchives[myMatchId]) {
-                common++;
-                const m = matchArchives[myMatchId];
-                const dateStr = new Date(m.dateObj).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
-                
-                commonMatchesList.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:10px; border-radius:8px; border: 1px solid var(--border-color); margin-bottom: 5px;">
-                        <span style="font-size:12px; font-weight:600; color:var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">${m.home.name} <span style="font-weight:400; opacity:0.6;">vs</span> ${m.away.name}</span>
-                        <span style="font-size:11px; color:var(--text-secondary); background:var(--tag-bg); padding:2px 6px; border-radius:4px; flex-shrink: 0;">${dateStr}</span>
-                    </div>
-                `;
-            }
-        });
-
-        commonCount.textContent = common;
+        let commonMatchesArray = [];
         
-        // On affiche la section uniquement s'il y a au moins 1 match en commun
-        if (common > 0) {
-            commonSection.style.display = 'block';
-        } else {
+        const currentUser = firebase.auth() ? firebase.auth().currentUser : null;
+
+        // Si on n'est pas connecté OU qu'on regarde notre propre profil, on cache cette section
+        if (!currentUser || currentUser.uid === friendUid) {
             commonSection.style.display = 'none';
+        } else {
+            Object.keys(matchArchives).forEach(myMatchId => {
+                if (friendArchives[myMatchId]) {
+                    commonMatchesArray.push(matchArchives[myMatchId]);
+                }
+            });
+
+            commonCount.textContent = commonMatchesArray.length;
+            
+            if (commonMatchesArray.length > 0) {
+                commonSection.style.display = 'block';
+                
+                // --- TRI ABSOLU DU PLUS RÉCENT AU PLUS ANCIEN ---
+                commonMatchesArray.sort((a, b) => {
+                    const dateA = new Date(a.dateObj).getTime();
+                    const dateB = new Date(b.dateObj).getTime();
+                    return dateB - dateA; 
+                });
+
+                commonMatchesArray.forEach(m => {
+                    const dateStr = new Date(m.dateObj).toLocaleDateString('fr-FR', { 
+                        day: '2-digit', 
+                        month: 'short',
+                        year: '2-digit' 
+                    });
+                    
+                    commonMatchesList.innerHTML += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-bg); padding:10px; border-radius:8px; border: 1px solid var(--border-color); margin-bottom: 5px;">
+                            <span style="font-size:12px; font-weight:600; color:var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%;">${m.home.name} <span style="font-weight:400; opacity:0.6;">vs</span> ${m.away.name}</span>
+                            <span style="font-size:11px; color:var(--text-secondary); background:var(--tag-bg); padding:2px 6px; border-radius:4px; flex-shrink: 0;">${dateStr}</span>
+                        </div>
+                    `;
+                });
+            } else {
+                commonSection.style.display = 'none';
+            }
         }
     }
 
@@ -4980,7 +5048,7 @@ function renderFriendHistory(archivesObj) {
                 <div class="match-header" style="flex: 2; display: flex; justify-content: flex-start; align-items: center; gap: 8px; margin-bottom: 0; width: auto;">
                     
                     <div class="team" style="display: flex; flex-direction: row-reverse; align-items: center; width: auto; gap: 8px; margin: 0;">
-                        <img src="${homeLogo}" class="team-logo" style="width: 28px; height: 28px; object-fit: contain;">
+                        <img src="${homeLogo}" class="team-logo" style="width: 28px; height: 28px; object-fit: contain;" onerror="this.onerror=null; this.src='data/default-team.png'">
                         <span class="team-name" style="font-size: 12px; text-align: right; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">${homeName}</span>
                     </div>
                     
@@ -4989,7 +5057,7 @@ function renderFriendHistory(archivesObj) {
                     </div>
                     
                     <div class="team" style="display: flex; flex-direction: row; align-items: center; width: auto; gap: 8px; margin: 0;">
-                        <img src="${awayLogo}" class="team-logo" style="width: 28px; height: 28px; object-fit: contain;">
+                        <img src="${awayLogo}" class="team-logo" style="width: 28px; height: 28px; object-fit: contain;" onerror="this.onerror=null; this.src='data/default-team.png'">
                         <span class="team-name" style="font-size: 12px; text-align: left; max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">${awayName}</span>
                     </div>
                 </div>
@@ -5013,6 +5081,44 @@ document.addEventListener('DOMContentLoaded', () => {
             // On réaffiche la modale amis (effet de retour)
             document.getElementById('friendsModal').classList.remove('hidden');
         });
+    }
+
+    const shareProfileBtn = document.getElementById('shareMyProfileBtn');
+    if (shareProfileBtn) {
+        shareProfileBtn.addEventListener('click', () => {
+            const insta = localStorage.getItem('userInsta');
+            if (!insta) {
+                alert("Vous devez renseigner votre pseudo Instagram pour pouvoir partager votre profil.");
+                return;
+            }
+            
+            const profileUrl = `https://fokalpress.fr/app.html?profile=${encodeURIComponent(insta.toLowerCase())}`;
+            const shareText = `Viens voir mon portfolio et mes prochains matchs sur FokalPress ! 📸`;
+
+            if (navigator.share && window.isSecureContext) {
+                navigator.share({
+                    title: 'Mon Profil FokalPress',
+                    text: shareText,
+                    url: profileUrl
+                }).catch(err => {
+                    console.log("Partage annulé ou erreur", err);
+                    fallbackShareCopy(profileUrl, shareProfileBtn);
+                });
+            } else {
+                fallbackShareCopy(profileUrl, shareProfileBtn);
+            }
+        });
+    }
+
+    // Fonction utilitaire (si tu ne l'as pas déjà accessible à cet endroit)
+    function fallbackShareCopy(url, btnElement) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(url).then(() => {
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="fa-solid fa-check" style="color:#34C759;"></i> Lien copié !';
+                setTimeout(() => { btnElement.innerHTML = originalHtml; }, 2000);
+            });
+        }
     }
 });
 
@@ -5169,6 +5275,35 @@ function fallbackShareCopy(url, btnElement) {
 // 5.2 et 5.3 Interception et Traitement du lien d'invitation
 window.checkPendingInvitations = async function() {
     const urlParams = new URLSearchParams(window.location.search);
+    const profileInsta = urlParams.get('profile');
+    if (profileInsta) {
+        // Boucle d'attente pour s'assurer que les matchs sont bien chargés en arrière-plan
+        const tryOpenProfile = async () => {
+            if (typeof allMatches !== 'undefined' && allMatches.length > 0) {
+                try {
+                    // On cherche l'utilisateur dans la base de données via son pseudo
+                    const query = await db.collection('users')
+                        .where('instagram', '==', profileInsta.toLowerCase().trim())
+                        .limit(1)
+                        .get();
+                        
+                    if (!query.empty) {
+                        const targetUid = query.docs[0].id;
+                        openFriendProfile(targetUid);
+                    } else {
+                        alert("Profil FokalPress introuvable pour ce pseudo.");
+                        cleanUrlParameters(); // Nettoie l'URL si erreur
+                    }
+                } catch (e) {
+                    console.error("Erreur chargement profil public:", e);
+                }
+            } else {
+                setTimeout(tryOpenProfile, 100);
+            }
+        };
+        tryOpenProfile();
+        return; // On arrête l'exécution ici pour prioriser l'affichage du profil
+    }
     const inviteMatchId = urlParams.get('inviteMatch');
     const fromUid = urlParams.get('from');
     const addFriendUid = urlParams.get('addFriend');
