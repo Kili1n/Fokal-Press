@@ -3483,33 +3483,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // --- NOUVELLE LOGIQUE : VRAIE VÉRIFICATION ---
-            // On récupère la liste exacte des équipes connues pour ce sport
+            // --- NOUVELLE LOGIQUE : VRAIE VÉRIFICATION (Liste + config_LOGO) ---
             const knownTeamsForSport = manualTeamsData.filter(t => t.sport === selectedSport).map(t => t.name);
 
-            // On vérifie si ce qui a été tapé correspond EXACTEMENT à une équipe de la liste
-            const homeKnown = knownTeamsForSport.includes(home);
-            const awayKnown = knownTeamsForSport.includes(away);
-            // ----------------------------------------------
+            // 1. Vérification dans l'autocomplétion
+            let homeKnown = knownTeamsForSport.includes(home);
+            let awayKnown = knownTeamsForSport.includes(away);
 
-            // Si les deux sont connues (cliquées dans la liste ou tapées à l'identique)
+            // 2. Si non trouvé, vérification STRICTE dans CUSTOM_LOGOS
+            // On utilise "===" et non ".includes()" pour éviter que "BASKET CLUB MONTPELLIER" 
+            // valide "MONTPELLIER" par erreur.
+            if (!homeKnown) {
+                homeKnown = Object.keys(CUSTOM_LOGOS).some(key => home.toUpperCase() === key.toUpperCase());
+            }
+            if (!awayKnown) {
+                awayKnown = Object.keys(CUSTOM_LOGOS).some(key => away.toUpperCase() === key.toUpperCase());
+            }
+            // -------------------------------------------------------------------
+
+            // Si les deux sont connues, on passe à la sauvegarde
             if (homeKnown && awayKnown) {
-                // Si l'utilisateur n'a pas renseigné de logo manuellement, on valide direct
                 handleManualMatchSubmit(); 
             } else {
-                // Sinon, c'est qu'au moins une équipe n'est pas dans la liste -> Étape 2
+                // Sinon on affiche l'étape 2
                 document.getElementById('step-1').classList.add('hidden');
                 document.getElementById('step-2').classList.remove('hidden');
 
-                // On récupère les blocs de l'étape 2
                 const homeLogoDiv = document.getElementById('manualHomeLogoDiv');
                 const awayLogoDiv = document.getElementById('manualAwayLogoDiv');
                 
-                // On cache tout par défaut au cas où
                 homeLogoDiv.classList.add('hidden');
                 awayLogoDiv.classList.add('hidden');
 
-                // On affiche uniquement les champs pour les équipes non reconnues
                 if (!homeKnown) {
                     homeLogoDiv.classList.remove('hidden');
                     document.getElementById('lblHomeLogo').textContent = `Lien logo pour "${home}"`;
