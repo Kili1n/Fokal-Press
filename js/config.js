@@ -267,6 +267,7 @@ const CUSTOM_LOGOS = {
     "FC ROUSSET" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1zV15zAx-CUF__uE9dRKJHDQpaHKzZrBcew&s",
     "FRONTIGNAN" : "https://www.frontignanthb.fr/wp-content/uploads/2020/05/FTHB_LOGOPRINCIPAL.png",
     "MONTPELLIER HSC" : "https://upload.wikimedia.org/wikipedia/commons/6/6a/Logo_-_Montpellier_H%C3%A9rault_Sport_Club_%28MHSC%29.png",
+    "BASKET LATTES MONTPELLIER" : "https://upload.wikimedia.org/wikipedia/fr/b/b1/Basket_Lattes_Montpellier_M%C3%A9diterran%C3%A9e_M%C3%A9tropole_Association_%28logo%29.svg",
     "MONTPELLIER" : "https://upload.wikimedia.org/wikipedia/fr/thumb/4/42/Montpellier_M%C3%A9diterran%C3%A9e_M%C3%A9tropole_Handball_logo_2018.svg/500px-Montpellier_M%C3%A9diterran%C3%A9e_M%C3%A9tropole_Handball_logo_2018.svg.png",
     "SAINTES US" : "https://upload.wikimedia.org/wikipedia/fr/b/bd/US_Saintes_Handball.svg",
     "FURIANI" : "https://upload.wikimedia.org/wikipedia/fr/thumb/5/52/Logo_AS_Furiani_Agliani_-_2020.svg/1280px-Logo_AS_Furiani_Agliani_-_2020.svg.png",
