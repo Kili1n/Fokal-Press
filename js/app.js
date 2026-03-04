@@ -3474,28 +3474,42 @@ document.addEventListener('DOMContentLoaded', () => {
             const home = document.getElementById('manualHome').value.trim();
             const away = document.getElementById('manualAway').value.trim();
             const comp = document.getElementById('manualComp').value.trim();
+            
+            // On récupère le sport actuellement sélectionné
+            const selectedSport = document.querySelector('input[name="manualSport"]:checked').value;
 
             if(!home || !away || !comp) {
                 alert("Merci de remplir les équipes et la compétition.");
                 return;
             }
 
-            // Vérifier si les équipes sont connues
-            const homeKnown = getLogoUrl(home) !== '';
-            const awayKnown = getLogoUrl(away) !== '';
+            // --- NOUVELLE LOGIQUE : VRAIE VÉRIFICATION ---
+            // On récupère la liste exacte des équipes connues pour ce sport
+            const knownTeamsForSport = manualTeamsData.filter(t => t.sport === selectedSport).map(t => t.name);
 
-            // Si les deux sont connues, on sauvegarde direct sans passer par l'étape 2
+            // On vérifie si ce qui a été tapé correspond EXACTEMENT à une équipe de la liste
+            const homeKnown = knownTeamsForSport.includes(home);
+            const awayKnown = knownTeamsForSport.includes(away);
+            // ----------------------------------------------
+
+            // Si les deux sont connues (cliquées dans la liste ou tapées à l'identique)
             if (homeKnown && awayKnown) {
+                // Si l'utilisateur n'a pas renseigné de logo manuellement, on valide direct
                 handleManualMatchSubmit(); 
             } else {
-                // Sinon, on montre l'étape 2
+                // Sinon, c'est qu'au moins une équipe n'est pas dans la liste -> Étape 2
                 document.getElementById('step-1').classList.add('hidden');
                 document.getElementById('step-2').classList.remove('hidden');
 
-                // On affiche les champs URL uniquement pour les équipes inconnues
+                // On récupère les blocs de l'étape 2
                 const homeLogoDiv = document.getElementById('manualHomeLogoDiv');
                 const awayLogoDiv = document.getElementById('manualAwayLogoDiv');
                 
+                // On cache tout par défaut au cas où
+                homeLogoDiv.classList.add('hidden');
+                awayLogoDiv.classList.add('hidden');
+
+                // On affiche uniquement les champs pour les équipes non reconnues
                 if (!homeKnown) {
                     homeLogoDiv.classList.remove('hidden');
                     document.getElementById('lblHomeLogo').textContent = `Lien logo pour "${home}"`;
@@ -3507,7 +3521,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
     // Bouton "Passer" (Step 2 -> Submit sans logos)
     const skipBtn = document.getElementById('skipStepBtn');
     if(skipBtn) {
