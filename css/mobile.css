@@ -461,4 +461,26 @@
     body.dark-mode #loginBtnMobile {
         color: var(--accent);
     }
+    /* --- BOUTONS SAUVEGARDE FILTRES (MOBILE) --- */
+    .saved-filters-actions {
+        /* On retire la bordure gauche et on la met en haut */
+        border-left: none;
+        padding-left: 0;
+        margin-left: 0;
+        
+        border-top: 1px solid var(--border-color);
+        margin-top: 5px;
+        padding-top: 15px;
+        
+        width: 100%;
+        height: auto;
+    }
+
+    .saved-filter-btn {
+        flex: 1; /* Prend 50% de la largeur chacun */
+        justify-content: center;
+        height: 44px; /* Hauteur standard Apple/Google pour le tactile */
+        font-size: 13px;
+    }
 }
+

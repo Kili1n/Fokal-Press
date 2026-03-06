@@ -13,6 +13,17 @@ const travelCache = new Map();
 const logoCache = new Map();
 let myFriends = [];
 let myFriendRequests = [];
+// --- INITIALISATION SÉCURISÉE DES FILTRES ---
+let mySavedFilters = [];
+try {
+    const storedFilters = localStorage.getItem('fokal_saved_filters');
+    if (storedFilters) {
+        mySavedFilters = JSON.parse(storedFilters);
+    }
+} catch (e) {
+    console.error("Erreur de lecture du cache local :", e);
+    mySavedFilters = [];
+}
 let unsubUserListener = null; 
 const usersCache = new Map();
 
@@ -744,6 +755,8 @@ async function loadMatches() {
 
         // On lance l'initialisation de l'auto-complete principal
         initSearchAutocomplete();
+
+        loadFiltersFromUrl();
                         
         applyFilters();
     } catch (error) {
@@ -1030,6 +1043,7 @@ function applyFilters() {
 
     currentlyFiltered = filtered;
     renderMatches(filtered);
+    updateUrlFromFilters();
 }
 
 function renderMatches(data) {
@@ -2569,6 +2583,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     matchStatuses = userData.favorites || {};
                     localStorage.setItem('matchStatuses', JSON.stringify(matchStatuses));
 
+                    if (userData.savedFilters && Array.isArray(userData.savedFilters)) {
+                        mySavedFilters = userData.savedFilters; // On récupère de Firebase
+                        localStorage.setItem('fokal_saved_filters', JSON.stringify(mySavedFilters)); // On met en cache
+                    }
+                    renderSavedFilters();
+
                     // --- B. Sync Historique (Priorité Cloud + Local existant si vide) ---
                     // On s'assure de ne pas mélanger avec des données résiduelles
                     const cloudArchives = userData.archives || {};
@@ -2723,7 +2743,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailEl = document.getElementById('settingsUserEmail');
         if (emailEl) {
             emailEl.textContent = user.email;
-            
+
             // --- NOUVEAU : Rendre l'email cliquable vers le profil public ---
             emailEl.style.cursor = "pointer";
             emailEl.title = "Voir mon profil public";
@@ -4291,7 +4311,37 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-   const enableNotifsBtn = document.getElementById('enableNotifsBtn');
+
+    // (Ajoute ça vers la ligne 692, avec tes autres listeners)
+    const saveFilterBtn = document.getElementById('saveFilterBtn');
+    if (saveFilterBtn) saveFilterBtn.addEventListener('click', saveCurrentFilter);
+
+    const openSavedFiltersBtn = document.getElementById('openSavedFiltersBtn');
+    const savedFiltersModal = document.getElementById('savedFiltersModal');
+    const closeSavedFiltersBtn = document.getElementById('closeSavedFiltersBtn');
+
+    if (openSavedFiltersBtn) {
+        openSavedFiltersBtn.addEventListener('click', () => {
+            if (savedFiltersModal) {
+                // 1. On met à jour la liste
+                renderSavedFilters(); 
+                // 2. On affiche la modale
+                savedFiltersModal.classList.remove('hidden');
+            }
+        });
+    }
+
+    if (closeSavedFiltersBtn) {
+        closeSavedFiltersBtn.addEventListener('click', () => savedFiltersModal.classList.add('hidden'));
+    }
+
+    if (savedFiltersModal) {
+        savedFiltersModal.addEventListener('click', (e) => {
+            if (e.target === savedFiltersModal) savedFiltersModal.classList.add('hidden');
+        });
+    }
+
+    const enableNotifsBtn = document.getElementById('enableNotifsBtn');
 
     if (enableNotifsBtn) {
         enableNotifsBtn.addEventListener('click', async () => {
@@ -5655,3 +5705,242 @@ function cleanUrlParameters() {
         svg += `</svg>`;
         return svg;
     }
+
+function updateUrlFromFilters() {
+    const url = new URL(window.location);
+    
+    // On n'ajoute dans l'URL que les filtres qui diffèrent de l'état par défaut (pour garder un lien propre)
+    if (currentFilters.sport !== "all") url.searchParams.set('sport', currentFilters.sport);
+    else url.searchParams.delete('sport');
+
+    if (currentFilters.comp !== "all") url.searchParams.set('comp', currentFilters.comp);
+    else url.searchParams.delete('comp');
+
+    if (currentFilters.week) url.searchParams.set('week', currentFilters.week);
+    else url.searchParams.delete('week');
+
+    if (currentFilters.search) url.searchParams.set('search', currentFilters.search);
+    else url.searchParams.delete('search');
+
+    if (currentFilters.sortBy !== "date") url.searchParams.set('sortBy', currentFilters.sortBy);
+    else url.searchParams.delete('sortBy');
+
+    if (currentFilters.maxDist !== 300) url.searchParams.set('maxDist', currentFilters.maxDist);
+    else url.searchParams.delete('maxDist');
+
+    if (currentFilters.accredOnly) url.searchParams.set('accredOnly', 'true');
+    else url.searchParams.delete('accredOnly');
+
+    // On modifie l'URL sans recharger la page et sans polluer l'historique de navigation
+    window.history.replaceState({}, '', url);
+}
+
+function loadFiltersFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+
+    // 1. Mise à jour de l'objet d'état
+    if (params.has('sport')) currentFilters.sport = params.get('sport');
+    if (params.has('comp')) currentFilters.comp = params.get('comp');
+    if (params.has('week')) currentFilters.week = params.get('week');
+    if (params.has('search')) currentFilters.search = params.get('search');
+    if (params.has('sortBy')) currentFilters.sortBy = params.get('sortBy');
+    if (params.has('maxDist')) currentFilters.maxDist = parseInt(params.get('maxDist')) || 300;
+    if (params.has('accredOnly')) currentFilters.accredOnly = params.get('accredOnly') === 'true';
+
+    // 2. Synchronisation visuelle des boutons et inputs avec l'URL
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        if (btn.dataset.filter === currentFilters.sport) {
+            document.querySelector('.filter-btn.active')?.classList.remove('active');
+            btn.classList.add('active');
+        }
+    });
+
+    const weekEl = document.getElementById('weekFilter');
+    if (weekEl && currentFilters.week) weekEl.value = currentFilters.week;
+
+    const searchEl = document.getElementById('searchInput');
+    if (searchEl && currentFilters.search) searchEl.value = currentFilters.search;
+
+    const sortEl = document.getElementById('sortFilter');
+    if (sortEl && currentFilters.sortBy !== "date") sortEl.value = currentFilters.sortBy;
+
+    const accredEl = document.getElementById('accredToggle');
+    if (accredEl && currentFilters.accredOnly) accredEl.checked = true;
+
+    const slider = document.getElementById('distSlider');
+    const distValue = document.getElementById('distValue');
+    if (slider && distValue) {
+        slider.value = currentFilters.maxDist;
+        distValue.textContent = currentFilters.maxDist + "km";
+    }
+
+    // (Le select 'compFilter' sera mis à jour dynamiquement dans applyFilters via populateCompFilter)
+}
+
+// --- GESTION DES FILTRES SAUVEGARDÉS ---
+window.shareSavedFilter = function(id, btnElement) {
+    const target = mySavedFilters.find(f => f.id === id);
+    if (!target) return;
+
+    // 1. On construit l'URL de base (sans les paramètres actuels)
+    const url = new URL(window.location.origin + window.location.pathname);
+    const f = target.filters;
+    
+    // 2. On ajoute uniquement les paramètres de CE filtre spécifique
+    if (f.sport !== "all") url.searchParams.set('sport', f.sport);
+    if (f.comp !== "all") url.searchParams.set('comp', f.comp);
+    if (f.week) url.searchParams.set('week', f.week);
+    if (f.search) url.searchParams.set('search', f.search);
+    if (f.sortBy !== "date") url.searchParams.set('sortBy', f.sortBy);
+    if (f.maxDist !== 300) url.searchParams.set('maxDist', f.maxDist);
+    if (f.accredOnly) url.searchParams.set('accredOnly', 'true');
+
+    // 3. On copie dans le presse-papier
+    navigator.clipboard.writeText(url.toString()).then(() => {
+        // Petit effet visuel sympa : l'icône se transforme en "Check" vert pendant 2 secondes
+        if (btnElement) {
+            const originalHTML = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fa-solid fa-check" style="color: #34C759;"></i>';
+            setTimeout(() => {
+                btnElement.innerHTML = originalHTML;
+            }, 2000);
+        }
+    }).catch(err => {
+        console.error('Erreur lors de la copie :', err);
+        alert("Impossible de copier le lien. Vérifiez les permissions de votre navigateur.");
+    });
+};
+
+function renderSavedFilters() {
+    const list = document.getElementById('savedFiltersList');
+    if (!list) return;
+
+    if (!Array.isArray(mySavedFilters)) mySavedFilters = [];
+    list.innerHTML = '';
+
+    if (mySavedFilters.length === 0) {
+        list.innerHTML = '<p style="font-size: 13px; color: var(--text-muted); text-align: center;">Aucune recherche sauvegardée.</p>';
+        return;
+    }
+
+    mySavedFilters.forEach(item => {
+        if (!item || !item.filters) return; 
+
+        let summary = [];
+        if (item.filters.sport !== 'all') summary.push(item.filters.sport);
+        if (item.filters.comp !== 'all') summary.push(item.filters.comp);
+        if (item.filters.maxDist < 300) summary.push(`-${item.filters.maxDist}km`);
+        if (item.filters.accredOnly) summary.push('Accréd. ✅');
+        
+        const summaryText = summary.length > 0 ? summary.join(' • ') : 'Tous les matchs';
+
+        list.innerHTML += `
+            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px;">
+                <div style="cursor: pointer; flex: 1;" onclick="applySavedFilter('${item.id}')">
+                    <strong style="display: block; font-size: 14px; color: var(--text-primary); margin-bottom: 4px;">${item.name}</strong>
+                    <span style="font-size: 11px; color: var(--text-secondary);">${summaryText}</span>
+                </div>
+                
+                <div style="display: flex; gap: 4px; align-items: center;">
+                    <button onclick="shareSavedFilter('${item.id}', this)" style="background: transparent; border: none; color: var(--accent); cursor: pointer; padding: 8px;" title="Copier le lien">
+                        <i class="fa-solid fa-link"></i>
+                    </button>
+                    <button onclick="deleteSavedFilter('${item.id}')" style="background: transparent; border: none; color: #FF3B30; cursor: pointer; padding: 8px;" title="Supprimer">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+async function saveCurrentFilter() {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        document.getElementById('featureAuthModal').classList.remove('hidden');
+        return;
+    }
+
+    const filterName = prompt("Donnez un nom à cette recherche (ex: N2 IDF) :");
+    if (!filterName) return;
+
+    const newFilter = {
+        id: 'filter_' + Date.now(),
+        name: filterName,
+        filters: JSON.parse(JSON.stringify(currentFilters)) // Copie propre
+    };
+
+    mySavedFilters.push(newFilter);
+    renderSavedFilters();
+
+    try {
+        await db.collection('users').doc(user.uid).update({
+            savedFilters: mySavedFilters
+        });
+        
+        // Petit feedback visuel sur le bouton
+        const btn = document.getElementById('saveFilterBtn');
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check" style="color: #34C759;"></i> Sauvegardé !';
+        setTimeout(() => btn.innerHTML = originalHtml, 2000);
+        
+    } catch (e) {
+        console.error("Erreur sauvegarde filtre :", e);
+        alert("Erreur lors de la sauvegarde.");
+    }
+}
+
+window.applySavedFilter = function(id) {
+    const target = mySavedFilters.find(f => f.id === id);
+    if (!target) return;
+
+    // 1. Écraser les filtres actuels
+    currentFilters = { ...target.filters };
+
+    // 2. Mettre à jour visuellement les éléments du header/menu
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        if (btn.dataset.filter === currentFilters.sport) {
+            document.querySelector('.filter-btn.active')?.classList.remove('active');
+            btn.classList.add('active');
+        }
+    });
+
+    const weekEl = document.getElementById('weekFilter');
+    if (weekEl) weekEl.value = currentFilters.week || "";
+
+    const searchEl = document.getElementById('searchInput');
+    if (searchEl) searchEl.value = currentFilters.search || "";
+
+    const sortEl = document.getElementById('sortFilter');
+    if (sortEl) sortEl.value = currentFilters.sortBy || "date";
+
+    const accredEl = document.getElementById('accredToggle');
+    if (accredEl) accredEl.checked = currentFilters.accredOnly;
+
+    const slider = document.getElementById('distSlider');
+    const distValue = document.getElementById('distValue');
+    if (slider && distValue) {
+        slider.value = currentFilters.maxDist;
+        distValue.textContent = currentFilters.maxDist + "km";
+    }
+
+    updateFilterSlider(); // Repositionne la barre sous le sport
+    
+    // 3. Appliquer et fermer la modale
+    applyFilters(); 
+    document.getElementById('savedFiltersModal').classList.add('hidden');
+};
+
+window.deleteSavedFilter = async function(id) {
+    if (!confirm("Supprimer ce filtre ?")) return;
+    
+    mySavedFilters = mySavedFilters.filter(f => f.id !== id);
+    renderSavedFilters();
+
+    const user = firebase.auth().currentUser;
+    if (user) {
+        try {
+            await db.collection('users').doc(user.uid).update({ savedFilters: mySavedFilters });
+        } catch (e) { console.error("Erreur suppression filtre:", e); }
+    }
+};

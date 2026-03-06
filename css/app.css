@@ -2348,3 +2348,73 @@ body.dark-mode .stat-badge-row:nth-of-type(3) .stat-icon {
         display: inline-block !important;
     }
 }
+
+/* --- BOUTONS SAUVEGARDE FILTRES (DESKTOP) --- */
+.saved-filters-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Petit séparateur vertical à gauche pour détacher du reste */
+    border-left: 1px solid var(--border-color);
+    padding-left: 12px;
+    margin-left: 4px;
+    height: 32px; /* Même hauteur que les autres filtres (select, tri) */
+}
+
+.saved-filter-btn {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    font-family: var(--font-main);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    border: 1px solid var(--border-color);
+}
+
+.saved-filter-btn.primary-btn {
+    background: var(--accent);
+    color: #FFFFFF;
+    border-color: var(--accent);
+}
+.saved-filter-btn.primary-btn:hover {
+    background: #005bb7;
+}
+
+.saved-filter-btn.secondary-btn {
+    background: #FFFFFF;
+    color: var(--text-primary);
+}
+.saved-filter-btn.secondary-btn:hover {
+    background: var(--bg-color);
+}
+
+/* --- Adaptation Dark Mode --- */
+body.dark-mode .saved-filter-btn.secondary-btn {
+    background: var(--tag-bg); /* #2C2C2E */
+    color: var(--text-primary);
+}
+body.dark-mode .saved-filter-btn.secondary-btn:hover {
+    background: #3A3A3C;
+}
+
+#advancedFilters {
+    width: 100%; /* Force le parent à prendre toute la place dans header-bottom */
+}
+/* --- BOUTONS SAUVEGARDE FILTRES (DESKTOP) --- */
+.saved-filters-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-left: 1px solid var(--border-color);
+    padding-left: 12px;
+    
+    /* C'est cette ligne qui fait toute la magie Flexbox : */
+    margin-left: auto; 
+    
+    height: 32px;
+}

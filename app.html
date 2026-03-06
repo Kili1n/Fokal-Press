@@ -165,6 +165,14 @@
                         <span class="slider"></span>
                     </label>
                 </div>
+                <div class="saved-filters-actions">
+                    <button id="saveFilterBtn" class="saved-filter-btn secondary-btn">
+                        <i class="fa-regular fa-bookmark"></i> Sauvegarder
+                    </button>
+                    <button id="openSavedFiltersBtn" class="saved-filter-btn primary-btn">
+                        <i class="fa-solid fa-list-check"></i> Mes Filtres
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -835,6 +843,22 @@
                 <button id="confirmDeleteBtn" class="login-submit-btn" style="background: #FF3B30; color: white; border: 1px solid #FF3B30;">
                     Supprimer
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="savedFiltersModal" class="map-modal hidden" style="z-index: 5000;">
+        <div class="login-card" style="max-width: 400px; width: 95%; position: relative; padding: 25px 20px;">
+            <button class="close-map" id="closeSavedFiltersBtn" style="position: absolute; top: 15px; right: 15px;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fa-solid fa-bookmark" style="color: var(--accent);"></i> Mes Recherches
+            </h2>
+            
+            <div id="savedFiltersList" style="display: flex; flex-direction: column; gap: 10px; max-height: 60vh; overflow-y: auto;">
+                <p style="font-size: 13px; color: var(--text-muted); text-align: center;">Aucun filtre sauvegardé.</p>
             </div>
         </div>
     </div>
