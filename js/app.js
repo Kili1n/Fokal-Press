@@ -1130,7 +1130,7 @@ function renderMatches(data) {
             </button>
             <div class="match-header">
                 <div class="team">
-                    <img src="${getLogoUrl(m.home.name)}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
+                    <img src="${getLogoUrl(m.home.name)}" class="team-logo" onerror="console.warn('Erreur logo - ${m.home.name}, fallback par défaut activé pour :', this.src); this.onerror=null; this.src='data/default-team.png'">
                     <span class="team-name">${m.home.name}</span>
                 </div>
                 <div class="match-center">
@@ -1138,7 +1138,7 @@ function renderMatches(data) {
                     <div class="vs">VS</div>
                 </div>
                 <div class="team">
-                    <img src="${getLogoUrl(m.away.name)}" class="team-logo" onerror="this.onerror=null; this.src='data/default-team.png'">
+                    <img src="${getLogoUrl(m.away.name)}" class="team-logo" onerror="console.warn('Erreur logo - ${m.away.name}, fallback par défaut activé pour :', this.src); this.onerror=null; this.src='data/default-team.png'">
                     <span class="team-name">${m.away.name}</span>
                 </div>
             </div>
