@@ -2721,7 +2721,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!user) return;
 
         const emailEl = document.getElementById('settingsUserEmail');
-        if (emailEl) emailEl.textContent = user.email;
+        if (emailEl) {
+            emailEl.textContent = user.email;
+            
+            // --- NOUVEAU : Rendre l'email cliquable vers le profil public ---
+            emailEl.style.cursor = "pointer";
+            emailEl.title = "Voir mon profil public";
+            
+            // Au survol, on peut ajouter un petit effet (optionnel)
+            emailEl.onmouseenter = () => emailEl.style.textDecoration = "underline";
+            emailEl.onmouseleave = () => emailEl.style.textDecoration = "none";
+
+            emailEl.onclick = () => {
+                document.getElementById('settingsModal').classList.add('hidden');
+                openFriendProfile(user.uid); // Ouvre le profil de l'utilisateur actuel
+            };
+            // ----------------------------------------------------------------
+        }
 
         settingsModal.classList.remove('hidden');
 
