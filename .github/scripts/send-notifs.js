@@ -99,7 +99,7 @@ async function run() {
                     }
 
                     const teams = `${homeName} vs ${awayName}`;
-                    sendPush(subscription, "⭐ Match dans 1 semaine !", `Tu veux couvrir ${teams}. C'est le moment d'envoyer ta demande d'accréditation !`);
+                    sendPush(subscription, "⭐ Match dans 1 semaine !", `Tu veux toujours couvrir ${teams} ? C'est le moment d'envoyer ta demande d'accréditation !`);
                 }
             });
         }
