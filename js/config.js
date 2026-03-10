@@ -1,4 +1,33 @@
 // config.js
+const GEOAPIFY_KEY = "61ca90447ebd483ab2f002050433fa42"; 
+const SPORT_EMOJIS = { "football": "⚽", "basketball": "🏀", "handball": "🤾"};
+const STATUS_CYCLE = [null, 'envie', 'asked', 'received', 'refused'];
+const LEVEL_RANK = {
+    "L1": 1,
+    "L2": 2,
+    "N1": 3,
+    "N2": 4,
+    "N3": 5,
+    "NAT": 6,
+    "COUPE": 7,
+    "REG": 8,
+    "AMICAL": 9
+};
+const SPORT_COLORS = {
+    'football': '#34C759',   // Vert
+    'basketball': '#FF9500', // Orange
+    'handball': '#0071E3'    // Bleu
+};
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgTd3xeQpnlnr4YqTX2B9qwtAnzhQefDY",
+  authDomain: "fokalpress.firebaseapp.com",
+  projectId: "fokalpress",
+  storageBucket: "fokalpress.firebasestorage.app",
+  messagingSenderId: "646309909772",
+  appId: "1:646309909772:web:ab3102c4e3351bf823e529",
+  measurementId: "G-LYH1P3NB5L"
+};
 
 const ACCRED_LIST = {
     "AFC COMPIEGNE": "https://www.instagram.com/afccompiegneofficiel/",
