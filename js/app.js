@@ -2053,7 +2053,7 @@ function updateFilterSlider() {
             favClubEl.textContent = "--";
         }
 
-        // --- 9. Génération Camembert & Légende (Inchangé) ---
+        // --- 9. Génération Camembert & Légende  ---
         const chartEl = document.getElementById('sportPieChart');
         const legendEl = document.getElementById('pieLegend');
         
@@ -4809,6 +4809,12 @@ window.openFriendProfile = async (friendUid) => {
     const friend = await fetchUserProfile(friendUid);
     if (!friend) return;
 
+    if (friend.instagram) {
+        const url = new URL(window.location);
+        url.searchParams.set('profile', friend.instagram.toLowerCase());
+        window.history.pushState({}, '', url);
+    }
+
     // 1. Remplir l'en-tête (Uniquement Pseudo Insta)
     const picContainer = document.getElementById('friendProfilePic');
     if (picContainer) picContainer.innerHTML = getAvatarHTML(friend.photoURL, friend.instagram, 60);
@@ -4917,7 +4923,23 @@ window.openFriendProfile = async (friendUid) => {
         if (received === 0) {
             legendHtml = '<span style="font-size:11px; color:gray; display:block; text-align:center; margin-top:10px;">Aucune donnée</span>';
         } else {
-            // Création de la légende (Top 2 par sport)
+            // --- NOUVEAU : Ajout de la ligne avec les émojis des sports ---
+            legendHtml += '<div style="display: flex; justify-content: center; gap: 16px; margin-top: 8px; margin-bottom: 8px;">';
+            ['football', 'basketball', 'handball'].forEach(sport => {
+                if (compBreakdown[sport] && Object.keys(compBreakdown[sport]).length > 0) {
+                    const baseColor = { 'football': '#34C759', 'basketball': '#FF9500', 'handball': '#0071E3' }[sport];
+                    const emoji = SPORT_EMOJIS[sport]; 
+                    legendHtml += `
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: ${baseColor};"></span>
+                            <span style="font-size: 12px; line-height: 1;">${emoji}</span>
+                        </div>`;
+                }
+            });
+            legendHtml += '</div>';
+            legendHtml += '<div style="height: 1px; background: var(--border-color); margin: 0 10px 6px; opacity: 0.3;"></div>';
+
+            // --- SUITE : Création de la légende (Top 2 par sport) ---
             ['football', 'basketball', 'handball'].forEach(sport => {
                 const comps = compBreakdown[sport];
                 if (!comps || Object.keys(comps).length === 0) return;
@@ -5164,6 +5186,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('friendProfileModal').classList.add('hidden');
             // On réaffiche la modale amis (effet de retour)
             document.getElementById('friendsModal').classList.remove('hidden');
+
+            const url = new URL(window.location);
+            url.searchParams.delete('profile');
+            window.history.pushState({}, '', url);
         });
     }
 
