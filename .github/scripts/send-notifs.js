@@ -75,7 +75,36 @@ async function run() {
             });
         }
 
-        // 3. NOUVEAU : Vérifier les demandes d'amis en attente
+        // 3. Vérifier les matchs "En envie" pour DANS 7 JOURS
+        if (userData.favorites) {
+            const in7Days = new Date(today);
+            in7Days.setDate(today.getDate() + 7);
+            const in7DaysStr = in7Days.toISOString().split('T')[0];
+
+            Object.entries(userData.favorites).forEach(([matchId, status]) => {
+                const matchDate = matchId.split('_').pop();
+                if (status === 'envie' && matchDate === in7DaysStr) {
+
+                    let homeName = matchId.split('_')[0];
+                    let awayName = matchId.split('_')[1];
+
+                    const realMatch = matchsDb.find(m =>
+                        cleanStr(m.home) === homeName &&
+                        cleanStr(m.away) === awayName
+                    );
+
+                    if (realMatch) {
+                        homeName = realMatch.home;
+                        awayName = realMatch.away;
+                    }
+
+                    const teams = `${homeName} vs ${awayName}`;
+                    sendPush(subscription, "⭐ Match dans 1 semaine !", `Tu veux couvrir ${teams}. C'est le moment d'envoyer ta demande d'accréditation !`);
+                }
+            });
+        }
+
+        // 4. NOUVEAU : Vérifier les demandes d'amis en attente
         if (userData.friendRequests && userData.friendRequests.length > 0) {
             const reqCount = userData.friendRequests.length;
             const notifTitle = "Nouvel ami FokalPress 📸";
