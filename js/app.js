@@ -1765,3 +1765,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+async function maybePromptNotifs() {
+    // Ne rien faire si :
+    // - déjà activé
+    // - déjà refusé définitivement par le navigateur
+    // - déjà affiché cette session
+    if (Notification.permission === 'granted') return;
+    if (Notification.permission === 'denied') return;
+    if (sessionStorage.getItem('notifPromptShown')) return;
+
+    // Marquer comme affiché pour ne pas re-spammer dans la session
+    sessionStorage.setItem('notifPromptShown', 'true');
+
+    const modal = document.getElementById('notifPromptModal');
+    const acceptBtn = document.getElementById('notifPromptAcceptBtn');
+    const dismissBtn = document.getElementById('notifPromptDismissBtn');
+    if (!modal) return;
+
+    // Petit délai pour ne pas superposer au feedback visuel du clic favori
+    setTimeout(() => modal.classList.remove('hidden'), 800);
+
+    acceptBtn.addEventListener('click', async () => {
+        modal.classList.add('hidden');
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') return;
+
+            const registration = await navigator.serviceWorker.register('sw.js');
+            const publicVapidKey = 'BHXLM_lvgVjR020rrfglRN31xr3WGaA56uWCBH4U0LGsOlmXXnGqxr3pAS9y6ldn_f7OdRrK8dU4f70jrsniD0c';
+
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+            });
+
+            const user = firebase.auth().currentUser;
+            if (user) {
+                await db.collection('users').doc(user.uid).update({
+                    pushSubscription: JSON.stringify(subscription)
+                });
+            }
+        } catch (err) {
+            console.error("Erreur activation notifs :", err);
+        }
+    }, { once: true });
+
+    dismissBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    }, { once: true });
+
+    // Fermeture en cliquant dehors
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.add('hidden');
+    });
+}

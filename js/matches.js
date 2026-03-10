@@ -55,6 +55,10 @@ function cycleStatus(event, matchId) {
         delete matchStatuses[matchId];
     }
 
+    if (nextStatus === 'envie') {
+        maybePromptNotifs();
+    }
+
     // 2. Mise à jour du Cache Local
     localStorage.setItem('matchStatuses', JSON.stringify(matchStatuses));
     localStorage.setItem('matchArchives', JSON.stringify(matchArchives)); // <--- Sauvegarde locale
