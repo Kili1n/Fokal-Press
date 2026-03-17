@@ -608,11 +608,19 @@ window.openFriendProfile = async (friendUid) => {
 
 // Fonction utilitaire pour récupérer un profil (avec cache pour économiser Firebase)
 async function fetchUserProfile(uid) {
-    if (usersCache.has(uid)) return usersCache.get(uid);
+    if (usersCache.has(uid)) {
+        const cachedData = usersCache.get(uid);
+        // On déclenche la vérification auto-guérison en arrière-plan
+        verifyAndRefreshProfilePicBackground(cachedData, uid);
+        return cachedData;
+    }
     try {
         const doc = await db.collection('users').doc(uid).get();
         if (doc.exists) {
             const data = doc.data();
+            // On déclenche la vérification auto-guérison en arrière-plan
+            verifyAndRefreshProfilePicBackground(data, uid);
+            
             usersCache.set(uid, data);
             return data;
         }
@@ -1115,8 +1123,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     resultDiv.innerHTML = "<span style='color: #FF3B30;'><i class='fa-solid fa-circle-xmark'></i> Aucun compte FokalPress trouvé avec ce pseudo.</span>";
                 } else {
                     const targetUser = query.docs[0];
-                    const targetData = targetUser.data();
+                    let targetData = targetUser.data(); // Utilise 'let' pour pouvoir modifier l'objet
                     const targetUid = targetUser.id;
+
+                    // ON ATTEND d'avoir une URL valide (l'ancienne si elle est bonne, ou une nouvelle si elle était expirée)
+                    const freshPhotoUrl = await ensureValidProfilePic(targetData, targetUid);
+                    targetData.photoURL = freshPhotoUrl; // On met à jour les données avant l'affichage
+
 
                     // Vérification de l'état actuel de la relation
                     if (myFriends.includes(targetUid)) {
@@ -1179,3 +1192,81 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- AUTO-GUÉRISON DES PHOTOS DE PROFIL ---
+function verifyAndRefreshProfilePicBackground(userData, uid) {
+    if (!userData || !userData.instagram) return;
+
+    const currentUrl = userData.photoURL || "";
+    let isExpired = false;
+
+    // 1. On cherche ton paramètre de temps "&t=" dans l'URL
+    const match = currentUrl.match(/&t=(\d+)/);
+    if (match) {
+        const timestamp = parseInt(match[1], 10);
+        // Si la photo date de plus de 24h (86 400 000 ms), le lien Meta est expiré
+        if (Date.now() - timestamp > 86400000) {
+            isExpired = true;
+        }
+    } else if (currentUrl.includes('instagram.com') || currentUrl.includes('fbcdn.net')) {
+        // C'est un vieux lien sans paramètre "&t=", il est forcément périmé
+        isExpired = true;
+    }
+
+    // 2. Si c'est expiré, on rafraîchit en arrière-plan
+    if (isExpired) {
+        console.log(`🔄 [Background] Lien expiré pour @${userData.instagram}. Récupération d'un nouveau lien...`);
+        
+        // On appelle ton API (sans 'await' pour ne pas geler l'interface de l'utilisateur)
+        fetchInstaProfilePic(userData.instagram).then(newUrl => {
+            if (newUrl && newUrl !== currentUrl) {
+                // A. Mise à jour de l'objet local en mémoire
+                userData.photoURL = newUrl;
+                if (typeof usersCache !== 'undefined') usersCache.set(uid, userData);
+                
+                // B. Mise à jour silencieuse dans Firestore
+                db.collection('users').doc(uid).update({ photoURL: newUrl })
+                    .catch(err => console.error("Erreur maj photo Firestore:", err));
+                
+                // Note : Les petites images (onerror) afficheront l'initiale cette fois-ci, 
+                // mais au prochain clic ou rechargement, la nouvelle photo sera là !
+            }
+        }).catch(error => {
+            console.warn(`Échec du rafraîchissement de la photo pour @${userData.instagram}:`, error);
+        });
+    }
+}
+
+// --- VÉRIFICATION FOREGROUND (ON ATTEND LA NOUVELLE PHOTO) ---
+async function ensureValidProfilePic(userData, uid) {
+    if (!userData || !userData.instagram) return userData.photoURL;
+
+    const currentUrl = userData.photoURL || "";
+    let isExpired = false;
+
+    const match = currentUrl.match(/&t=(\d+)/);
+    if (match) {
+        const timestamp = parseInt(match[1], 10);
+        if (Date.now() - timestamp > 86400000) isExpired = true; // Expiré si > 24h
+    } else if (currentUrl.includes('instagram.com') || currentUrl.includes('fbcdn.net')) {
+        isExpired = true; // Vieux format = expiré
+    }
+
+    if (isExpired) {
+        console.log(`⏳ [Recherche] Lien expiré pour @${userData.instagram}. Rafraîchissement direct...`);
+        try {
+            const newUrl = await fetchInstaProfilePic(userData.instagram);
+            if (newUrl && newUrl !== currentUrl) {
+                userData.photoURL = newUrl;
+                if (typeof usersCache !== 'undefined') usersCache.set(uid, userData);
+                // Mise à jour de la base de données
+                await db.collection('users').doc(uid).update({ photoURL: newUrl });
+                return newUrl; // On renvoie la nouvelle image toute fraîche !
+            }
+        } catch (error) {
+            console.warn(`Échec de la récupération pour @${userData.instagram}:`, error);
+        }
+    }
+    
+    return currentUrl; // Si ce n'était pas expiré, on renvoie l'actuelle
+}
