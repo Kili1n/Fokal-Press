@@ -261,7 +261,7 @@ const CUSTOM_LOGOS = {
     "NANCY ASNL": "https://upload.wikimedia.org/wikipedia/fr/thumb/f/fd/Logo_AS_Nancy_Lorraine_2018.svg/960px-Logo_AS_Nancy_Lorraine_2018.svg.png",
     "FCLDSD": "https://upload.wikimedia.org/wikipedia/fr/thumb/7/7c/Logo_FC_Limonest_Dardilly_Saint_Didier_-_2021.svg/960px-Logo_FC_Limonest_Dardilly_Saint_Didier_-_2021.svg.png",
     "LE PUY F. 43 AUVERGN": "https://upload.wikimedia.org/wikipedia/fr/8/88/Logo_Puy_Foot_43_Auvergne_2017.svg",
-    "LENS": "https://upload.wikimedia.org/wikipedia/fr/thumb/c/c5/Logo_RC_Lens.svg/1510px-Logo_RC_Lens.svg.png",
+    "LENS": "https://upload.wikimedia.org/wikipedia/fr/archive/3/3c/20210915145128%21Logo_RC_Lens_2014.svg",
     "WASQUEHAL FOOTBALL": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/29/Logo_Wasquehal_Football_-_2017.svg/960px-Logo_Wasquehal_Football_-_2017.svg.png",
     "THONON EVIAN GG FC": "https://upload.wikimedia.org/wikipedia/fr/thumb/6/64/Logo_Thonon_%C3%89vian_Grand_Gen%C3%A8ve_FC_2020.svg/1764px-Logo_Thonon_%C3%89vian_Grand_Gen%C3%A8ve_FC_2020.svg.png",
     "GUINGAMP EA": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Logo_EA_Guingamp_2019.svg/1280px-Logo_EA_Guingamp_2019.svg.png",
@@ -280,7 +280,6 @@ const CUSTOM_LOGOS = {
     "SAINTE GENEVIEVE": "https://upload.wikimedia.org/wikipedia/fr/thumb/8/83/Logo_Sainte_Genevi%C3%A8ve_Football_Club_-_2022.svg/960px-Logo_Sainte_Genevi%C3%A8ve_Football_Club_-_2022.svg.png?20240924030233",
     "NIMES OL": "https://1000logos.net/wp-content/uploads/2020/09/Nimes-Olympique-Logo.png",
     "DRAGUIGNAN VAR HANDBALL": "https://dvhb83.fr/wp-content/uploads/2022/12/logo_dvhb_head.png",
-    "CHERBOURG" : "https://backend.jscherbourg.fr/storage/clubs/from_drupal/jscherbourglogoprincipal-copie.png",
     "HYERES" : "https://upload.wikimedia.org/wikipedia/fr/archive/0/00/20190519234206%21Logo_Hy%C3%A8res_FC_2017.svg",
     "ASTDV" : "https://upload.wikimedia.org/wikipedia/fr/7/76/Logo_ASTDV.png",
     "MONDEVILLE" : "https://upload.wikimedia.org/wikipedia/fr/c/c8/LOGO_USOM.png",
@@ -344,7 +343,12 @@ const CUSTOM_LOGOS = {
     "FOLSCHVILLER" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHtit7RxbnFAQhTk309QZutdHaaeuBwiPylA&s",
     "NANTES BASKET HERMINE" : "https://upload.wikimedia.org/wikipedia/fr/8/83/Logo_Nantes_Basket_Hermine_-_2017.svg",
     "FC NANTES" :"https://upload.wikimedia.org/wikipedia/commons/6/68/FC-Nantes-blason-rvb.png",
-    "AJ AUXERRE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/e/ed/Logo_AJ_Auxerre_-_1997.svg/960px-Logo_AJ_Auxerre_-_1997.svg.png?_=20241201051351"
+    "AJ AUXERRE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/e/ed/Logo_AJ_Auxerre_-_1997.svg/960px-Logo_AJ_Auxerre_-_1997.svg.png?_=20241201051351",
+    "MULHOUSE FC" : "https://upload.wikimedia.org/wikipedia/fr/b/bd/Logo_FC_Mulhouse_2020.svg",
+    "ISTRES PROVENCE" : "https://upload.wikimedia.org/wikipedia/fr/thumb/7/71/Istres_Provence_handball.svg/500px-Istres_Provence_handball.svg.png",
+    "STADE BRESTOIS" : "https://upload.wikimedia.org/wikipedia/fr/1/14/Logo_Stade_Brestois.svg",
+    "MULHOUSE" : "https://wp.bebasket.fr/images/2025/07/520599397_122250897662088869_7752803969749140152_n.jpg",
+    "CHERBOURG JS" : "https://upload.wikimedia.org/wikipedia/commons/e/e5/Logo_JSCherbourg.png",
 };  
 
 const STADIUM_COORDS = {
