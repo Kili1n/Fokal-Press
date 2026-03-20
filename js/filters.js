@@ -32,9 +32,14 @@ function applyFilters() {
         filtered = filtered.filter(m => getCompFilterGroup(m.compFormatted, m.sport) === currentFilters.comp);
     }
 
-    if (currentFilters.accredOnly) {
+    if (currentFilters.accredOnly === true) {
+        // Mode utilisateur classique : coche cochée -> uniquement les matchs AVEC accréditation
         const accredKeys = Object.keys(ACCRED_LIST);
         filtered = filtered.filter(m => accredKeys.some(key => m.home.name.toUpperCase().includes(key)));
+    } else if (currentFilters.accredOnly === 'false') {
+        // Mode secret via URL : ?accredOnly=false -> uniquement les matchs SANS accréditation
+        const accredKeys = Object.keys(ACCRED_LIST);
+        filtered = filtered.filter(m => !accredKeys.some(key => m.home.name.toUpperCase().includes(key)));
     }
 
     if (currentFilters.week) {
@@ -178,8 +183,13 @@ function updateUrlFromFilters() {
     if (currentFilters.maxDist !== 300) url.searchParams.set('maxDist', currentFilters.maxDist);
     else url.searchParams.delete('maxDist');
 
-    if (currentFilters.accredOnly) url.searchParams.set('accredOnly', 'true');
-    else url.searchParams.delete('accredOnly');
+    if (currentFilters.accredOnly === true) {
+        url.searchParams.set('accredOnly', 'true');
+    } else if (currentFilters.accredOnly === 'false') {
+        url.searchParams.set('accredOnly', 'false'); // Garde le mode secret dans l'URL
+    } else {
+        url.searchParams.delete('accredOnly');
+    }
 
     // On modifie l'URL sans recharger la page et sans polluer l'historique de navigation
     window.history.replaceState({}, '', url);
@@ -195,7 +205,11 @@ function loadFiltersFromUrl() {
     if (params.has('search')) currentFilters.search = params.get('search');
     if (params.has('sortBy')) currentFilters.sortBy = params.get('sortBy');
     if (params.has('maxDist')) currentFilters.maxDist = parseInt(params.get('maxDist')) || 300;
-    if (params.has('accredOnly')) currentFilters.accredOnly = params.get('accredOnly') === 'true';
+    if (params.has('accredOnly')) {
+        const val = params.get('accredOnly');
+        if (val === 'true') currentFilters.accredOnly = true;
+        else if (val === 'false') currentFilters.accredOnly = 'false'; // On garde la chaîne de caractères "false" !
+    }
 
     // 2. Synchronisation visuelle des boutons et inputs avec l'URL
     document.querySelectorAll('.filter-btn').forEach(btn => {
