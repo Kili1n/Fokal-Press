@@ -330,10 +330,24 @@ window.openFriendProfile = async (friendUid) => {
     }
 
     // 1. Remplir l'en-tête (Uniquement Pseudo Insta)
+    // 1. Remplir l'en-tête (Uniquement Pseudo Insta)
     const picContainer = document.getElementById('friendProfilePic');
     if (picContainer) picContainer.innerHTML = getAvatarHTML(friend.photoURL, friend.instagram, 60);
     
-    document.getElementById('friendProfileName').innerHTML = `<i class="fa-brands fa-instagram"></i> @${friend.instagram || 'inconnu'}`;
+    // Rendre le pseudo cliquable vers Instagram
+    if (friend.instagram) {
+        document.getElementById('friendProfileName').innerHTML = `
+            <a href="https://www.instagram.com/${friend.instagram}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; cursor: pointer;" title="Voir sur Instagram">
+                <i class="fa-brands fa-instagram"></i> @${friend.instagram}
+            </a>`;
+        
+        // Petit effet visuel au survol pour bien faire comprendre que c'est cliquable
+        const nameElement = document.getElementById('friendProfileName').querySelector('a');
+        nameElement.onmouseenter = () => nameElement.style.textDecoration = "underline";
+        nameElement.onmouseleave = () => nameElement.style.textDecoration = "none";
+    } else {
+        document.getElementById('friendProfileName').innerHTML = `<i class="fa-brands fa-instagram"></i> @inconnu`;
+    }
     const instaDiv = document.getElementById('friendProfileInsta');
     if (instaDiv) instaDiv.style.display = 'none';
 
