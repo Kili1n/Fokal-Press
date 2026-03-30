@@ -111,21 +111,35 @@ async function loadSentRequests() {
     }
 }
 
-window.injectFriendsOnCards = async function() {
-    // Si l'utilisateur n'est pas connecté ou n'a pas d'amis, on arrête.
-    if (!auth.currentUser || myFriends.length === 0) return;
+// --- AJOUT : Variables globales pour le cache (à placer juste au-dessus de la fonction) ---
+let allUsersGlobalCache = null;
+let lastUsersFetchTime = 0;
 
-    // 1. Récupérer les données à jour de tous les amis (Utilise le cache pour être ultra rapide)
-    const friendsData = [];
-    for (const uid of myFriends) {
-        const f = await fetchUserProfile(uid);
-        if (f) {
-            f.uid = uid; // On garde l'UID pour pouvoir cliquer sur le profil
-            friendsData.push(f);
+window.injectFriendsOnCards = async function() {
+    // 1. On arrête si non connecté (Optionnel : tu peux l'enlever si tu veux que les visiteurs non-connectés voient les avatars)
+    if (!auth.currentUser) return;
+
+    // 2. Récupérer TOUS les utilisateurs (avec un cache de 5 minutes pour sauver ton quota Firebase)
+    const now = Date.now();
+    if (!allUsersGlobalCache || (now - lastUsersFetchTime > 300000)) { // 300000 ms = 5 minutes
+        try {
+            const snapshot = await db.collection('users').get();
+            allUsersGlobalCache = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                data.uid = doc.id; // On garde l'UID pour le clic vers le profil
+                allUsersGlobalCache.push(data);
+            });
+            lastUsersFetchTime = now;
+        } catch (e) {
+            console.error("Erreur lors de la récupération de tous les utilisateurs", e);
+            return;
         }
     }
 
-    // 2. Parcourir toutes les zones d'avatars (.friends-stack) générées sur l'écran
+    const usersToDisplay = allUsersGlobalCache;
+
+    // 3. Parcourir toutes les zones d'avatars (.friends-stack) générées sur l'écran
     const stacks = document.querySelectorAll('.friends-stack');
     
     stacks.forEach(stack => {
@@ -133,25 +147,25 @@ window.injectFriendsOnCards = async function() {
         const matchId = stack.id.replace('friends-stack-', '');
         let html = '';
         let count = 0;
-        let friendsHere = [];
+        let usersHere = [];
 
-        // 3. Vérifier quels amis vont à ce match
-        friendsData.forEach(friend => {
-            const favStatus = friend.favorites ? friend.favorites[matchId] : null;
-            const isArchived = friend.archives ? !!friend.archives[matchId] : false;
+        // 4. Vérifier quels utilisateurs vont à ce match
+        usersToDisplay.forEach(user => {
+            const favStatus = user.favorites ? user.favorites[matchId] : null;
+            const isArchived = user.archives ? !!user.archives[matchId] : false;
 
-            // --- CORRECTION ICI : Condition explicite pour les 3 statuts ---
+            // Condition explicite pour les 3 statuts
             if (favStatus === 'envie' || favStatus === 'asked' || favStatus === 'received' || isArchived) {
-                friendsHere.push(friend);
+                usersHere.push(user);
                 
                 // On affiche un maximum de 3 photos empilées
                 if (count < 3) {
                     const marginLeft = count === 0 ? '0' : '-10px';
                     const zIndex = 10 - count;
-                    const initial = (friend.displayName || "U").charAt(0).toUpperCase();
+                    const initial = (user.displayName || user.instagram || "U").charAt(0).toUpperCase();
                     
                     // Sécurisation de l'image (Proxy anti-CORS)
-                    let safeUrl = friend.photoURL || '';
+                    let safeUrl = user.photoURL || '';
                     if (safeUrl && !safeUrl.includes('wsrv.nl') && !safeUrl.includes('ui-avatars.com')) {
                         safeUrl = `https://wsrv.nl/?url=${encodeURIComponent(safeUrl)}&maxage=1d`;
                     }
@@ -178,13 +192,13 @@ window.injectFriendsOnCards = async function() {
                         statusIconHtml = '<div style="position: absolute; bottom: -2px; right: -4px; background: white; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #FF9500; box-shadow: 0 1px 3px rgba(0,0,0,0.3); z-index: 2;"><i class="fa-solid fa-star"></i></div>';
                     }
 
-                    // Création de l'avatar avec un conteneur parent relatif pour que la pastille sorte du cadre
+                    // Création de l'avatar (Note: j'ai changé title pour prendre l'instagram par défaut)
                     html += `
-                    <div onclick="event.stopPropagation(); openFriendProfile('${friend.uid}')" 
+                    <div onclick="event.stopPropagation(); openFriendProfile('${user.uid}')" 
                          style="position: relative; width: 26px; height: 26px; margin-left: ${marginLeft}; z-index: ${zIndex}; cursor: pointer; transition: transform 0.2s ease;"
                          onmouseover="this.style.transform='translateY(-2px)'"
                          onmouseout="this.style.transform='translateY(0)'"
-                         title="${friend.instagram} ${statusTitle}">
+                         title="@${user.instagram || 'Inconnu'} ${statusTitle}">
                         
                         <div style="width: 100%; height: 100%; background: white; color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; border: 2px solid var(--card-bg);">
                             <img src="${safeUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerText='${initial}';">
@@ -197,9 +211,9 @@ window.injectFriendsOnCards = async function() {
             }
         });
 
-        // 4. S'il y a plus de 3 amis, on ajoute une petite pastille "+X"
+        // 5. S'il y a plus de 3 personnes, on ajoute une petite pastille "+X"
         if (count > 3) {
-            const extraNames = friendsHere.map(f => f.displayName).join(', ');
+            const extraNames = usersHere.map(u => u.instagram || u.displayName).join(', ');
             html += `
             <div style="width: 26px; height: 26px; border-radius: 50%; background: var(--bg-secondary); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid var(--card-bg); margin-left: -10px; z-index: 1; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="${extraNames}">
                 +${count - 3}
