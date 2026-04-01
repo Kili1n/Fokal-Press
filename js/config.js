@@ -185,7 +185,7 @@ const CUSTOM_LOGOS = {
     "CERCLE SPORTIF VESULIEN": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_b52vv79c5gat4zRO42onxe1PaDkpGls4MA&s",
     "ELITE VAL-D'OISE": "https://upload.wikimedia.org/wikipedia/fr/0/01/LogoEVO.webp",
     "CERNAY/WATTWILLER": "https://www.cwh.fr/wp-content/uploads/2021/02/cropped-cernay_handball.png",
-    "NANTES HBC": "https://upload.wikimedia.org/wikipedia/fr/thumb/b/b9/HBC_Nantes_2011_logo.svg/1149px-HBC_Nantes_2011_logo.svg.png",
+    "NANTES HBC": "https://upload.wikimedia.org/wikipedia/fr/b/b9/HBC_Nantes_2011_logo.svg",
     "SELESTAT ALSACE": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/a9/S%C3%A9lestat_Alsace_handball_2017.svg/1158px-S%C3%A9lestat_Alsace_handball_2017.svg.png",
     "TREMBLAY": "https://upload.wikimedia.org/wikipedia/fr/b/bc/Logo_du_Tremblay_Handball.png",
     "MASSY": "https://upload.wikimedia.org/wikipedia/fr/thumb/4/40/Massy_Essonne_Handball_logo.png/250px-Massy_Essonne_Handball_logo.png",
@@ -264,7 +264,7 @@ const CUSTOM_LOGOS = {
     "LENS": "https://upload.wikimedia.org/wikipedia/fr/archive/3/3c/20210915145128%21Logo_RC_Lens_2014.svg",
     "WASQUEHAL FOOTBALL": "https://upload.wikimedia.org/wikipedia/fr/thumb/2/29/Logo_Wasquehal_Football_-_2017.svg/960px-Logo_Wasquehal_Football_-_2017.svg.png",
     "THONON EVIAN GG FC": "https://upload.wikimedia.org/wikipedia/fr/thumb/6/64/Logo_Thonon_%C3%89vian_Grand_Gen%C3%A8ve_FC_2020.svg/1764px-Logo_Thonon_%C3%89vian_Grand_Gen%C3%A8ve_FC_2020.svg.png",
-    "GUINGAMP EA": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Logo_EA_Guingamp_2019.svg/1280px-Logo_EA_Guingamp_2019.svg.png",
+    "GUINGAMP": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Logo_EA_Guingamp_2019.svg/1280px-Logo_EA_Guingamp_2019.svg.png",
     "ESTAC TROYES": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/ES_Troyes_AC.svg/1665px-ES_Troyes_AC.svg.png",
     "SC AUBAGNE AIR BEL": "https://upload.wikimedia.org/wikipedia/en/9/94/SC_Aubagne_Air_Bel_logo.png",
     "FBBP": "https://upload.wikimedia.org/wikipedia/fr/archive/f/f9/20220727005049%21Logo_Football_Bourg-en-Bresse_P%C3%A9ronnas_01_-_2015.svg",
@@ -349,6 +349,7 @@ const CUSTOM_LOGOS = {
     "STADE BRESTOIS" : "https://upload.wikimedia.org/wikipedia/fr/1/14/Logo_Stade_Brestois.svg",
     "MULHOUSE" : "https://wp.bebasket.fr/images/2025/07/520599397_122250897662088869_7752803969749140152_n.jpg",
     "CHERBOURG JS" : "https://upload.wikimedia.org/wikipedia/commons/e/e5/Logo_JSCherbourg.png",
+    "CHOLET" : "https://upload.wikimedia.org/wikipedia/fr/thumb/a/aa/Logo_Cholet_Basket_2019.svg/500px-Logo_Cholet_Basket_2019.svg.png"
 };  
 
 const STADIUM_COORDS = {
