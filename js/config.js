@@ -54,7 +54,7 @@ const ACCRED_LIST = {
     "MASSY ESSONNE" : "https://mehb.fr/amateur-infos-pratiques/contact/",
     "PONTAULT-COMBAULT" : "5877029@ffhandball.net",
     "PARIS BASKETBALL" : "https://parisbasketball.com/contact/",
-    "PARIS SAINT-GERMAIN HANDBALL" : "https://www.instagram.com/psghandassoofficiel/",
+    "PARIS SAINT-GERMAIN HANDBALL" : "https://accreditation.psg.fr/",
     "NANTERRE 92_U21" : "https://www.nanterre92.com/club/club/contact/",
     "SAINT QUENTIN BASKET BALL" : "contact@sqbb.fr",
     "RED STAR" : "news@redstar.fr",
