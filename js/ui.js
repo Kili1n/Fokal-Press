@@ -1053,3 +1053,32 @@ async function calculateAndShowStats(e) {
     document.getElementById('settingsModal').classList.add('hidden');
     statsModal.classList.remove('hidden');
 }
+
+// --- BANNIÈRE FIN DE SAISON ---
+function renderSeasonBanner() {
+    // Ne pas créer deux fois
+    if (document.getElementById('seasonEndBanner')) return;
+
+    const grid = document.getElementById('grid');
+    if (!grid) return;
+
+    const banner = document.createElement('div');
+    banner.id = 'seasonEndBanner';
+    banner.className = 'season-end-banner';
+    banner.innerHTML = `
+        <div class="season-banner-left">
+            <div class="season-banner-icon">🏆</div>
+            <div class="season-banner-text">
+                <span class="season-banner-title">Fin de Saison 2024–2025</span>
+                <span class="season-banner-sub">Télécharge ton bilan photo de la saison et partage-le sur tes réseaux</span>
+            </div>
+        </div>
+        <button class="season-banner-btn" id="seasonDownloadBtn" onclick="triggerSeasonExport()">
+            <i class="fa-solid fa-download"></i>
+            <span>Mon bilan</span>
+        </button>
+    `;
+
+    // Insérer avant la grille
+    grid.parentNode.insertBefore(banner, grid);
+}

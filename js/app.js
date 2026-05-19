@@ -311,6 +311,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     requestAnimationFrame(() => {
         document.body.classList.add('loaded');
+        // Bannière fin de saison (après que la grille est dans le DOM)
+        if (typeof renderSeasonBanner === 'function') renderSeasonBanner();
     }); 
     // --- GESTION STATISTIQUES ---
     const statsModal = document.getElementById('statsModal');
@@ -1765,6 +1767,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+// --- EXPORT BILAN FIN DE SAISON ---
+// Ouvre le modal Stats puis déclenche automatiquement le téléchargement
+async function triggerSeasonExport() {
+    const btn = document.getElementById('seasonDownloadBtn');
+    const openStatsBtn = document.getElementById('openStatsBtn');
+    const saveStatsBtn = document.getElementById('saveStatsBtn');
+
+    // Feedback visuel sur le bouton bannière
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Chargement…</span>';
+    }
+
+    // 1. Ouvrir le modal stats (il charge les données Firebase)
+    if (openStatsBtn) openStatsBtn.click();
+
+    // 2. Attendre que le modal soit rendu (les images et le SVG ont besoin d'un tick)
+    setTimeout(() => {
+        if (saveStatsBtn) {
+            saveStatsBtn.click();
+        }
+        // Remettre le bouton bannière après l'export
+        setTimeout(() => {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-download"></i><span>Mon bilan</span>';
+            }
+        }, 2000);
+    }, 700);
+}
 
 async function maybePromptNotifs() {
     // Ne rien faire si :
