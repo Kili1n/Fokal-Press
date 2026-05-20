@@ -328,46 +328,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const closeBtn = document.getElementById('closeStatsBtn');
             const btnsWrapper = document.getElementById('statsButtonsWrapper');
             const buttonsRow = btnsWrapper.querySelector('div[style*="display: flex"]');
+            const arrowBtn = document.getElementById('topMatchArrow');
 
-            // 1. Masquage UI pour la photo
+            // 1. Masquage de l'UI pour la photo
             closeBtn.style.display = 'none';
             if(buttonsRow) buttonsRow.style.display = 'none';
-
-            const arrowBtn = document.getElementById('topMatchArrow');
             if(arrowBtn) arrowBtn.style.display = 'none';
             
             const originalBtnText = saveStatsBtn.innerHTML;
             saveStatsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
-            // --- FIX COULEURS ---
+            // --- CORRECTION DU FIX COULEURS (Évite l'effet grisâtre) ---
             const originalCardBg = card.style.background;
             const originalCardColor = card.style.color;
-            const computedStyle = getComputedStyle(card);
-            const computedBgColor = computedStyle.backgroundColor;
-            const computedTextColor = computedStyle.color;
+            
             const isDark = document.body.classList.contains('dark-mode');
             const realBgColor = isDark ? '#1C1C1E' : '#FFFFFF';
+            const realTextColor = isDark ? '#FFFFFF' : '#1D1D1F';
 
-            card.style.backgroundColor = computedBgColor;
-            card.style.color = computedTextColor;
+            // On applique des couleurs solides et sans variables CSS transparentes
+            card.style.backgroundColor = realBgColor;
+            card.style.color = realTextColor;
+            
             const headerDiv = card.querySelector('div[style*="linear-gradient"]');
             if(headerDiv) headerDiv.style.color = 'white';
 
-            // 2. Capture
+            // 2. Capture avec html2canvas
             html2canvas(card, {
                 scale: window.innerWidth < 768 ? 2 : 3,
-                backgroundColor: realBgColor,
-                useCORS: true,
+                backgroundColor: null, // INTERDIT l'aplat carré en arrière-plan (active la transparence)
+                useCORS: true,        // Permet de charger les logos d'autres domaines (avec crossorigin)
                 onclone: (clonedDoc) => {
-                const clonedCard = clonedDoc.querySelector('.login-card');
-                clonedCard.style.boxShadow = 'none';
-                clonedCard.style.border = 'none';
-            }
+                    // On récupère la carte clonée dans le DOM temporaire d'html2canvas
+                    const clonedCard = clonedDoc.querySelector('.login-card');
+                    if (clonedCard) {
+                        clonedCard.style.boxShadow = 'none'; // Supprime les ombres mal calculées par html2canvas
+                        clonedCard.style.border = 'none';
+                        clonedCard.style.borderRadius = '16px'; // <-- Force l'arrondi recherché
+                        clonedCard.style.overflow = 'hidden';   // <-- Coupe les enfants aux angles de l'arrondi
+                    }
+                }
             }).then(originalCanvas => {
 
-                // On ajoute 15% de marge en largeur pour que la carte "respire"
+                // On ajoute une marge autour pour que la carte "respire" dans la story
                 const targetWidth = originalCanvas.width * 1.15; 
-                // Hauteur proportionnelle pour du 9:16 (ex: 1080x1920)
                 const targetHeight = Math.round(targetWidth * (16 / 9)); 
 
                 const storyCanvas = document.createElement('canvas');
@@ -375,29 +379,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 storyCanvas.height = targetHeight;
                 const ctx = storyCanvas.getContext('2d');
 
-                // Remplissage du fond (clair ou sombre selon le thème)
+                // Remplissage du fond de la Story
                 ctx.fillStyle = realBgColor;
                 ctx.fillRect(0, 0, targetWidth, targetHeight);
 
-                // Centrage horizontal
+                // Centrage horizontal et vertical de la carte sur le fond 9:16
                 const xOffset = (targetWidth - originalCanvas.width) / 2;
-                // Centrage vertical (légèrement remonté à 45% pour ne pas être gêné par les boutons Insta en bas)
                 const yOffset = (targetHeight - originalCanvas.height) * 0.45;
 
-                // On dessine la carte sur le fond 9:16
+                // On dessine le résultat (l'arrondi transparent du clone va se découper proprement sur realBgColor)
                 ctx.drawImage(originalCanvas, xOffset, yOffset);
                 
-                // --- CORRECTION MOBILE ICI ---
+                // Gestion de l'export / partage standard
                 if (isMobile() && navigator.share) {
-                    storyCanvas.toBlob(async (blob) => { // <-- On utilise storyCanvas
+                    storyCanvas.toBlob(async (blob) => {
                         if (!blob) return;
                         const file = new File([blob], "FokalPress_Stats.png", { type: "image/png" });
-                        
                         try {
-                            await navigator.share({
-                                files: [file],
-                                title: 'Mes Stats FokalPress'
-                            });
+                            await navigator.share({ files: [file], title: 'Mes Stats FokalPress' });
                         } catch (err) {
                             console.log("Partage annulé ou erreur", err);
                         }
@@ -406,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     const link = document.createElement('a');
                     link.download = `FokalPress_Stats_${new Date().toISOString().slice(0,10)}.png`;
-                    link.href = storyCanvas.toDataURL('image/png'); // <-- On utilise storyCanvas
+                    link.href = storyCanvas.toDataURL('image/png');
                     link.click();
                     restoreUI();
                 }
@@ -416,7 +415,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 restoreUI();
             });
 
-            // Fonction utilitaire pour remettre l'interface
             function restoreUI() {
                 closeBtn.style.display = 'flex';
                 if(buttonsRow) buttonsRow.style.display = 'flex';

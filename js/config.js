@@ -315,7 +315,7 @@ const CUSTOM_LOGOS = {
     "BIESHEIM" : "https://upload.wikimedia.org/wikipedia/fr/archive/4/40/20230509143453%21Logo_ASC_Biesheim.svg",
     "CHARTRES METROPOLE BASKET" : "https://www.ccmbf.fr/Medias/logos/logo_ccbf/logocbf.png",
     "CHARTRES BASKET" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ-IRUe3PP7nRcSR7OlrEa3rtvhzBq3RStag&s",
-    "C'CHARTRES": "https://pro.ccmhb.fr/public/images/logo.png",
+    "C'CHARTRES": "https://upload.wikimedia.org/wikipedia/fr/3/3a/Blason_CCMHB_%282%29.jpg",
     "C CHARTRES F": "https://pro.ccmhb.fr/public/images/logo.png",
     "ROUEN METROPOLE BASKET" : "https://upload.wikimedia.org/wikipedia/fr/thumb/c/c1/Logo_Rouen_M%C3%A9tropole_Basket_-_2025.svg/1280px-Logo_Rouen_M%C3%A9tropole_Basket_-_2025.svg.png",
     "ESA LINAS-MONTLHÉRY" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOsa1Zj55TT4kGqvSiVYgyqEpNad5NDVnKrg&s",

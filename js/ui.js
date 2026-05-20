@@ -827,9 +827,9 @@ async function calculateAndShowStats(e) {
         return `
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <img src="${homeLogo}" style="width: 28px; height: 28px; object-fit: contain;">
+                    <img src="${homeLogo}" style="width: 28px; height: 28px; object-fit: contain;" crossorigin="anonymous">
                     <span style="font-size: 9px; opacity: 0.5;">VS</span>
-                    <img src="${awayLogo}" style="width: 28px; height: 28px; object-fit: contain;">
+                    <img src="${awayLogo}" style="width: 28px; height: 28px; object-fit: contain;" crossorigin="anonymous">
                 </div>
                 <div style="font-size: 11px; font-weight: 600; color: var(--text-primary); text-align:right;">
                     ${sportEmoji} ${displayLvl}

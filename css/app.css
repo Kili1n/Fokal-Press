@@ -1281,16 +1281,6 @@ body.dark-mode .stat-icon {
     letter-spacing: 0.5px;
 }
 
-/* Conteneur Camembert + Légende */
-.pie-container {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: var(--bg-color);
-    padding: 15px;
-    border-radius: 12px;
-}
-
 /* app.css */
 
 .pie-chart {
@@ -1320,14 +1310,6 @@ body.dark-mode .stat-icon {
     display: none;
 }
 
-/* Légende */
-.pie-legend {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex: 1;
-}
-
 .legend-item {
     display: flex;
     align-items: center;
@@ -1352,28 +1334,21 @@ body.dark-mode .pie-chart::after {
     background: #2C2C2E;
 }
 
-/* --- NOUVEAU LAYOUT STATS (Plus large) --- */
-.stats-content-row {
+/* Ajustement du Camembert pour le format Story */
+.pie-container {
     display: flex;
-    gap: 25px; /* Espace entre Camembert et Badges */
-    margin-top: 15px;
-    align-items: center; /* Centrage vertical */
+    align-items: center;
+    background: var(--bg-color);
+    border-radius: 12px;
+    /* On enlève gap: 20px car géré par flex-direction column dans le HTML */
 }
 
-/* Colonne Gauche (Camembert) */
-.stats-left-col {
-    flex: 1;
+/* On centre bien la légende sous le graphique */
+.pie-legend {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centre le camembert */
-}
-
-/* Colonne Droite (Badges) */
-.stats-right-col {
-    flex: 1.4; /* Prend un peu plus de place pour le texte */
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Espace réduit entre les badges */
+    gap: 6px;
+    width: 100%;
 }
 
 /* Ajustement des badges pour qu'ils soient moins hauts */
