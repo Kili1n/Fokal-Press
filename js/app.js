@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalBtnText = saveStatsBtn.innerHTML;
             saveStatsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
-            // --- CORRECTION DU FIX COULEURS (Évite l'effet grisâtre) ---
+            // --- PRÉPARATION DES COULEURS SOLIDES (Évite l'effet grisâtre) ---
             const originalCardBg = card.style.background;
             const originalCardColor = card.style.color;
             
@@ -353,24 +353,42 @@ document.addEventListener('DOMContentLoaded', () => {
             const headerDiv = card.querySelector('div[style*="linear-gradient"]');
             if(headerDiv) headerDiv.style.color = 'white';
 
-            // 2. Capture avec html2canvas
+            // 2. Capture avec html2canvas (Ton nouveau bloc optimisé)
             html2canvas(card, {
                 scale: window.innerWidth < 768 ? 2 : 3,
-                backgroundColor: null, // INTERDIT l'aplat carré en arrière-plan (active la transparence)
-                useCORS: true,        // Permet de charger les logos d'autres domaines (avec crossorigin)
+                backgroundColor: null, 
+                useCORS: true,        
                 onclone: (clonedDoc) => {
-                    // On récupère la carte clonée dans le DOM temporaire d'html2canvas
                     const clonedCard = clonedDoc.querySelector('.login-card');
                     if (clonedCard) {
-                        clonedCard.style.boxShadow = 'none'; // Supprime les ombres mal calculées par html2canvas
+                        // 1. Fix pour la structure principale
+                        clonedCard.style.boxShadow = 'none'; 
                         clonedCard.style.border = 'none';
-                        clonedCard.style.borderRadius = '16px'; // <-- Force l'arrondi recherché
-                        clonedCard.style.overflow = 'hidden';   // <-- Coupe les enfants aux angles de l'arrondi
+                        clonedCard.style.borderRadius = '16px'; 
+                        clonedCard.style.overflow = 'hidden';   
+
+                        // 2. Suppression des ombres de TOUS les éléments enfants (comme l'avatar)
+                        clonedCard.querySelectorAll('*').forEach(el => {
+                            if (el.style.boxShadow) {
+                                el.style.boxShadow = 'none';
+                            }
+                        });
+
+                        // 3. Remplacement des variables CSS du graphique SVG par la couleur de fond solide
+                        const svgElements = clonedCard.querySelectorAll('svg path, svg circle');
+                        svgElements.forEach(svgEl => {
+                            if (svgEl.getAttribute('stroke') === 'var(--card-bg)') {
+                                svgEl.setAttribute('stroke', realBgColor);
+                            }
+                            if (svgEl.getAttribute('fill') === 'var(--card-bg)') {
+                                svgEl.setAttribute('fill', realBgColor);
+                            }
+                        });
                     }
                 }
             }).then(originalCanvas => {
 
-                // On ajoute une marge autour pour que la carte "respire" dans la story
+                // Ajout de la marge pour le format Story 9:16
                 const targetWidth = originalCanvas.width * 1.15; 
                 const targetHeight = Math.round(targetWidth * (16 / 9)); 
 
@@ -383,14 +401,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillStyle = realBgColor;
                 ctx.fillRect(0, 0, targetWidth, targetHeight);
 
-                // Centrage horizontal et vertical de la carte sur le fond 9:16
+                // Centrage de la carte
                 const xOffset = (targetWidth - originalCanvas.width) / 2;
                 const yOffset = (targetHeight - originalCanvas.height) * 0.45;
 
-                // On dessine le résultat (l'arrondi transparent du clone va se découper proprement sur realBgColor)
+                // Dessin du résultat
                 ctx.drawImage(originalCanvas, xOffset, yOffset);
                 
-                // Gestion de l'export / partage standard
+                // Gestion du partage mobile ou téléchargement PC
                 if (isMobile() && navigator.share) {
                     storyCanvas.toBlob(async (blob) => {
                         if (!blob) return;
@@ -415,6 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 restoreUI();
             });
 
+            // Fonction de restauration de l'interface graphique
             function restoreUI() {
                 closeBtn.style.display = 'flex';
                 if(buttonsRow) buttonsRow.style.display = 'flex';
