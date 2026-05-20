@@ -327,18 +327,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.querySelector('#statsModal .login-card');
             const closeBtn = document.getElementById('closeStatsBtn');
             const btnsWrapper = document.getElementById('statsButtonsWrapper');
-            const buttonsRow = btnsWrapper.querySelector('div[style*="display: flex"]');
+            const buttonsRow = btnsWrapper ? btnsWrapper.querySelector('div[style*="display: flex"]') : null;
             const arrowBtn = document.getElementById('topMatchArrow');
 
-            // 1. Masquage de l'UI pour la photo
-            closeBtn.style.display = 'none';
-            if(buttonsRow) buttonsRow.style.display = 'none';
-            if(arrowBtn) arrowBtn.style.display = 'none';
+            // 1. Masquage temporaire de l'UI pour la capture
+            if (closeBtn) closeBtn.style.display = 'none';
+            if (buttonsRow) buttonsRow.style.display = 'none';
+            if (arrowBtn) arrowBtn.style.display = 'none';
             
             const originalBtnText = saveStatsBtn.innerHTML;
             saveStatsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
-            // --- PRÉPARATION DES COULEURS SOLIDES (Évite l'effet grisâtre) ---
+            // --- PRÉPARATION DES COULEURS SOLIDES ---
             const originalCardBg = card.style.background;
             const originalCardColor = card.style.color;
             
@@ -346,35 +346,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const realBgColor = isDark ? '#1C1C1E' : '#FFFFFF';
             const realTextColor = isDark ? '#FFFFFF' : '#1D1D1F';
 
-            // On applique des couleurs solides et sans variables CSS transparentes
             card.style.backgroundColor = realBgColor;
             card.style.color = realTextColor;
             
             const headerDiv = card.querySelector('div[style*="linear-gradient"]');
-            if(headerDiv) headerDiv.style.color = 'white';
+            if (headerDiv) headerDiv.style.color = 'white';
 
-            // 2. Capture avec html2canvas (Ton nouveau bloc optimisé)
+            // 2. Capture avec html2canvas (Correction : Couleur solide globale)
             html2canvas(card, {
                 scale: window.innerWidth < 768 ? 2 : 3,
-                backgroundColor: null, 
+                backgroundColor: realBgColor, // FIX MOBILE : Plus de fond transparent ici
                 useCORS: true,        
                 onclone: (clonedDoc) => {
                     const clonedCard = clonedDoc.querySelector('.login-card');
                     if (clonedCard) {
-                        // 1. Fix pour la structure principale
                         clonedCard.style.boxShadow = 'none'; 
                         clonedCard.style.border = 'none';
                         clonedCard.style.borderRadius = '16px'; 
                         clonedCard.style.overflow = 'hidden';   
+                        clonedCard.style.background = realBgColor; // Force le fond opaque sur le clone
 
-                        // 2. Suppression des ombres de TOUS les éléments enfants (comme l'avatar)
+                        // Nettoyage des ombres enfants (avatar, etc.)
                         clonedCard.querySelectorAll('*').forEach(el => {
                             if (el.style.boxShadow) {
                                 el.style.boxShadow = 'none';
                             }
                         });
 
-                        // 3. Remplacement des variables CSS du graphique SVG par la couleur de fond solide
+                        // Correction des couleurs du SVG (Pie Chart)
                         const svgElements = clonedCard.querySelectorAll('svg path, svg circle');
                         svgElements.forEach(svgEl => {
                             if (svgEl.getAttribute('stroke') === 'var(--card-bg)') {
@@ -388,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }).then(originalCanvas => {
 
-                // Ajout de la marge pour le format Story 9:16
+                // Construction de la Story 9:16
                 const targetWidth = originalCanvas.width * 1.15; 
                 const targetHeight = Math.round(targetWidth * (16 / 9)); 
 
@@ -397,21 +396,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 storyCanvas.height = targetHeight;
                 const ctx = storyCanvas.getContext('2d');
 
-                // Remplissage du fond de la Story
+                // FIX MOBILE : On s'assure que tout le fond du canvas est opaque
                 ctx.fillStyle = realBgColor;
                 ctx.fillRect(0, 0, targetWidth, targetHeight);
 
-                // Centrage de la carte
                 const xOffset = (targetWidth - originalCanvas.width) / 2;
                 const yOffset = (targetHeight - originalCanvas.height) * 0.45;
 
-                // Dessin du résultat
                 ctx.drawImage(originalCanvas, xOffset, yOffset);
                 
-                // Gestion du partage mobile ou téléchargement PC
+                // Gestion de l'export / partage
                 if (isMobile() && navigator.share) {
                     storyCanvas.toBlob(async (blob) => {
-                        if (!blob) return;
+                        if (!blob) {
+                            restoreUI();
+                            return;
+                        }
                         const file = new File([blob], "FokalPress_Stats.png", { type: "image/png" });
                         try {
                             await navigator.share({ files: [file], title: 'Mes Stats FokalPress' });
@@ -421,11 +421,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         restoreUI();
                     }, 'image/png');
                 } else {
+                    // Téléchargement classique sur PC
                     const link = document.createElement('a');
                     link.download = `FokalPress_Stats_${new Date().toISOString().slice(0,10)}.png`;
                     link.href = storyCanvas.toDataURL('image/png');
                     link.click();
-                    restoreUI();
+                    
+                    setTimeout(restoreUI, 300);
                 }
             }).catch(err => {
                 console.error("Erreur capture :", err);
@@ -433,15 +435,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 restoreUI();
             });
 
-            // Fonction de restauration de l'interface graphique
+            // Fonction interne de restauration de l'interface
             function restoreUI() {
-                closeBtn.style.display = 'flex';
-                if(buttonsRow) buttonsRow.style.display = 'flex';
-                if(arrowBtn) arrowBtn.style.display = 'block';
+                if (closeBtn) closeBtn.style.display = 'flex';
+                if (buttonsRow) buttonsRow.style.display = 'flex';
+                if (arrowBtn) arrowBtn.style.display = 'block';
                 saveStatsBtn.innerHTML = originalBtnText;
-                card.style.backgroundColor = originalCardBg;
+                card.style.background = originalCardBg;
                 card.style.color = originalCardColor;
-                if(headerDiv) headerDiv.style.color = ''; 
+                if (headerDiv) headerDiv.style.color = ''; 
             }
         });
     }
