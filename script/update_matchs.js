@@ -79,22 +79,16 @@ const BASKET_URLS = [
     { name: "C'CHARTRES METROPOLE BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729' },
     { name: "C'CHARTRES METROPOLE BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526' },
     { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334745' },
-    { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334549' },
+    { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334528' },
     { name: "VAL DE SEINE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545' },
-
-    { name: "NANTERRE 92", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152746' },
-    { name: "NANTERRE 92", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005152781' },
-    { name: "PARIS BASKETBALL", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152783' },
-    { name: "SAINT QUENTIN BASKET BALL", url: 'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152787' },
-    { name: "ALM EVREUX BASKET", url: 'https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005152397' },
-    { name: "PARIS BASKETBALL", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005152748' },
-    { name: "SAINT QUENTIN BASKET BALL", url: 'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005152752' },
-    { name: "LEVALLOIS METROPOLITANS", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005294950' },
-    { name: "C'CHARTRES BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005294939' },
-    { name: "POISSY BASKET ASSOCIATION", url: 'https://competitions.ffbb.com/ligues/idf/comites/0078/clubs/idf0078013/equipes/200000005294948' },
-    { name: "POLE FRANCE BASKET", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005294952' },
-    { name: "ROUEN METROPOLE BASKET", url: 'https://competitions.ffbb.com/ligues/nor/comites/0076/clubs/nor0076071/equipes/200000005152395' },
-    { name: "ORLEANS LOIRET BASKET", url: 'https://competitions.ffbb.com/ligues/cvl/comites/0045/clubs/cvl0045058/equipes/200000005152388' }
+    { name: "NANTERRE 92", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092' },
+    { name: "NANTERRE 92", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245' },
+    { name: "PARIS BASKETBALL", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246' },
+    { name: "PARIS BASKETBALL", url: 'https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093' },
+    { name: "SAINT QUENTIN BASKET BALL", url: 'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249' },
+    { name: "SAINT QUENTIN BASKET BALL", url: 'https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096' },
+    { name: "ALM EVREUX BASKET", url: 'https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356' },
+    { name: "LEVALLOIS METROPOLITANS", url: 'https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362' }
 ];
 
 const HANDBALL_URLS = [
@@ -171,7 +165,20 @@ function parseFFBBDate(dateStr) {
     if (parts.length < 3) return null;
     const day = parseInt(parts[0]);
     const month = monthsMap[parts[1]];
-    const year = (month <= 5) ? 2026 : 2025; 
+    
+    // Calcul dynamique de la saison sportive
+    const now = new Date();
+    let year = now.getFullYear();
+    
+    // Si nous sommes en fin d'année (ex: oct 2026) et le match au début d'année civile (ex: fév), c'est l'année d'après (2027)
+    if (now.getMonth() >= 7 && month <= 6) {
+        year += 1;
+    } 
+    // Si nous sommes en début d'année (ex: mars 2027) et le match en fin d'année (ex: oct), c'était l'année d'avant (2026)
+    else if (now.getMonth() <= 6 && month >= 7) {
+        year -= 1;
+    }
+
     const [hours, minutes] = parts[2].split('h').map(n => parseInt(n) || 0);
     return new Date(year, month, day, hours, minutes);
 }
@@ -358,6 +365,7 @@ async function scrapeBasketball(page) {
                 const results = [];
                 const rows = document.querySelectorAll('div.bg-white.h-\\[115px\\], div.bg-white.lg\\:h-\\[65px\\]');
                 rows.forEach(row => {
+                    // On ne récupère déjà que les matchs à domicile via le DOM
                     if (row.querySelector('.w-\\[50px\\]:not(.font-AgencyFBBlackComp)')?.innerText.trim() === "Domicile") {
                         results.push({
                             dateRaw: row.querySelector('.w-\\[100px\\].whitespace-nowrap')?.innerText.trim(),
@@ -371,10 +379,15 @@ async function scrapeBasketball(page) {
                 return { club: mainClubName, matches: results };
             });
 
-            const filtered = pageData.matches.map(m => {
+            let debugReasons = [];
+            let filtered = [];
+
+            pageData.matches.forEach((m, index) => {
                 const matchDate = parseFFBBDate(m.dateRaw);
-                if (matchDate && matchDate >= now && matchDate <= limitDate) {
-                    return {
+                const isWithinRange = matchDate && matchDate >= now && matchDate <= limitDate;
+
+                if (isWithinRange) {
+                    filtered.push({
                         sport: "basketball",
                         sourceUrl: teamConfig.url,
                         isoDate: matchDate.toISOString(),
@@ -385,13 +398,32 @@ async function scrapeBasketball(page) {
                         round: m.round,
                         location: "N/A",
                         timestamp: matchDate.getTime()
-                    };
+                    });
+                } else {
+                    // Collecte des raisons du rejet pour ce match
+                    let reasons = [];
+                    if (!matchDate) reasons.push(`Date invalide ("${m.dateRaw}")`);
+                    else if (!isWithinRange) reasons.push(`Date hors limite (${matchDate.toLocaleDateString()} n'est pas entre aujourd'hui et +2 mois)`);
+                    
+                    debugReasons.push(`Match #${index + 1} (${m.home} vs ${m.away}) -> REJETÉ : ${reasons.join(' | ')}`);
                 }
-                return null;
-            }).filter(m => m !== null);
+            });
+
+            // Affichage classique ou affichage DEBUG si 0 match
+            if (filtered.length === 0) {
+                console.log(`❌ ${teamConfig.name} : 0 match trouvé !`);
+                console.log(`   🔍 --- RAPPORT DE DÉBUG (${pageData.matches.length} matchs analysés sur la page) ---`);
+                if (pageData.matches.length === 0) {
+                    console.log(`   👉 Aucun match à domicile trouvé dans le DOM.`);
+                } else {
+                    debugReasons.forEach(reason => console.log(`   👉 ${reason}`));
+                }
+                console.log(`   ------------------------------------------------------------------`);
+            } else {
+                console.log(`✅ ${teamConfig.name} : ${filtered.length} matchs trouvés.`);
+            }
 
             allBasketMatches.push(...filtered);
-            console.log(`✅ ${teamConfig.name} : ${filtered.length} matchs trouvés.`);
 
         } catch (e) {
             console.error(`❌ Erreur FFBB sur ${teamConfig.url} :`, e.message);
@@ -492,12 +524,12 @@ async function run() {
 
     // Exécution dans l'ordre demandé
 
+    const basketMatches = await scrapeBasketball(page);
     const footballMatches = await scrapeFootball(page);
     const handballMatches = await scrapeHandball(page);
-    const basketMatches = await scrapeBasketball(page);
 
     // Fusion et tri par date
-    const allMatches = [...footballMatches, ...handballMatches, ...basketMatches]
+    const allMatches = [ ...basketMatches, ...footballMatches, ...handballMatches]
         .sort((a, b) => a.timestamp - b.timestamp)
         .map(({ timestamp, ...rest }) => rest);
 
