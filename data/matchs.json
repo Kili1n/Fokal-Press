@@ -1,46 +1,13 @@
 [
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334528",
-        "isoDate": "2026-10-02T14:00:00.000Z",
-        "date": "vendredi 2 octobre 2026",
-        "home": "POLE FRANCE BASKET",
-        "away": "LYONSO",
-        "competition": "NM1",
-        "round": "J4",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
-        "isoDate": "2026-10-02T18:00:00.000Z",
-        "date": "vendredi 2 octobre 2026",
-        "home": "ALM EVREUX BASKET",
-        "away": "BYERS",
-        "competition": "ÉLIT2",
-        "round": "J2",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
-        "isoDate": "2026-10-02T18:00:00.000Z",
-        "date": "vendredi 2 octobre 2026",
-        "home": "LEVALLOIS METROPOLITANS",
-        "away": "JEANNE D'ARC DE VICHY",
-        "competition": "ÉLIT2",
-        "round": "J2",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
-        "isoDate": "2026-10-02T18:30:00.000Z",
-        "date": "vendredi 2 octobre 2026",
-        "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "RENNES",
-        "competition": "NM1",
-        "round": "J4",
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U18F_4/saison",
+        "isoDate": "2026-10-03T11:00:00.000Z",
+        "date": "samedi 3 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "EA GUINGAMP",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 5",
         "location": "N/A"
     },
     {
@@ -162,6 +129,28 @@
         "away": "BLOIS F. 41",
         "competition": "N2 - Senior",
         "round": "Journée 4",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121447/",
+        "isoDate": "2026-10-03T18:00:00.000Z",
+        "date": "samedi 3 octobre 2026",
+        "home": "TREMBLAY-EN-FRANCE",
+        "away": "ASPTT MULHOUSE/RIXHEIM",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 4",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121438/",
+        "isoDate": "2026-10-03T18:30:00.000Z",
+        "date": "samedi 3 octobre 2026",
+        "home": "SAINT CYR",
+        "away": "SARAN LOIRET HB",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 4",
         "location": "N/A"
     },
     {
@@ -319,6 +308,83 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2026_616_U17_7/saison",
+        "isoDate": "2026-10-04T13:00:00.000Z",
+        "date": "dimanche 4 octobre 2026",
+        "home": "PARIS FC",
+        "away": "QUEVILLY RM",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2026_18056_U18F_2/saison",
+        "isoDate": "2026-10-04T13:00:00.000Z",
+        "date": "dimanche 4 octobre 2026",
+        "home": "LE MANS FC",
+        "away": "LOSC LILLE",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500240-amiens-sc/equipe/2026_358_U19_2/saison",
+        "isoDate": "2026-10-04T13:00:00.000Z",
+        "date": "dimanche 4 octobre 2026",
+        "home": "AMIENS SC",
+        "away": "RACING CLUB FRANCE",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2026_670_U17_5/saison",
+        "isoDate": "2026-10-04T13:00:00.000Z",
+        "date": "dimanche 4 octobre 2026",
+        "home": "SARCELLES AAS",
+        "away": "VALENCIENNES FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/544913-mantois-78-fc/equipe/2026_23013_U17_3/saison",
+        "isoDate": "2026-10-04T13:00:00.000Z",
+        "date": "dimanche 4 octobre 2026",
+        "home": "FC MANTOIS 78",
+        "away": "MONTROUGE FC 92",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2026_4969_U17_3/saison",
+        "isoDate": "2026-10-04T13:00:00.000Z",
+        "date": "dimanche 4 octobre 2026",
+        "home": "CS MAINVILLIERS",
+        "away": "US BOULOGNE CO",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/541471-thionville-lusitanos/equipe/2026_21305_U17_4/saison",
+        "isoDate": "2026-10-04T13:00:00.000Z",
+        "date": "dimanche 4 octobre 2026",
+        "home": "THIONVILLE LUSITANOS",
+        "away": "RC JOINVILLE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
         "isoDate": "2026-10-04T13:15:00.000Z",
@@ -352,6 +418,17 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/ligue-butagaz-energie-2026-2027-30618/equipe-2118505/",
+        "isoDate": "2026-10-09T17:30:00.000Z",
+        "date": "vendredi 9 octobre 2026",
+        "home": "PARIS 92",
+        "away": "ES BESANCON FEMININ",
+        "competition": "LIGUE BUTAGAZ ENERGIE 2026-2027",
+        "round": "JOURNÉE 5",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
         "isoDate": "2026-10-09T18:00:00.000Z",
@@ -360,6 +437,61 @@
         "away": "PÔLE FRANCE",
         "competition": "NM1",
         "round": "J5",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119693/",
+        "isoDate": "2026-10-09T18:00:00.000Z",
+        "date": "vendredi 9 octobre 2026",
+        "home": "C'CHARTRES METROPOLE HANDBALL",
+        "away": "CHAMBERY SAVOIE MB",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/ligue-butagaz-energie-2026-2027-30618/equipe-2118508/",
+        "isoDate": "2026-10-09T18:30:00.000Z",
+        "date": "vendredi 9 octobre 2026",
+        "home": "STELLA SAINT-MAUR HANDBALL",
+        "away": "STRASBOURG ACHENHEIM TRUCHTERSHEIM HANDBALL",
+        "competition": "LIGUE BUTAGAZ ENERGIE 2026-2027",
+        "round": "JOURNÉE 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118167/",
+        "isoDate": "2026-10-09T18:30:00.000Z",
+        "date": "vendredi 9 octobre 2026",
+        "home": "ELITE VAL D'OISE",
+        "away": "FRONTIGNAN THAU",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118164/",
+        "isoDate": "2026-10-09T18:30:00.000Z",
+        "date": "vendredi 9 octobre 2026",
+        "home": "US CRETEIL",
+        "away": "JS CHERBOURGEOISE MANCHE HB",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118171/",
+        "isoDate": "2026-10-09T18:30:00.000Z",
+        "date": "vendredi 9 octobre 2026",
+        "home": "MASSY ESSONNE",
+        "away": "PONTAULT-COMBAULT HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 6",
         "location": "N/A"
     },
     {
@@ -390,9 +522,42 @@
         "isoDate": "2026-10-10T16:00:00.000Z",
         "date": "samedi 10 octobre 2026",
         "home": "NANTERRE 92",
-        "away": "BASKET CLUB MARITIME GRAVELINES - GRAND FORT PHILIPPE",
+        "away": "GRAVELINES GRAND FORT BCM",
         "competition": "BETCLICE",
         "round": "J3",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/504891-us-orleans-loiret/equipe/2026_2421_U19_2/saison",
+        "isoDate": "2026-10-10T16:00:00.000Z",
+        "date": "samedi 10 octobre 2026",
+        "home": "U.S. ORLEANS LOIRET",
+        "away": "PARIS SAINT-GERMAIN",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121446/",
+        "isoDate": "2026-10-10T16:30:00.000Z",
+        "date": "samedi 10 octobre 2026",
+        "home": "AC BOULOGNE-BILLANCOURT",
+        "away": "GRAND POITIERS HANDBALL 86",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119699/",
+        "isoDate": "2026-10-10T17:00:00.000Z",
+        "date": "samedi 10 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN HANDBALL",
+        "away": "TOULOUSE FENIX",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 6",
         "location": "N/A"
     },
     {
@@ -407,12 +572,34 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121439/",
+        "isoDate": "2026-10-10T18:00:00.000Z",
+        "date": "samedi 10 octobre 2026",
+        "home": "SARAN LOIRET",
+        "away": "BELFORT AUHB",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2026_364_SEM_2/saison",
+        "isoDate": "2026-10-10T18:45:00.000Z",
+        "date": "samedi 10 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "LE MANS FC",
+        "competition": "L1 - Senior",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
         "isoDate": "2026-10-11T11:00:00.000Z",
         "date": "dimanche 11 octobre 2026",
         "home": "SAINT QUENTIN BASKET BALL",
-        "away": "LE MANS SCM",
+        "away": "LE MANS SARTHE BASKET",
         "competition": "ESPOIRS",
         "round": "J3",
         "location": "N/A"
@@ -506,6 +693,94 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U17_5/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "SM CAEN",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2026_670_U18F_3/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "SARCELLES AAS",
+        "away": "LE MANS FC",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/550679-montrouge-fc-92/equipe/2026_105489_U17_3/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "FC MONTROUGE 92",
+        "away": "PARIS FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2026_343_U17_3/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "CS BRETIGNY",
+        "away": "CS MAINVILLIERS",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/548635-montfermeil-fc/equipe/2026_25590_U17_3/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "FC MONTFERMEIL",
+        "away": "JA DRANCY",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "NANTERRE ES",
+        "away": "THIONVILLE LUSITANOS",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537053-rc-joinville/equipe/2026_18023_U17_9/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "JOINVILLE R.C",
+        "away": "LOSC LILLE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500108-beauvais-oise-as/equipe/2026_244_SEM_1/saison",
+        "isoDate": "2026-10-11T13:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "AS BEAUVAIS OISE",
+        "away": "LONGUEAU ESC",
+        "competition": "Coupe Hauts-de-France Seniors - Senior",
+        "round": "2ème Tour",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
         "isoDate": "2026-10-11T14:00:00.000Z",
@@ -517,6 +792,17 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119704/",
+        "isoDate": "2026-10-11T14:00:00.000Z",
+        "date": "dimanche 11 octobre 2026",
+        "home": "TREMBLAY-EN-FRANCE",
+        "away": "MONTPELLIER",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 6",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246",
         "isoDate": "2026-10-11T14:30:00.000Z",
@@ -525,6 +811,17 @@
         "away": "S.I. GRAFFENSTADEN",
         "competition": "BETCLICE",
         "round": "J3",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/ligue-butagaz-energie-2026-2027-30618/equipe-2118508/",
+        "isoDate": "2026-10-14T18:30:00.000Z",
+        "date": "mercredi 14 octobre 2026",
+        "home": "STELLA SAINT-MAUR HANDBALL",
+        "away": "CHAMBRAY TOURAINE HANDBALL",
+        "competition": "LIGUE BUTAGAZ ENERGIE 2026-2027",
+        "round": "JOURNÉE 6",
         "location": "N/A"
     },
     {
@@ -566,9 +863,42 @@
         "isoDate": "2026-10-16T18:30:00.000Z",
         "date": "vendredi 16 octobre 2026",
         "home": "LEVALLOIS METROPOLITANS",
-        "away": "ASA GRIES / OBERHOFFEN",
+        "away": "ALLIANCE SPORT ALSACE",
         "competition": "ÉLIT2",
         "round": "J4",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118170/",
+        "isoDate": "2026-10-16T18:30:00.000Z",
+        "date": "vendredi 16 octobre 2026",
+        "home": "US IVRY",
+        "away": "ELITE VAL-D'OISE",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118173/",
+        "isoDate": "2026-10-16T18:30:00.000Z",
+        "date": "vendredi 16 octobre 2026",
+        "home": "PONTAULT-COMBAULT",
+        "away": "US SAINTES HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U19_1/saison",
+        "isoDate": "2026-10-17T12:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "VERSAILLES 78 FC",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 8",
         "location": "N/A"
     },
     {
@@ -594,6 +924,28 @@
         "location": "N/A"
     },
     {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
+        "isoDate": "2026-10-17T13:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "PARIS BASKETBALL",
+        "away": "BOULAZAC BASKET DORDOGNE PRO",
+        "competition": "ESPOIRS",
+        "round": "J4",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500240-amiens-sc/equipe/2026_358_U19_2/saison",
+        "isoDate": "2026-10-17T13:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "AMIENS SC",
+        "away": "RC LENS",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc-2/equipe/2026_616_SEM_4/saison",
         "isoDate": "2026-10-17T14:00:00.000Z",
@@ -602,17 +954,6 @@
         "away": "BERRI CHATEAUROUX 2",
         "competition": "N2 - Senior",
         "round": "Journée 5",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
-        "isoDate": "2026-10-17T15:00:00.000Z",
-        "date": "samedi 17 octobre 2026",
-        "home": "PARIS BASKETBALL",
-        "away": "BOULAZAC BASKET DORDOGNE PRO",
-        "competition": "ESPOIRS",
-        "round": "J4",
         "location": "N/A"
     },
     {
@@ -705,6 +1046,127 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U17_5/saison",
+        "isoDate": "2026-10-17T16:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "AMIENS SC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500710-sainte-genevieve-football-club/equipe/2026_675_SEM_2/saison",
+        "isoDate": "2026-10-17T16:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "FC SAINTE GENEVIEVE",
+        "away": "VIERZON FC",
+        "competition": "N2 - Senior",
+        "round": "Journée 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121445/",
+        "isoDate": "2026-10-17T16:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN HANDBALL",
+        "away": "MOLSHEIM",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/560836-le-pays-du-valois-us/equipe/2026_199020_SEM_1/saison",
+        "isoDate": "2026-10-17T16:30:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "US LE PAYS DU VALOIS",
+        "away": "FC MONTLOUIS",
+        "competition": "N1 - Senior",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500689-creteil-f/equipe/2026_667_SEM_2/saison",
+        "isoDate": "2026-10-17T18:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "US CRETEIL",
+        "away": "FURIANI AGLIA",
+        "competition": "N1 - Senior",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119701/",
+        "isoDate": "2026-10-17T18:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "SARAN LOIRET",
+        "away": "HBC NANTES",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121447/",
+        "isoDate": "2026-10-17T18:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "TREMBLAY-EN-FRANCE",
+        "away": "SARAN LOIRET HB",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121438/",
+        "isoDate": "2026-10-17T18:30:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "SAINT CYR",
+        "away": "ANGERS SCO HANDBALL",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_SEF_3/saison",
+        "isoDate": "2026-10-17T19:00:00.000Z",
+        "date": "samedi 17 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "OL LYONNES",
+        "competition": "ARKEMA PREMIERE LIGUE - Senior F",
+        "round": "Journée 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2026_18056_SEF_3/saison",
+        "isoDate": "2026-10-18T11:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "LE MANS FC",
+        "away": "AS CANNES",
+        "competition": "SECONDE LIGUE - Senior F",
+        "round": "Journée 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/539013-racing-club-france/equipe/2026_19429_U17_3/saison",
+        "isoDate": "2026-10-18T13:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "RACING CLUB FRANCE",
+        "away": "MONTROUGE FC 92",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/531562-quevilly-rm/equipe/2026_14293_U19_4/saison",
         "isoDate": "2026-10-18T13:00:00.000Z",
         "date": "dimanche 18 octobre 2026",
@@ -749,6 +1211,17 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2026_616_U17_7/saison",
+        "isoDate": "2026-10-18T13:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "PARIS FC",
+        "away": "MANTOIS 78 FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500217-bretigny-fcs/equipe/2026_343_SEM_2/saison",
         "isoDate": "2026-10-18T13:00:00.000Z",
         "date": "dimanche 18 octobre 2026",
@@ -759,12 +1232,67 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2026_670_U17_5/saison",
+        "isoDate": "2026-10-18T13:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "SARCELLES AAS",
+        "away": "JEUNES AUBERVILLIERS",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2026_4969_U17_3/saison",
+        "isoDate": "2026-10-18T13:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "CS MAINVILLIERS",
+        "away": "QUEVILLY RM",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/554350-evreux-fc-27/equipe/2026_152041_U17_10/saison",
+        "isoDate": "2026-10-18T13:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "EVREUX FC",
+        "away": "US BOULOGNE CO",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-10-18T13:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "NANTERRE ES",
+        "away": "RC JOINVILLE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/541471-thionville-lusitanos/equipe/2026_21305_U17_4/saison",
+        "isoDate": "2026-10-18T13:00:00.000Z",
+        "date": "dimanche 18 octobre 2026",
+        "home": "THIONVILLE LUSITANOS",
+        "away": "RED STAR FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246",
         "isoDate": "2026-10-18T14:30:00.000Z",
         "date": "dimanche 18 octobre 2026",
         "home": "PARIS BASKETBALL",
-        "away": "BOULAZAC BASKET DORDOGNE PRO",
+        "away": "BOULAZAC BASKET DORDOGNE",
         "competition": "BETCLICE",
         "round": "J4",
         "location": "N/A"
@@ -797,7 +1325,7 @@
         "isoDate": "2026-10-23T14:00:00.000Z",
         "date": "vendredi 23 octobre 2026",
         "home": "SAINT QUENTIN BASKET BALL",
-        "away": "SASP JDA DIJON BASKET",
+        "away": "JDA DIJON BOURGOGNE",
         "competition": "ESPOIRS",
         "round": "J5",
         "location": "N/A"
@@ -808,7 +1336,7 @@
         "isoDate": "2026-10-23T15:00:00.000Z",
         "date": "vendredi 23 octobre 2026",
         "home": "POLE FRANCE BASKET",
-        "away": "MULHOUSE",
+        "away": "MULHOUSE BASKET AGGLOMERATION",
         "competition": "NM1",
         "round": "J8",
         "location": "N/A"
@@ -825,12 +1353,23 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119693/",
+        "isoDate": "2026-10-23T18:00:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "C'CHARTRES METROPOLE HANDBALL",
+        "away": "NIMES USAM GARD",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
         "isoDate": "2026-10-23T18:30:00.000Z",
         "date": "vendredi 23 octobre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "LORIENT",
+        "away": "CEP LORIENT BREIZH BASKET",
         "competition": "NM1",
         "round": "J8",
         "location": "N/A"
@@ -841,9 +1380,64 @@
         "isoDate": "2026-10-23T18:30:00.000Z",
         "date": "vendredi 23 octobre 2026",
         "home": "LEVALLOIS METROPOLITANS",
-        "away": "ORLEANS LOIRET BASKET ASSOCIATION",
+        "away": "ORLEANS LOIRET BASKET",
         "competition": "ÉLIT2",
         "round": "J6",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119704/",
+        "isoDate": "2026-10-23T18:30:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "TREMBLAY-EN-FRANCE",
+        "away": "CESSON RENNES METROPOLE",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118167/",
+        "isoDate": "2026-10-23T18:30:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "ELITE VAL D'OISE",
+        "away": "DIJON METROPOLE",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118164/",
+        "isoDate": "2026-10-23T18:30:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "US CRETEIL",
+        "away": "IVRY UNION SPORTIVE",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118171/",
+        "isoDate": "2026-10-23T18:30:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "MASSY ESSONNE",
+        "away": "VALENCE HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_SEF_3/saison",
+        "isoDate": "2026-10-23T19:05:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "MONTPELLIER FC",
+        "competition": "ARKEMA PREMIERE LIGUE - Senior F",
+        "round": "Journée 6",
         "location": "N/A"
     },
     {
@@ -880,6 +1474,28 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121446/",
+        "isoDate": "2026-10-24T16:30:00.000Z",
+        "date": "samedi 24 octobre 2026",
+        "home": "AC BOULOGNE-BILLANCOURT",
+        "away": "SAINT CYR HANDBALL",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121439/",
+        "isoDate": "2026-10-24T17:00:00.000Z",
+        "date": "samedi 24 octobre 2026",
+        "home": "SARAN LOIRET",
+        "away": "PARIS ST-GERMAIN HB",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 7",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
         "isoDate": "2026-10-24T18:30:00.000Z",
@@ -888,6 +1504,17 @@
         "away": "CHOLET BASKET",
         "competition": "BETCLICE",
         "round": "J5",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/554350-evreux-fc-27/equipe/2026_152041_U17_10/saison",
+        "isoDate": "2026-10-25T14:00:00.000Z",
+        "date": "dimanche 25 octobre 2026",
+        "home": "EVREUX FC",
+        "away": "PARIS SAINT-GERMAIN",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 6",
         "location": "N/A"
     },
     {
@@ -902,6 +1529,17 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2026_364_SEM_2/saison",
+        "isoDate": "2026-10-25T19:45:00.000Z",
+        "date": "dimanche 25 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "OLYMPIQUE LYONNAIS",
+        "competition": "L1 - Senior",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
         "isoDate": "2026-10-27T19:00:00.000Z",
@@ -910,6 +1548,17 @@
         "away": "S.I. GRAFFENSTADEN",
         "competition": "BETCLICE",
         "round": "J13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_SEF_3/saison",
+        "isoDate": "2026-10-28T13:30:00.000Z",
+        "date": "mercredi 28 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "FC FLEURY 91",
+        "competition": "Challenge Espoirs LFFP - Senior F",
+        "round": "Journée 2",
         "location": "N/A"
     },
     {
@@ -946,6 +1595,39 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119701/",
+        "isoDate": "2026-10-30T19:00:00.000Z",
+        "date": "vendredi 30 octobre 2026",
+        "home": "SARAN LOIRET",
+        "away": "TREMBLAY-EN-FRANCE",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118170/",
+        "isoDate": "2026-10-30T19:30:00.000Z",
+        "date": "vendredi 30 octobre 2026",
+        "home": "US IVRY",
+        "away": "MASSY ESSONNE HB",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118173/",
+        "isoDate": "2026-10-30T19:30:00.000Z",
+        "date": "vendredi 30 octobre 2026",
+        "home": "PONTAULT-COMBAULT",
+        "away": "BILLERE HANDBALL PAU PYRENEES",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 9",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500260-chantilly-us/equipe/2026_374_SEM_1/saison",
         "isoDate": "2026-10-31T13:30:00.000Z",
@@ -954,6 +1636,17 @@
         "away": "LE PAYS DU VALOIS US",
         "competition": "N1 - Senior",
         "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U19_1/saison",
+        "isoDate": "2026-10-31T13:30:00.000Z",
+        "date": "samedi 31 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "C CHARTRES FOOTBALL",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 9",
         "location": "N/A"
     },
     {
@@ -1001,6 +1694,17 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/527078-aubervilliers-fcm/equipe/2026_11270_SEM_2/saison",
+        "isoDate": "2026-10-31T15:00:00.000Z",
+        "date": "samedi 31 octobre 2026",
+        "home": "FCM AUBERVILLIERS",
+        "away": "US IVRY FOOTBALL",
+        "competition": "N2 - Senior",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
         "isoDate": "2026-10-31T16:00:00.000Z",
@@ -1020,6 +1724,17 @@
         "away": "ASVEL BASKET (SAS)",
         "competition": "ESPOIRS",
         "round": "J6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500689-creteil-f/equipe/2026_667_SEM_2/saison",
+        "isoDate": "2026-10-31T17:00:00.000Z",
+        "date": "samedi 31 octobre 2026",
+        "home": "US CRETEIL",
+        "away": "HAGUENAU FCSR",
+        "competition": "N1 - Senior",
+        "round": "Journée 8",
         "location": "N/A"
     },
     {
@@ -1051,6 +1766,17 @@
         "date": "samedi 31 octobre 2026",
         "home": "LILLE LOSC",
         "away": "ST OUEN L'AUMONE AS",
+        "competition": "N2 - Senior",
+        "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/511876-us-torcy-pvm/equipe/2026_3896_SEM_2/saison",
+        "isoDate": "2026-10-31T17:00:00.000Z",
+        "date": "samedi 31 octobre 2026",
+        "home": "US TORCY",
+        "away": "CHARLEVILLE PRIX OAM",
         "competition": "N2 - Senior",
         "round": "Journée 6",
         "location": "N/A"
@@ -1112,6 +1838,17 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/504891-us-orleans-loiret/equipe/2026_2421_U19_2/saison",
+        "isoDate": "2026-11-01T13:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "U.S. ORLEANS LOIRET",
+        "away": "VERSAILLES 78 FC",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500002-red-star-fc/equipe/2026_154_U17_4/saison",
         "isoDate": "2026-11-01T13:30:00.000Z",
         "date": "dimanche 1 novembre 2026",
@@ -1156,6 +1893,72 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/550679-montrouge-fc-92/equipe/2026_105489_U17_3/saison",
+        "isoDate": "2026-11-01T13:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "FC MONTROUGE 92",
+        "away": "CS MAINVILLIERS",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/544913-mantois-78-fc/equipe/2026_23013_U17_3/saison",
+        "isoDate": "2026-11-01T13:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "FC MANTOIS 78",
+        "away": "RACING CLUB FRANCE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2026_343_U17_3/saison",
+        "isoDate": "2026-11-01T13:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "CS BRETIGNY",
+        "away": "EVREUX FC 27",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/548635-montfermeil-fc/equipe/2026_25590_U17_3/saison",
+        "isoDate": "2026-11-01T13:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "FC MONTFERMEIL",
+        "away": "THIONVILLE LUSITANOS",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537053-rc-joinville/equipe/2026_18023_U17_9/saison",
+        "isoDate": "2026-11-01T13:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "JOINVILLE R.C",
+        "away": "USL DUNKERQUE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500108-beauvais-oise-as/equipe/2026_244_SEM_1/saison",
+        "isoDate": "2026-11-01T13:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "AS BEAUVAIS OISE",
+        "away": "AMIENS PORTUGAIS FCP",
+        "competition": "Seniors Régional 2 - Senior",
+        "round": "Journée 5",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/508884-neuilly-marne-s-f-c/equipe/2026_3359_SEM_1/saison",
         "isoDate": "2026-11-01T14:00:00.000Z",
         "date": "dimanche 1 novembre 2026",
@@ -1166,12 +1969,34 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2026_18056_SEF_3/saison",
+        "isoDate": "2026-11-01T14:00:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "LE MANS FC",
+        "away": "LOSC LILLE",
+        "competition": "SECONDE LIGUE - Senior F",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/ligue-butagaz-energie-2026-2027-30618/equipe-2118505/",
+        "isoDate": "2026-11-01T14:00:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "PARIS 92",
+        "away": "STELLA SAINT-MAUR HANDBALL",
+        "competition": "LIGUE BUTAGAZ ENERGIE 2026-2027",
+        "round": "JOURNÉE 7",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
         "isoDate": "2026-11-01T14:30:00.000Z",
         "date": "dimanche 1 novembre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "LATTES MONTPELLIER",
+        "away": "BLMA",
         "competition": "LBWL",
         "round": "J7",
         "location": "N/A"
@@ -1188,12 +2013,23 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119699/",
+        "isoDate": "2026-11-01T16:00:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN HANDBALL",
+        "away": "MONTPELLIER",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 9",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246",
         "isoDate": "2026-11-01T18:00:00.000Z",
         "date": "dimanche 1 novembre 2026",
         "home": "PARIS BASKETBALL",
-        "away": "SEM ELAN CHALON",
+        "away": "ELAN CHALON",
         "competition": "BETCLICE",
         "round": "J6",
         "location": "N/A"
@@ -1204,7 +2040,7 @@
         "isoDate": "2026-11-03T19:30:00.000Z",
         "date": "mardi 3 novembre 2026",
         "home": "LEVALLOIS METROPOLITANS",
-        "away": "CEP POITIERS",
+        "away": "POITIERS BASKET 86",
         "competition": "ÉLIT2",
         "round": "J12",
         "location": "N/A"
@@ -1226,7 +2062,7 @@
         "isoDate": "2026-11-06T19:30:00.000Z",
         "date": "vendredi 6 novembre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "VITRE",
+        "away": "AURORE VITRE BASKET BRETAGNE",
         "competition": "NM1",
         "round": "J10",
         "location": "N/A"
@@ -1237,9 +2073,20 @@
         "isoDate": "2026-11-06T19:30:00.000Z",
         "date": "vendredi 6 novembre 2026",
         "home": "LEVALLOIS METROPOLITANS",
-        "away": "BYERS",
+        "away": "SAS FOS PROVENCE BASKET",
         "competition": "ÉLIT2",
         "round": "J8",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/ligue-butagaz-energie-2026-2027-30618/equipe-2118508/",
+        "isoDate": "2026-11-06T19:30:00.000Z",
+        "date": "vendredi 6 novembre 2026",
+        "home": "STELLA SAINT-MAUR HANDBALL",
+        "away": "ST AMAND HANDBALL - PORTE DU HAINAUT",
+        "competition": "LIGUE BUTAGAZ ENERGIE 2026-2027",
+        "round": "JOURNÉE 8",
         "location": "N/A"
     },
     {
@@ -1276,12 +2123,23 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U18F_4/saison",
+        "isoDate": "2026-11-07T14:00:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "STADE RENNAIS FC",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
         "isoDate": "2026-11-07T16:00:00.000Z",
         "date": "samedi 7 novembre 2026",
         "home": "NANTERRE 92",
-        "away": "SEM ELAN CHALON",
+        "away": "ELAN CHALON",
         "competition": "ESPOIRS",
         "round": "J7",
         "location": "N/A"
@@ -1408,12 +2266,45 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_SEF_3/saison",
+        "isoDate": "2026-11-07T17:00:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "HAVRE AC",
+        "competition": "ARKEMA PREMIERE LIGUE - Senior F",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500710-sainte-genevieve-football-club/equipe/2026_675_SEM_2/saison",
+        "isoDate": "2026-11-07T17:00:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "FC SAINTE GENEVIEVE",
+        "away": "CORTE",
+        "competition": "N2 - Senior",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/560836-le-pays-du-valois-us/equipe/2026_199020_SEM_1/saison",
+        "isoDate": "2026-11-07T17:30:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "US LE PAYS DU VALOIS",
+        "away": "EPINAL SAS",
+        "competition": "N1 - Senior",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
         "isoDate": "2026-11-07T19:00:00.000Z",
         "date": "samedi 7 novembre 2026",
         "home": "NANTERRE 92",
-        "away": "SEM ELAN CHALON",
+        "away": "ELAN CHALON",
         "competition": "BETCLICE",
         "round": "J7",
         "location": "N/A"
@@ -1424,9 +2315,20 @@
         "isoDate": "2026-11-07T19:00:00.000Z",
         "date": "samedi 7 novembre 2026",
         "home": "PARIS BASKETBALL",
-        "away": "J.L. BOURG BASKET",
+        "away": "JEUNESSE LAIQUE BOURG EN BRESSE",
         "competition": "BETCLICE",
         "round": "J7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2026_364_SEM_2/saison",
+        "isoDate": "2026-11-07T19:45:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "ESTAC TROYES",
+        "competition": "L1 - Senior",
+        "round": "Journée 10",
         "location": "N/A"
     },
     {
@@ -1458,6 +2360,17 @@
         "date": "dimanche 8 novembre 2026",
         "home": "FC VERSAILLES 78",
         "away": "AMIENS SC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/539013-racing-club-france/equipe/2026_19429_U17_3/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "RACING CLUB FRANCE",
+        "away": "PARIS FC",
         "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
         "round": "Journée 10",
         "location": "N/A"
@@ -1541,6 +2454,94 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2026_18056_U18F_2/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "LE MANS FC",
+        "away": "HAVRE AC",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U17_5/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "US BOULOGNE CO",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500240-amiens-sc/equipe/2026_358_U19_2/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "AMIENS SC",
+        "away": "PARIS SAINT-GERMAIN",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2026_670_U17_5/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "SARCELLES AAS",
+        "away": "USL DUNKERQUE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2026_4969_U17_3/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "CS MAINVILLIERS",
+        "away": "MANTOIS 78 FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/554350-evreux-fc-27/equipe/2026_152041_U17_10/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "EVREUX FC",
+        "away": "QUEVILLY RM",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "NANTERRE ES",
+        "away": "MONTFERMEIL FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/541471-thionville-lusitanos/equipe/2026_21305_U17_4/saison",
+        "isoDate": "2026-11-08T13:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "THIONVILLE LUSITANOS",
+        "away": "VALENCIENNES FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500217-bretigny-fcs/equipe/2026_343_SEM_2/saison",
         "isoDate": "2026-11-08T14:00:00.000Z",
         "date": "dimanche 8 novembre 2026",
@@ -1559,6 +2560,50 @@
         "away": "ORLEANS LOIRET BASKET ASSOCIATION",
         "competition": "ÉLIT2",
         "round": "J9",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119693/",
+        "isoDate": "2026-11-13T19:00:00.000Z",
+        "date": "vendredi 13 novembre 2026",
+        "home": "C'CHARTRES METROPOLE HANDBALL",
+        "away": "LIMOGES",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119704/",
+        "isoDate": "2026-11-13T19:30:00.000Z",
+        "date": "vendredi 13 novembre 2026",
+        "home": "TREMBLAY-EN-FRANCE",
+        "away": "CAEN HANDBALL",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118164/",
+        "isoDate": "2026-11-13T19:30:00.000Z",
+        "date": "vendredi 13 novembre 2026",
+        "home": "US CRETEIL",
+        "away": "PONTAULT-COMBAULT HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118171/",
+        "isoDate": "2026-11-13T19:30:00.000Z",
+        "date": "vendredi 13 novembre 2026",
+        "home": "MASSY ESSONNE",
+        "away": "DRAGUIGNAN VAR HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 10",
         "location": "N/A"
     },
     {
@@ -1584,6 +2629,28 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121445/",
+        "isoDate": "2026-11-14T17:00:00.000Z",
+        "date": "samedi 14 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN HANDBALL",
+        "away": "LANESTER HB",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121447/",
+        "isoDate": "2026-11-14T17:30:00.000Z",
+        "date": "samedi 14 novembre 2026",
+        "home": "TREMBLAY-EN-FRANCE",
+        "away": "ANGERS SCO HANDBALL",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
         "isoDate": "2026-11-14T19:00:00.000Z",
@@ -1592,6 +2659,28 @@
         "away": "CHOLET BASKET",
         "competition": "BETCLICE",
         "round": "J8",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121438/",
+        "isoDate": "2026-11-14T19:30:00.000Z",
+        "date": "samedi 14 novembre 2026",
+        "home": "SAINT CYR",
+        "away": "HANDBALL HAZEBROUCK 71",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118167/",
+        "isoDate": "2026-11-14T19:45:00.000Z",
+        "date": "samedi 14 novembre 2026",
+        "home": "ELITE VAL D'OISE",
+        "away": "ISTRES PROVENCE HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 10",
         "location": "N/A"
     },
     {
@@ -1629,6 +2718,17 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/504891-us-orleans-loiret/equipe/2026_2421_U19_2/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "U.S. ORLEANS LOIRET",
+        "away": "C CHARTRES FOOTBALL",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/524861-fc-fleury-91/equipe/2026_9753_U18F_4/saison",
         "isoDate": "2026-11-15T13:30:00.000Z",
         "date": "dimanche 15 novembre 2026",
@@ -1658,6 +2758,105 @@
         "away": "LE MANS FC",
         "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
         "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2026_616_U17_7/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "PARIS FC",
+        "away": "CS MAINVILLIERS",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U19_1/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "VALENCIENNES FC",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U18F_4/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "STADE BRESTOIS 29",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/550679-montrouge-fc-92/equipe/2026_105489_U17_3/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "FC MONTROUGE 92",
+        "away": "EVREUX FC 27",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/544913-mantois-78-fc/equipe/2026_23013_U17_3/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "FC MANTOIS 78",
+        "away": "HAVRE AC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2026_343_U17_3/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "CS BRETIGNY",
+        "away": "PARIS SAINT-GERMAIN",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/548635-montfermeil-fc/equipe/2026_25590_U17_3/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "FC MONTFERMEIL",
+        "away": "RED STAR FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537053-rc-joinville/equipe/2026_18023_U17_9/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "JOINVILLE R.C",
+        "away": "AAS SARCELLES",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/537103-le-mans-fc/equipe/2026_18056_SEF_3/saison",
+        "isoDate": "2026-11-15T14:00:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "LE MANS FC",
+        "away": "GRENOBLE FOOT 38",
+        "competition": "SECONDE LIGUE - Senior F",
+        "round": "Journée 9",
         "location": "N/A"
     },
     {
@@ -1705,6 +2904,17 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/ligue-butagaz-energie-2026-2027-30618/equipe-2118505/",
+        "isoDate": "2026-11-18T18:30:00.000Z",
+        "date": "mercredi 18 novembre 2026",
+        "home": "PARIS 92",
+        "away": "JDA BOURGOGNE DIJON HANDBALL",
+        "competition": "LIGUE BUTAGAZ ENERGIE 2026-2027",
+        "round": "JOURNÉE 10",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500240-amiens-scf/equipe/2026_358_SEM_4/saison",
         "isoDate": "2026-11-19T19:45:00.000Z",
@@ -1713,6 +2923,28 @@
         "away": "SM CAEN",
         "competition": "L3 - Senior",
         "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119701/",
+        "isoDate": "2026-11-20T19:00:00.000Z",
+        "date": "vendredi 20 novembre 2026",
+        "home": "SARAN LOIRET",
+        "away": "CHAMBERY SAVOIE MB",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118167/",
+        "isoDate": "2026-11-20T19:30:00.000Z",
+        "date": "vendredi 20 novembre 2026",
+        "home": "ELITE VAL D'OISE",
+        "away": "US CRETEIL HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 11",
         "location": "N/A"
     },
     {
@@ -1750,6 +2982,17 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/504891-us-orleans-45/equipe/2026_2421_SEM_1/saison",
+        "isoDate": "2026-11-21T13:45:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "U.S. ORLEANS LOIRET",
+        "away": "THIONVILLE LUSITANOS",
+        "competition": "L3 - Senior",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/524861-fc-fleury-91/equipe/2026_9753_SEM_2/saison",
         "isoDate": "2026-11-21T13:45:00.000Z",
         "date": "samedi 21 novembre 2026",
@@ -1760,12 +3003,23 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/527078-aubervilliers-fcm/equipe/2026_11270_SEM_2/saison",
+        "isoDate": "2026-11-21T15:00:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "FCM AUBERVILLIERS",
+        "away": "NANCY LORRAINE AS 2",
+        "competition": "N2 - Senior",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
         "isoDate": "2026-11-21T16:00:00.000Z",
         "date": "samedi 21 novembre 2026",
         "home": "NANTERRE 92",
-        "away": "SIG STRASBOURG",
+        "away": "S.I. GRAFFENSTADEN",
         "competition": "ESPOIRS",
         "round": "J9",
         "location": "N/A"
@@ -1776,9 +3030,20 @@
         "isoDate": "2026-11-21T16:00:00.000Z",
         "date": "samedi 21 novembre 2026",
         "home": "PARIS BASKETBALL",
-        "away": "GRAVELINES GRAND FORT BCM",
+        "away": "BASKET CLUB MARITIME GRAVELINES - GRAND FORT PHILIPPE",
         "competition": "ESPOIRS",
         "round": "J9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500689-creteil-f/equipe/2026_667_SEM_2/saison",
+        "isoDate": "2026-11-21T17:00:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "US CRETEIL",
+        "away": "ST PRYVE ST HILAIRE",
+        "competition": "N1 - Senior",
+        "round": "Journée 10",
         "location": "N/A"
     },
     {
@@ -1799,6 +3064,17 @@
         "date": "samedi 21 novembre 2026",
         "home": "LILLE LOSC",
         "away": "ASTDV",
+        "competition": "N2 - Senior",
+        "round": "Journée 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/511876-us-torcy-pvm/equipe/2026_3896_SEM_2/saison",
+        "isoDate": "2026-11-21T17:00:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "US TORCY",
+        "away": "US IVRY FOOTBALL",
         "competition": "N2 - Senior",
         "round": "Journée 8",
         "location": "N/A"
@@ -1827,6 +3103,28 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_SEF_3/saison",
+        "isoDate": "2026-11-21T17:00:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "US ST MALO",
+        "competition": "ARKEMA PREMIERE LIGUE - Senior F",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121446/",
+        "isoDate": "2026-11-21T17:30:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "AC BOULOGNE-BILLANCOURT",
+        "away": "TREMBLAY-EN-FRANCE HB",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/531562-quevilly-rm/equipe/2026_14293_U19_4/saison",
         "isoDate": "2026-11-21T18:00:00.000Z",
         "date": "samedi 21 novembre 2026",
@@ -1834,6 +3132,17 @@
         "away": "PARIS SAINT-GERMAIN",
         "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
         "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121439/",
+        "isoDate": "2026-11-21T18:00:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "SARAN LOIRET",
+        "away": "MOLSHEIM",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 9",
         "location": "N/A"
     },
     {
@@ -1853,7 +3162,7 @@
         "isoDate": "2026-11-21T19:00:00.000Z",
         "date": "samedi 21 novembre 2026",
         "home": "PARIS BASKETBALL",
-        "away": "BASKET CLUB MARITIME GRAVELINES - GRAND FORT PHILIPPE",
+        "away": "GRAVELINES GRAND FORT BCM",
         "competition": "BETCLICE",
         "round": "J9",
         "location": "N/A"
@@ -1867,6 +3176,17 @@
         "away": "RACING CLUB FRANCE",
         "competition": "N1 - Senior",
         "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/ligue-butagaz-energie-2026-2027-30618/equipe-2118508/",
+        "isoDate": "2026-11-21T19:30:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "STELLA SAINT-MAUR HANDBALL",
+        "away": "BREST BRETAGNE HANDBALL",
+        "competition": "LIGUE BUTAGAZ ENERGIE 2026-2027",
+        "round": "JOURNÉE 11",
         "location": "N/A"
     },
     {
@@ -1958,6 +3278,105 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U17_5/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "QUEVILLY RM",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500240-amiens-sc/equipe/2026_358_U19_2/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "AMIENS SC",
+        "away": "C CHARTRES FOOTBALL",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2026_670_U18F_3/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "SARCELLES AAS",
+        "away": "HAVRE AC",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2026_4969_U17_3/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "CS MAINVILLIERS",
+        "away": "RACING CLUB FRANCE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/554350-evreux-fc-27/equipe/2026_152041_U17_10/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "EVREUX FC",
+        "away": "MANTOIS 78 FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/548635-montfermeil-fc/equipe/2026_25590_U17_3/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "FC MONTFERMEIL",
+        "away": "RC JOINVILLE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "NANTERRE ES",
+        "away": "FC METZ",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/541471-thionville-lusitanos/equipe/2026_21305_U17_4/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "THIONVILLE LUSITANOS",
+        "away": "JEUNES AUBERVILLIERS",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500108-beauvais-oise-as/equipe/2026_244_SEM_1/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "AS BEAUVAIS OISE",
+        "away": "MONTREUIL SUR MER US",
+        "competition": "Seniors Régional 2 - Senior",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
         "isoDate": "2026-11-22T14:30:00.000Z",
@@ -1985,7 +3404,7 @@
         "isoDate": "2026-11-22T17:00:00.000Z",
         "date": "dimanche 22 novembre 2026",
         "home": "LEVALLOIS METROPOLITANS",
-        "away": "ROUEN MÉTROPOLE BASKET - ASSOCIATION 1893",
+        "away": "ROUEN METROPOLE BASKET",
         "competition": "ÉLIT2",
         "round": "J11",
         "location": "N/A"
@@ -1999,6 +3418,50 @@
         "away": "BERCK",
         "competition": "NM1",
         "round": "J1",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/daikin-starligue-2026-27-32372/equipe-2119701/",
+        "isoDate": "2026-11-27T19:00:00.000Z",
+        "date": "vendredi 27 novembre 2026",
+        "home": "SARAN LOIRET",
+        "away": "CAEN HANDBALL",
+        "competition": "DAIKIN STARLIGUE 2026-27",
+        "round": "JOURNÉE 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118164/",
+        "isoDate": "2026-11-27T19:30:00.000Z",
+        "date": "vendredi 27 novembre 2026",
+        "home": "US CRETEIL",
+        "away": "HANDBALL CLUB COURNON D'AUVERGNE",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118173/",
+        "isoDate": "2026-11-27T19:30:00.000Z",
+        "date": "vendredi 27 novembre 2026",
+        "home": "PONTAULT-COMBAULT",
+        "away": "FRONTIGNAN THAU",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/proligue-2026-27-32243/equipe-2118171/",
+        "isoDate": "2026-11-27T19:30:00.000Z",
+        "date": "vendredi 27 novembre 2026",
+        "home": "MASSY ESSONNE",
+        "away": "ISTRES PROVENCE HANDBALL",
+        "competition": "PROLIGUE 2026-27",
+        "round": "JOURNÉE 12",
         "location": "N/A"
     },
     {
@@ -2035,6 +3498,39 @@
         "location": "N/A"
     },
     {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121439/",
+        "isoDate": "2026-11-28T18:00:00.000Z",
+        "date": "samedi 28 novembre 2026",
+        "home": "SARAN LOIRET",
+        "away": "CERCLE SPORTIF VESULIEN HAUTE SAONE",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121438/",
+        "isoDate": "2026-11-28T19:30:00.000Z",
+        "date": "samedi 28 novembre 2026",
+        "home": "SAINT CYR",
+        "away": "FOLSCHVILLER",
+        "competition": "NATIONALE 1 MASCULINE 2026-2027",
+        "round": "JOURNÉE 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2026_364_SEM_2/saison",
+        "isoDate": "2026-11-28T19:45:00.000Z",
+        "date": "samedi 28 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "LORIENT FC",
+        "competition": "L1 - Senior",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500650-versailles-78-fc/equipe/2026_656_U19_1/saison",
         "isoDate": "2026-11-29T13:30:00.000Z",
@@ -2042,6 +3538,17 @@
         "home": "FC VERSAILLES 78",
         "away": "QUEVILLY RM",
         "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/539013-racing-club-france/equipe/2026_19429_U17_3/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "RACING CLUB FRANCE",
+        "away": "HAVRE AC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
         "round": "Journée 13",
         "location": "N/A"
     },
@@ -2076,6 +3583,105 @@
         "away": "NANTERRE ES",
         "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
         "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2026_616_U17_7/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "PARIS FC",
+        "away": "EVREUX FC 27",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U19_1/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "FC ROUEN 1899",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500240-amiens-sc/equipe/2026_358_U19_2/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "AMIENS SC",
+        "away": "US ORLEANS LOIRET",
+        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500695-aas-sarcelles/equipe/2026_670_U17_5/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "SARCELLES AAS",
+        "away": "JA DRANCY",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/550679-montrouge-fc-92/equipe/2026_105489_U17_3/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "FC MONTROUGE 92",
+        "away": "PARIS SAINT-GERMAIN",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/544913-mantois-78-fc/equipe/2026_23013_U17_3/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "FC MANTOIS 78",
+        "away": "SM CAEN",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/516125-cs-mainvilliers/equipe/2026_4969_U17_3/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "CS MAINVILLIERS",
+        "away": "AMIENS SC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500217-cs-bretigny-football/equipe/2026_343_U17_3/saison",
+        "isoDate": "2026-11-29T13:30:00.000Z",
+        "date": "dimanche 29 novembre 2026",
+        "home": "CS BRETIGNY",
+        "away": "US BOULOGNE CO",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 13",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2026_364_SEM_2/saison",
+        "isoDate": "2026-12-02T13:30:00.000Z",
+        "date": "mercredi 2 décembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "HAVRE AC",
+        "competition": "CHALLENGE ESPOIRS - Senior",
+        "round": "Journée 3",
         "location": "N/A"
     }
 ]
