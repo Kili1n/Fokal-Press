@@ -117,6 +117,14 @@ const HANDBALL_URLS = [
     { name: "AC BOULOGNE-BILLANCOURT", url: 'https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121446/' }
 ];
 
+const EHF_URLS = [
+    { name: "PARIS SAINT-GERMAIN", url: 'https://ehfcl.eurohandball.com/men/2026-27/clubs/details/hputODilVqNbBbAttPlUww/ParisSaintGermain/' }
+];
+
+const UEFA_URLS = [
+    { name: "PARIS SAINT-GERMAIN", url: 'https://fr.uefa.com/uefachampionsleague/clubs/52747--paris/matches/' }
+];
+
 const OUTPUT_FILE = 'data/matchs.json';
 
 // --- UTILS ---
@@ -196,6 +204,64 @@ function parseFFHBDate(dateStr) {
         return new Date(year, month, day, hour, min);
     }
     return null;
+}
+
+function parseEHFDate(dateStr, timeStr) {
+    if (!dateStr || !timeStr) return null;
+    const months = { 
+        'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5, 
+        'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11 
+    };
+
+    const dateParts = dateStr.toLowerCase().replace(/,/g, '').split(' ');
+    if (dateParts.length < 4) return null;
+    
+    const month = months[dateParts[1]];
+    const day = parseInt(dateParts[2]);
+    const year = parseInt(dateParts[3]);
+
+    // Parse "20:45, Paris (FRA)"
+    const timeMatch = timeStr.match(/(\d{2}):(\d{2})/);
+    let hours = 0, minutes = 0;
+    if (timeMatch) {
+        hours = parseInt(timeMatch[1]);
+        minutes = parseInt(timeMatch[2]);
+    }
+    
+    return new Date(year, month, day, hours, minutes);
+}
+
+function parseUEFADate(dateStr, timeStr) {
+    if (!dateStr || !timeStr) return null;
+    
+    // Nettoyage de la chaîne (ex: "mar. 3 nov." -> ["mar", "3", "nov"])
+    const parts = dateStr.toLowerCase().replace(/\./g, '').split(' ');
+    if (parts.length < 3) return null;
+    
+    const day = parseInt(parts[1]);
+    const monthStr = parts[2];
+    
+    const monthsMap = {
+        'janv': 0, 'janvier': 0, 'fevr': 1, 'fevrier': 1, 'mars': 2, 
+        'avr': 3, 'avril': 3, 'mai': 4, 'juin': 5, 'juil': 6, 'juillet': 6,
+        'aout': 7, 'sept': 8, 'oct': 9, 'nov': 10, 'dec': 11
+    };
+    
+    const month = monthsMap[monthStr];
+    if (month === undefined) return null;
+
+    // Calcul dynamique de la saison sportive (identique à parseFFBBDate)
+    const now = new Date();
+    let year = now.getFullYear();
+    
+    if (now.getMonth() >= 7 && month <= 6) {
+        year += 1;
+    } else if (now.getMonth() <= 6 && month >= 7) {
+        year -= 1;
+    }
+
+    const [hours, minutes] = timeStr.split(':').map(n => parseInt(n) || 0);
+    return new Date(year, month, day, hours, minutes);
 }
 
 // --- SCRAPERS ---
@@ -514,6 +580,125 @@ async function scrapeHandball(page) {
     return allHBMatches;
 }
 
+async function scrapeEHF(page) {
+    console.log("\n🇪🇺 DEBUT SCRAPING EHF (HANDBALL LDC)");
+    let allEHFMatches = [];
+    const now = new Date();
+    const limitDate = new Date();
+    limitDate.setMonth(now.getMonth() + 2); // Filtre à 2 mois
+
+    for (let teamConfig of EHF_URLS) {
+        try {
+            await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 45000 });
+            await page.waitForSelector('.table-row--results', { timeout: 15000 });
+
+            // On utilise la fonction de normalisation pour correspondre au format exact
+            const targetNorm = normalize(teamConfig.name);
+
+            const data = await page.evaluate(() => {
+                return Array.from(document.querySelectorAll('.table-row--results')).map(row => ({
+                    dateRaw: row.querySelector('.date')?.innerText.trim() || "",
+                    timeRaw: row.querySelector('.time-and-location')?.innerText.trim() || "",
+                    home: row.querySelector('.team-block--first .name')?.innerText.trim() || "N/A",
+                    away: row.querySelector('.team-block--second .name')?.innerText.trim() || "N/A",
+                    round: row.querySelector('.round-block')?.innerText.trim() || "N/A"
+                }));
+            });
+
+            const filtered = data.map(m => {
+                const matchDate = parseEHFDate(m.dateRaw, m.timeRaw);
+                const homeNorm = normalize(m.home);
+                const isHome = homeNorm === targetNorm;
+                const isWithinRange = matchDate && matchDate >= now && matchDate <= limitDate;
+
+                if (isHome && isWithinRange) {
+                    return {
+                        sport: "handball",
+                        sourceUrl: teamConfig.url,
+                        isoDate: matchDate.toISOString(),
+                        date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+                        home: teamConfig.name,
+                        away: m.away,
+                        competition: "EHF Champions League",
+                        round: m.round,
+                        location: m.timeRaw.split(',')[1]?.trim() || "N/A",
+                        timestamp: matchDate.getTime()
+                    };
+                }
+                return null;
+            }).filter(m => m !== null);
+
+            allEHFMatches.push(...filtered);
+            console.log(`✅ ${teamConfig.name} (EHF) : ${filtered.length} matchs trouvés.`);
+
+        } catch (error) {
+            console.error(`❌ Erreur EHF sur ${teamConfig.url} :`, error.message);
+        }
+    }
+    return allEHFMatches;
+}
+
+async function scrapeUEFA(page) {
+    console.log("\n⭐️ DEBUT SCRAPING LIGUE DES CHAMPIONS (UEFA)");
+    let allUEFAMatches = [];
+    const now = new Date();
+    const limitDate = new Date();
+    limitDate.setMonth(now.getMonth() + 2); // Filtre à 2 mois
+
+    for (let teamConfig of UEFA_URLS) {
+        try {
+            await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 45000 });
+            await page.waitForSelector('.pk-match-unit', { timeout: 15000 });
+
+            const targetNorm = normalize(teamConfig.name);
+
+            const data = await page.evaluate(() => {
+                return Array.from(document.querySelectorAll('.pk-match-unit')).map(match => {
+                    const homeBadge = match.querySelector('.pk-match__base--team-home pk-badge');
+                    const awayBadge = match.querySelector('.pk-match__base--team-away pk-badge');
+                    
+                    return {
+                        dateRaw: match.querySelector('.pk-match__datetime--date')?.innerText.trim() || "",
+                        timeRaw: match.querySelector('.pk-match__datetime--time')?.innerText.trim() || "",
+                        home: homeBadge ? homeBadge.getAttribute('alt') : "N/A",
+                        away: awayBadge ? awayBadge.getAttribute('alt') : "N/A"
+                    };
+                });
+            });
+
+            const filtered = data.map(m => {
+                const matchDate = parseUEFADate(m.dateRaw, m.timeRaw);
+                const homeNorm = normalize(m.home);
+                const isHome = homeNorm === targetNorm;
+                const isWithinRange = matchDate && matchDate >= now && matchDate <= limitDate;
+
+                if (isHome && isWithinRange) {
+                    return {
+                        sport: "football",
+                        sourceUrl: teamConfig.url,
+                        isoDate: matchDate.toISOString(),
+                        date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+                        home: teamConfig.name,
+                        away: m.away,
+                        competition: "Ligue des Champions",
+                        round: "N/A",
+                        location: "N/A",
+                        timestamp: matchDate.getTime()
+                    };
+                }
+                return null;
+            }).filter(m => m !== null);
+
+            allUEFAMatches.push(...filtered);
+            console.log(`✅ ${teamConfig.name} (UEFA) : ${filtered.length} matchs trouvés.`);
+
+        } catch (error) {
+            console.error(`❌ Erreur UEFA sur ${teamConfig.url} :`, error.message);
+        }
+    }
+    return allUEFAMatches;
+}
+
 // --- MAIN ---
 
 async function run() {
@@ -527,9 +712,11 @@ async function run() {
     const basketMatches = await scrapeBasketball(page);
     const footballMatches = await scrapeFootball(page);
     const handballMatches = await scrapeHandball(page);
+    const ehfMatches = await scrapeEHF(page);
+    const uefaMatches = await scrapeUEFA(page);
 
     // Fusion et tri par date
-    const allMatches = [ ...basketMatches, ...footballMatches, ...handballMatches]
+    const allMatches = [ ...basketMatches, ...footballMatches, ...handballMatches, ...ehfMatches, ...uefaMatches]
         .sort((a, b) => a.timestamp - b.timestamp)
         .map(({ timestamp, ...rest }) => rest);
 
@@ -539,9 +726,9 @@ async function run() {
     
     console.log(`\n====================================`);
     console.log(`✨ FIN DU SCRAPING GLOBAL`);
-    console.log(`🤾 Handball : ${handballMatches.length}`);
+    console.log(`🤾 Handball (EHF inclus) : ${handballMatches.length + ehfMatches.length}`);
     console.log(`🏀 Basketball : ${basketMatches.length}`);
-    console.log(`⚽ Football : ${footballMatches.length}`);
+    console.log(`⚽ Football (UEFA inclus) : ${footballMatches.length + uefaMatches.length}`);
     console.log(`📂 Fichier ${OUTPUT_FILE} mis à jour (${allMatches.length} matchs).`);
     console.log(`====================================`);
 
