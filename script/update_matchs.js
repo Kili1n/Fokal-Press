@@ -411,41 +411,123 @@ async function scrapeFootball(page) {
 }
 
 async function scrapeBasketball(page) {
-    console.log("\n🏀 DEBUT SCRAPING BASKETBALL (MODE DEBUG HTML)");
+    console.log("\n🏀 DEBUT SCRAPING BASKETBALL");
     let allBasketMatches = [];
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const limitDate = new Date();
+    limitDate.setMonth(now.getMonth() + 2); 
 
-    // On teste uniquement sur le premier club pour ne pas polluer tes logs
-    const testConfig = BASKET_URLS[0]; 
+    // --- TECHNIQUES D'ÉVASION ANTI-BOT ---
+    // 1. Masquer la propriété "webdriver" (qui trahit Puppeteer)
+    await page.evaluateOnNewDocument(() => {
+        Object.defineProperty(navigator, 'webdriver', { get: () => false });
+    });
+    
+    // 2. Ajouter des en-têtes de navigateur classiques
+    await page.setExtraHTTPHeaders({
+        'Accept-Language': 'fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Upgrade-Insecure-Requests': '1'
+    });
 
-    try {
-        await page.goto(testConfig.url, { waitUntil: 'domcontentloaded', timeout: 45000 });
-        
-        // Attente souple
-        await page.waitForSelector('h1, div.bg-white', { timeout: 15000 }).catch(() => {});
-        await new Promise(r => setTimeout(r, 3000)); 
-
-        const dumpHTML = await page.evaluate(() => {
-            // On cherche les conteneurs blancs typiques des matchs
-            const rows = Array.from(document.querySelectorAll('div.bg-white'));
+    for (let teamConfig of BASKET_URLS) {
+        try {
+            await page.goto(teamConfig.url, { waitUntil: 'domcontentloaded', timeout: 45000 });
             
-            if (rows.length > 0) {
-                // On renvoie le HTML brut des deux premières lignes pour avoir un modèle complet
-                return "LIGNES TROUVÉES :\n" + rows.slice(0, 2).map(r => r.outerHTML).join('\n\n--- SUIVANT ---\n\n');
-            } else {
-                // S'il n'y a pas de lignes, on renvoie un bout de la page pour voir s'il y a un blocage (Captcha, Cloudflare)
-                return "AUCUNE LIGNE 'bg-white' TROUVÉE. Voici le début du `body` :\n" + document.body.innerHTML.substring(0, 2000);
+            // Attente souple
+            try {
+                await page.waitForSelector('h1, div.bg-white', { timeout: 15000 });
+                await new Promise(r => setTimeout(r, 2000)); 
+            } catch (waitError) {
+                console.log(`⚠️ Temps d'attente dépassé pour ${teamConfig.name}. Le pare-feu bloque toujours l'IP de GitHub.`);
+                continue; // On passe au club suivant
             }
-        });
 
-        console.log(`\n🔎 --- DUMP HTML BASKET POUR ${testConfig.name} ---`);
-        console.log(dumpHTML);
-        console.log(`------------------------------------------------------\n`);
+            const pageData = await page.evaluate(() => {
+                const isBlocked = document.querySelector('.blocked-img') !== null;
+                if (isBlocked) return { club: "BLOCKED", matches: [] };
 
-    } catch (e) {
-        console.error(`❌ Erreur d'exécution pour le debug :`, e.message);
+                const h1El = document.querySelector('h1.font-AgencyFBBlackComp') || document.querySelector('h1');
+                const mainClubName = h1El ? h1El.innerText.trim() : "CLUB";
+                
+                const compLabel = Array.from(document.querySelectorAll('span'))
+                    .map(s => s.innerText).find(t => t && t.includes('|'))?.replace(/[|\s\u00A0]/g, '') || "N/A";
+
+                const results = [];
+                const rows = document.querySelectorAll('div.bg-white');
+                
+                rows.forEach(row => {
+                    const homeLabelEl = row.querySelector('div[class*="w-[50px]"]') || row.firstElementChild;
+                    
+                    if (homeLabelEl && homeLabelEl.innerText.trim().toLowerCase().includes("domic")) {
+                        const dateEl = row.querySelector('div[class*="w-[100px]"]');
+                        const awayEl = row.querySelector('.line-clamp-2');
+                        const roundEl = row.querySelector('.uppercase');
+
+                        if (dateEl && awayEl) {
+                            results.push({
+                                dateRaw: dateEl.innerText.trim(),
+                                home: mainClubName,
+                                away: awayEl.innerText.trim(),
+                                competition: compLabel,
+                                round: roundEl ? roundEl.innerText.trim() : "N/A"
+                            });
+                        }
+                    }
+                });
+                return { club: mainClubName, matches: results };
+            });
+
+            if (pageData.club === "BLOCKED") {
+                console.log(`❌ ${teamConfig.name} : Accès refusé par le pare-feu Anti-Bot de la FFBB.`);
+                continue;
+            }
+
+            let debugReasons = [];
+            let filtered = [];
+
+            pageData.matches.forEach((m, index) => {
+                const matchDate = parseFFBBDate(m.dateRaw);
+                const isWithinRange = matchDate && matchDate >= now && matchDate <= limitDate;
+
+                if (isWithinRange) {
+                    filtered.push({
+                        sport: "basketball",
+                        sourceUrl: teamConfig.url,
+                        isoDate: matchDate.toISOString(),
+                        date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+                        home: teamConfig.name,
+                        away: m.away,
+                        competition: m.competition,
+                        round: m.round,
+                        location: "N/A",
+                        timestamp: matchDate.getTime()
+                    });
+                } else {
+                    let reasons = [];
+                    if (!matchDate) reasons.push(`Date invalide ("${m.dateRaw}")`);
+                    else if (!isWithinRange) reasons.push(`Date hors limite (${matchDate ? matchDate.toLocaleDateString() : 'N/A'})`);
+                    
+                    debugReasons.push(`Match #${index + 1} (${m.home} vs ${m.away}) -> REJETÉ : ${reasons.join(' | ')}`);
+                }
+            });
+
+            if (filtered.length === 0) {
+                console.log(`❌ ${teamConfig.name} : 0 match trouvé !`);
+                console.log(`   🔍 --- RAPPORT DE DÉBUG (${pageData.matches.length} matchs à domicile analysés) ---`);
+                debugReasons.forEach(reason => console.log(`   👉 ${reason}`));
+            } else {
+                console.log(`✅ ${teamConfig.name} : ${filtered.length} matchs trouvés.`);
+            }
+
+            allBasketMatches.push(...filtered);
+
+        } catch (e) {
+            console.error(`❌ Erreur globale FFBB sur ${teamConfig.url} :`, e.message);
+        }
     }
-
-    return allBasketMatches; // Renvoie vide pour le moment
+    return allBasketMatches;
 }
 
 async function scrapeHandball(page) {
