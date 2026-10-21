@@ -420,26 +420,53 @@ async function scrapeBasketball(page) {
 
     for (let teamConfig of BASKET_URLS) {
         try {
-            await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 30000 });
-            await page.waitForSelector('h1.font-AgencyFBBlackComp');
+            // Utilisation de domcontentloaded pour éviter que networkidle2 ne bloque indéfiniment
+            await page.goto(teamConfig.url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+            
+            try {
+                // On attend de manière plus générique n'importe quel titre h1 ou la grille de match
+                await page.waitForSelector('h1, .bg-white', { timeout: 15000 });
+                // Petite pause pour laisser React/Vue injecter les données
+                await new Promise(r => setTimeout(r, 2000)); 
+            } catch (waitError) {
+                console.log(`⚠️ Échec du chargement normal pour ${teamConfig.name}. Capture du HTML pour analyse...`);
+                const html = await page.content();
+                console.log(`\n🔎 --- DEBUT HTML DUMP (${teamConfig.url}) ---`);
+                // On affiche les 1000 premiers caractères pour voir s'il y a un message Cloudflare/Anti-bot
+                console.log(html.substring(0, 1000));
+                console.log(`\n---------------------------------------------\n`);
+                throw waitError; // On relance l'erreur pour passer au club suivant
+            }
 
             const pageData = await page.evaluate(() => {
-                const mainClubName = document.querySelector('h1.font-AgencyFBBlackComp')?.innerText.trim() || "CLUB";
-                const compLabel = Array.from(document.querySelectorAll('span.text-\\[\\#8a8ea1\\]'))
-                    .map(s => s.innerText).find(t => t.includes('|'))?.replace(/[|\s\u00A0]/g, '') || "N/A";
+                // Sécurité : on prend le premier h1 disponible, sans forcer la classe de la police
+                const h1El = document.querySelector('h1.font-AgencyFBBlackComp') || document.querySelector('h1');
+                const mainClubName = h1El ? h1El.innerText.trim() : "CLUB";
+                
+                const compLabel = Array.from(document.querySelectorAll('span'))
+                    .map(s => s.innerText).find(t => t && t.includes('|'))?.replace(/[|\s\u00A0]/g, '') || "N/A";
 
                 const results = [];
-                const rows = document.querySelectorAll('div.bg-white.h-\\[115px\\], div.bg-white.lg\\:h-\\[65px\\]');
+                // Ciblage plus large pour les lignes de match
+                const rows = document.querySelectorAll('div.bg-white');
+                
                 rows.forEach(row => {
-                    // On ne récupère déjà que les matchs à domicile via le DOM
-                    if (row.querySelector('.w-\\[50px\\]:not(.font-AgencyFBBlackComp)')?.innerText.trim() === "Domicile") {
-                        results.push({
-                            dateRaw: row.querySelector('.w-\\[100px\\].whitespace-nowrap')?.innerText.trim(),
-                            home: mainClubName,
-                            away: row.querySelector('.line-clamp-2')?.innerText.trim(),
-                            competition: compLabel,
-                            round: row.querySelector('.uppercase.w-\\[20px\\]')?.innerText.trim() || "N/A"
-                        });
+                    const homeLabelEl = row.querySelector('.w-[50px]');
+                    // Tolérance sur la casse et le texte exact pour "Domicile"
+                    if (homeLabelEl && homeLabelEl.innerText.trim().toLowerCase().includes("domic")) {
+                        const dateEl = row.querySelector('.w-[100px]');
+                        const awayEl = row.querySelector('.line-clamp-2');
+                        const roundEl = row.querySelector('.uppercase.w-[20px]');
+
+                        if (dateEl && awayEl) {
+                            results.push({
+                                dateRaw: dateEl.innerText.trim(),
+                                home: mainClubName,
+                                away: awayEl.innerText.trim(),
+                                competition: compLabel,
+                                round: roundEl ? roundEl.innerText.trim() : "N/A"
+                            });
+                        }
                     }
                 });
                 return { club: mainClubName, matches: results };
@@ -458,7 +485,7 @@ async function scrapeBasketball(page) {
                         sourceUrl: teamConfig.url,
                         isoDate: matchDate.toISOString(),
                         date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
-                        home: teamConfig.name,
+                        home: teamConfig.name, // On garde le nom officiel de ta constante
                         away: m.away,
                         competition: m.competition,
                         round: m.round,
@@ -466,19 +493,17 @@ async function scrapeBasketball(page) {
                         timestamp: matchDate.getTime()
                     });
                 } else {
-                    // Collecte des raisons du rejet pour ce match
                     let reasons = [];
                     if (!matchDate) reasons.push(`Date invalide ("${m.dateRaw}")`);
-                    else if (!isWithinRange) reasons.push(`Date hors limite (${matchDate.toLocaleDateString()} n'est pas entre aujourd'hui et +2 mois)`);
+                    else if (!isWithinRange) reasons.push(`Date hors limite (${matchDate.toLocaleDateString()})`);
                     
                     debugReasons.push(`Match #${index + 1} (${m.home} vs ${m.away}) -> REJETÉ : ${reasons.join(' | ')}`);
                 }
             });
 
-            // Affichage classique ou affichage DEBUG si 0 match
             if (filtered.length === 0) {
                 console.log(`❌ ${teamConfig.name} : 0 match trouvé !`);
-                console.log(`   🔍 --- RAPPORT DE DÉBUG (${pageData.matches.length} matchs analysés sur la page) ---`);
+                console.log(`   🔍 --- RAPPORT DE DÉBUG (${pageData.matches.length} matchs à domicile analysés) ---`);
                 if (pageData.matches.length === 0) {
                     console.log(`   👉 Aucun match à domicile trouvé dans le DOM.`);
                 } else {
@@ -492,12 +517,11 @@ async function scrapeBasketball(page) {
             allBasketMatches.push(...filtered);
 
         } catch (e) {
-            console.error(`❌ Erreur FFBB sur ${teamConfig.url} :`, e.message);
+            console.error(`❌ Erreur globale FFBB sur ${teamConfig.url} :`, e.message);
         }
     }
     return allBasketMatches;
 }
-
 async function scrapeHandball(page) {
     console.log("\n🤾 DEBUT SCRAPING HANDBALL");
     let allHBMatches = [];
