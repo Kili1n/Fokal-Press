@@ -1,4 +1,6 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 const fs = require('fs');
 
 // --- CONFIGURATION ---
@@ -188,7 +190,7 @@ function parseFFBBDate(dateStr) {
     }
 
     const [hours, minutes] = parts[2].split('h').map(n => parseInt(n) || 0);
-    return new Date(year, month, day, hours, minutes);
+    return new Date(year, month, day, hours+2, minutes);
 }
 
 function parseFFHBDate(dateStr) {
@@ -643,37 +645,77 @@ async function scrapeUEFA(page) {
     let allUEFAMatches = [];
     const now = new Date();
     const limitDate = new Date();
-    limitDate.setMonth(now.getMonth() + 2); // Filtre à 2 mois
+    limitDate.setMonth(now.getMonth() + 2);
 
     for (let teamConfig of UEFA_URLS) {
         try {
             await page.goto(teamConfig.url, { waitUntil: 'networkidle2', timeout: 45000 });
-            await page.waitForSelector('.pk-match-unit', { timeout: 15000 });
+            await page.waitForSelector('pk-match-unit, .pk-match-unit', { timeout: 15000 });
+            await new Promise(r => setTimeout(r, 2000)); // Hydratation
 
             const targetNorm = normalize(teamConfig.name);
 
             const data = await page.evaluate(() => {
-                return Array.from(document.querySelectorAll('.pk-match-unit')).map(match => {
-                    const homeBadge = match.querySelector('.pk-match__base--team-home pk-badge');
-                    const awayBadge = match.querySelector('.pk-match__base--team-away pk-badge');
-                    
-                    return {
-                        dateRaw: match.querySelector('.pk-match__datetime--date')?.innerText.trim() || "",
-                        timeRaw: match.querySelector('.pk-match__datetime--time')?.innerText.trim() || "",
-                        home: homeBadge ? homeBadge.getAttribute('alt') : "N/A",
-                        away: awayBadge ? awayBadge.getAttribute('alt') : "N/A"
-                    };
+                const matches = Array.from(document.querySelectorAll('pk-match-unit, .pk-match-unit'));
+                
+                return matches.map((match) => {
+                    let home = "N/A", away = "N/A", dateRaw = "", timeRaw = "";
+                    let exactDate = null;
+
+                    // 1. Essai de lecture via le Shadow DOM
+                    const shadow = match.shadowRoot || match;
+                    const homeNameEl = shadow.querySelector('[part="team-home-name"]');
+                    const awayNameEl = shadow.querySelector('[part="team-away-name"]');
+                    const dateEl = shadow.querySelector('[part="match-date"]');
+                    const timeEl = shadow.querySelector('[part="match-time"]');
+
+                    if (homeNameEl) home = homeNameEl.textContent.trim();
+                    if (awayNameEl) away = awayNameEl.textContent.trim();
+                    if (dateEl) dateRaw = dateEl.textContent.trim();
+                    if (timeEl) timeRaw = timeEl.textContent.trim();
+
+                    // 2. Récupération infaillible via les attributs JSON (data-tracking & data-options)
+                    const btn = match.querySelector('[data-tracking], [data-options]');
+                    if (btn) {
+                        try {
+                            const trackingStr = btn.getAttribute('data-tracking');
+                            if (trackingStr) {
+                                const tracking = JSON.parse(trackingStr);
+                                if (tracking.name && tracking.name.includes(' vs ')) {
+                                    const teams = tracking.name.split(' vs ');
+                                    home = teams[0].trim();
+                                    away = teams[1].trim();
+                                }
+                            }
+                            const optionsStr = btn.getAttribute('data-options');
+                            if (optionsStr) {
+                                const options = JSON.parse(optionsStr);
+                                const dateTime = options?.matchOptions?.match?.kickOffTime?.dateTime;
+                                if (dateTime) {
+                                    exactDate = dateTime; // ex: "2026-11-03T20:00:00+00:00"
+                                }
+                            }
+                        } catch (e) {}
+                    }
+
+                    return { home, away, dateRaw, timeRaw, exactDate };
                 });
             });
 
-            const filtered = data.map(m => {
-                const matchDate = parseUEFADate(m.dateRaw, m.timeRaw);
+            let debugReasons = [];
+            let filtered = [];
+
+            data.forEach((m, index) => {
+                // Utilisation de la date exacte du JSON si dispo, sinon fallback sur la fonction d'analyse
+                const matchDate = m.exactDate ? new Date(m.exactDate) : parseUEFADate(m.dateRaw, m.timeRaw);
                 const homeNorm = normalize(m.home);
-                const isHome = homeNorm === targetNorm;
+                
+                // Tolérance : si le site affiche juste "Paris", on le valide pour "PARIS SAINT-GERMAIN"
+                const isHome = homeNorm === targetNorm || homeNorm === normalize("Paris") || homeNorm === normalize("Paris SG");
                 const isWithinRange = matchDate && matchDate >= now && matchDate <= limitDate;
 
                 if (isHome && isWithinRange) {
-                    return {
+                    filtered.push({
                         sport: "football",
                         sourceUrl: teamConfig.url,
                         isoDate: matchDate.toISOString(),
@@ -684,13 +726,27 @@ async function scrapeUEFA(page) {
                         round: "N/A",
                         location: "N/A",
                         timestamp: matchDate.getTime()
-                    };
+                    });
+                } else {
+                    let reasons = [];
+                    if (!isHome) reasons.push(`Pas à domicile (Lu: "${m.home}" [norm: ${homeNorm}] ≠ Cible: "${teamConfig.name}")`);
+                    if (!matchDate) reasons.push(`Date introuvable`);
+                    else if (!isWithinRange) reasons.push(`Date hors limite (${matchDate.toLocaleDateString()})`);
+                    
+                    debugReasons.push(`Match #${index + 1} (${m.home} vs ${m.away}) -> REJETÉ : ${reasons.join(' | ')}`);
                 }
-                return null;
-            }).filter(m => m !== null);
+            });
+
+            if (filtered.length === 0) {
+                console.log(`❌ ${teamConfig.name} (UEFA) : 0 match trouvé !`);
+                console.log(`   🔍 --- RAPPORT DE DÉBUG (${data.length} matchs analysés sur la page) ---`);
+                debugReasons.forEach(reason => console.log(`   👉 ${reason}`));
+                console.log(`   ------------------------------------------------------------------`);
+            } else {
+                console.log(`✅ ${teamConfig.name} (UEFA) : ${filtered.length} matchs trouvés.`);
+            }
 
             allUEFAMatches.push(...filtered);
-            console.log(`✅ ${teamConfig.name} (UEFA) : ${filtered.length} matchs trouvés.`);
 
         } catch (error) {
             console.error(`❌ Erreur UEFA sur ${teamConfig.url} :`, error.message);
@@ -708,12 +764,11 @@ async function run() {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     // Exécution dans l'ordre demandé
-
     const basketMatches = await scrapeBasketball(page);
-    const footballMatches = await scrapeFootball(page);
-    const handballMatches = await scrapeHandball(page);
     const ehfMatches = await scrapeEHF(page);
+    const handballMatches = await scrapeHandball(page);
     const uefaMatches = await scrapeUEFA(page);
+    const footballMatches = await scrapeFootball(page);
 
     // Fusion et tri par date
     const allMatches = [ ...basketMatches, ...footballMatches, ...handballMatches, ...ehfMatches, ...uefaMatches]
