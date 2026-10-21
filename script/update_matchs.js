@@ -266,6 +266,88 @@ function parseUEFADate(dateStr, timeStr) {
 
 // --- SCRAPERS ---
 
+async function scrapeLNB(page) {
+    console.log("\n🏀 DEBUT SCRAPING LNB");
+    
+    // Configuration de l'URL cible
+    const LNB_URL = 'https://lnb.fr/fr/calendar/betclicelite?did=1&abbrev=PROA&yid=2026&cid=317';
+    let allLNBMatches = [];
+    
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const limitDate = new Date();
+    limitDate.setMonth(now.getMonth() + 2); // Limite de 2 mois comme dans le script d'origine
+
+    try {
+        await page.goto(LNB_URL, { waitUntil: 'networkidle2', timeout: 45000 });
+        await page.waitForSelector('section[id^="2026-"]', { timeout: 15000 });
+
+        const data = await page.evaluate(() => {
+            // Sélectionne tous les blocs de matchs basés sur l'ID de date
+            return Array.from(document.querySelectorAll('section[id^="2026-"]')).map(match => {
+                // Nettoyage des noms d'équipes en ciblant l'alignement textuel propre au HTML fourni
+                const homeNode = match.querySelector('span.text-end');
+                const awayNode = match.querySelector('span.text-start');
+                
+                return {
+                    dateRaw: match.getAttribute('id'), // Ex: "2026-10-25"
+                    timeRaw: match.querySelector('.font-vinila-compressed.text-lg')?.innerText.trim() || "00:00",
+                    home: homeNode ? homeNode.childNodes[0].textContent.trim() : "N/A",
+                    away: awayNode ? awayNode.childNodes[0].textContent.trim() : "N/A",
+                    round: match.querySelector('h2')?.innerText.trim() || "N/A",
+                    competition: "Betclic Elite"
+                };
+            });
+        });
+
+        let debugReasons = [];
+
+        const filtered = data.map((m, index) => {
+            // Recomposition de la date exacte
+            const [year, month, day] = m.dateRaw.split('-');
+            const [hours, minutes] = m.timeRaw.split(':');
+            const matchDate = new Date(year, month - 1, day, parseInt(hours || 0), parseInt(minutes || 0));
+            
+            const isWithinRange = matchDate && matchDate >= now && matchDate <= limitDate;
+
+            if (isWithinRange && m.home !== "N/A" && m.away !== "N/A") {
+                return {
+                    sport: "basketball",
+                    sourceUrl: LNB_URL,
+                    isoDate: matchDate.toISOString(),
+                    date: matchDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+                    home: m.home,
+                    away: m.away,
+                    competition: m.competition,
+                    round: m.round,
+                    location: "N/A",
+                    timestamp: matchDate.getTime()
+                };
+            } else {
+                let reasons = [];
+                if (!matchDate) reasons.push(`Date invalide (${m.dateRaw})`);
+                else if (!isWithinRange) reasons.push(`Hors limite 2 mois (${matchDate.toLocaleDateString()})`);
+                debugReasons.push(`Match #${index + 1} (${m.home} vs ${m.away}) -> REJETÉ : ${reasons.join(' | ')}`);
+                return null;
+            }
+        }).filter(m => m !== null);
+
+        if (filtered.length === 0) {
+            console.log(`❌ LNB : 0 match trouvé !`);
+            debugReasons.forEach(reason => console.log(`   👉 ${reason}`));
+        } else {
+            console.log(`✅ LNB : ${filtered.length} matchs trouvés.`);
+        }
+
+        allLNBMatches.push(...filtered);
+
+    } catch (error) {
+        console.error(`❌ Erreur Scraping LNB sur ${LNB_URL} :`, error.message);
+    }
+    
+    return allLNBMatches;
+}
+
 async function scrapeFootball(page) {
     console.log("\n⚽ DEBUT SCRAPING FOOTBALL");
     let futureMatchesMap = new Map();
@@ -762,6 +844,7 @@ async function run() {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     // Exécution dans l'ordre demandé
+    const lnbMatches = await scrapeLNB(page)
     const basketMatches = await scrapeBasketball(page);
     const ehfMatches = await scrapeEHF(page);
     const footballMatches = await scrapeFootball(page);
