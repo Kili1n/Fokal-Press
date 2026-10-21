@@ -266,6 +266,34 @@ function parseUEFADate(dateStr, timeStr) {
 
 // --- SCRAPERS ---
 
+async function scrapeLNB(page) {
+    console.log("\n🏀 DEBUT SCRAPING LNB - MODE DEBUG AFFICHAGE DIRECT");
+    const LNB_URL = 'https://lnb.fr/fr/calendar/betclicelite?did=1&abbrev=PROA&yid=2026&cid=317';
+
+    try {
+        // Navigation vers la page
+        await page.goto(LNB_URL, { waitUntil: 'networkidle2', timeout: 45000 });
+        
+        // Récupération immédiate du contenu HTML du body (sans timer)
+        const bodyHTML = await page.evaluate(() => document.body.innerHTML);
+        
+        console.log("\n--- CONTENU HTML SCRAPÉ (APERÇU) ---");
+        // On affiche les 3000 premiers caractères pour voir l'entête et le début du body
+        // (Vous pouvez enlever le .substring() si vous voulez inonder votre console avec tout le code)
+        console.log(bodyHTML.substring(0, 3000));
+        console.log("\n------------------------------------");
+
+        // Petit test rapide pour voir si des balises section existent
+        const matchCount = await page.evaluate(() => document.querySelectorAll('section').length);
+        console.log(`\nNombre de balises <section> trouvées dans le DOM : ${matchCount}`);
+
+    } catch (error) {
+        console.error(`❌ Erreur Scraping LNB :`, error.message);
+    }
+    
+    return [];
+}
+
 async function scrapeFootball(page) {
     console.log("\n⚽ DEBUT SCRAPING FOOTBALL");
     let futureMatchesMap = new Map();
@@ -762,6 +790,7 @@ async function run() {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
     // Exécution dans l'ordre demandé
+    const lnbMatches = await scrapeLNB(page)
     const basketMatches = await scrapeBasketball(page);
     const ehfMatches = await scrapeEHF(page);
     const footballMatches = await scrapeFootball(page);
