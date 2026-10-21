@@ -2,22 +2,11 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
-        "isoDate": "2026-10-23T14:00:00.000Z",
+        "isoDate": "2026-10-23T16:00:00.000Z",
         "date": "vendredi 23 octobre 2026",
         "home": "SAINT QUENTIN BASKET BALL",
         "away": "JDA DIJON BOURGOGNE",
         "competition": "ESPOIRS",
-        "round": "J5",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
-        "isoDate": "2026-10-23T18:00:00.000Z",
-        "date": "vendredi 23 octobre 2026",
-        "home": "SAINT QUENTIN BASKET BALL",
-        "away": "SASP JDA DIJON BASKET",
-        "competition": "BETCLICE",
         "round": "J5",
         "location": "N/A"
     },
@@ -30,28 +19,6 @@
         "away": "NIMES USAM GARD",
         "competition": "DAIKIN STARLIGUE 2026-27",
         "round": "JOURNÉE 8",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
-        "isoDate": "2026-10-23T18:30:00.000Z",
-        "date": "vendredi 23 octobre 2026",
-        "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "CEP LORIENT BREIZH BASKET",
-        "competition": "NM1",
-        "round": "J8",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
-        "isoDate": "2026-10-23T18:30:00.000Z",
-        "date": "vendredi 23 octobre 2026",
-        "home": "LEVALLOIS METROPOLITANS",
-        "away": "ORLEANS LOIRET BASKET ASSOCIATION",
-        "competition": "ÉLIT2",
-        "round": "J6",
         "location": "N/A"
     },
     {
@@ -110,6 +77,39 @@
         "location": "N/A"
     },
     {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
+        "isoDate": "2026-10-23T20:00:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "SAINT QUENTIN BASKET BALL",
+        "away": "SASP JDA DIJON BASKET",
+        "competition": "BETCLICE",
+        "round": "J5",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
+        "isoDate": "2026-10-23T20:30:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "C'CHARTRES METROPOLE BASKET",
+        "away": "CEP LORIENT BREIZH BASKET",
+        "competition": "NM1",
+        "round": "J8",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
+        "isoDate": "2026-10-23T20:30:00.000Z",
+        "date": "vendredi 23 octobre 2026",
+        "home": "LEVALLOIS METROPOLITANS",
+        "away": "ORLEANS LOIRET BASKET ASSOCIATION",
+        "competition": "ÉLIT2",
+        "round": "J6",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/541471-thionville-lusitanos/equipe/2026_21305_U17_4/saison",
         "isoDate": "2026-10-24T11:00:00.000Z",
@@ -118,17 +118,6 @@
         "away": "UCKANGE USAG",
         "competition": "COUPE DU GRAND EST U17 - U17 - U16",
         "round": "2E TOUR",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
-        "isoDate": "2026-10-24T14:30:00.000Z",
-        "date": "samedi 24 octobre 2026",
-        "home": "NANTERRE 92",
-        "away": "CHOLET BASKET",
-        "competition": "ESPOIRS",
-        "round": "J5",
         "location": "N/A"
     },
     {
@@ -151,6 +140,17 @@
         "away": "TOULOUSE FC",
         "competition": "ARKEMA PREMIERE LIGUE - Senior F",
         "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
+        "isoDate": "2026-10-24T16:30:00.000Z",
+        "date": "samedi 24 octobre 2026",
+        "home": "NANTERRE 92",
+        "away": "CHOLET BASKET",
+        "competition": "ESPOIRS",
+        "round": "J5",
         "location": "N/A"
     },
     {
@@ -178,7 +178,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
-        "isoDate": "2026-10-24T18:30:00.000Z",
+        "isoDate": "2026-10-24T20:30:00.000Z",
         "date": "samedi 24 octobre 2026",
         "home": "NANTERRE 92",
         "away": "CHOLET BASKET",
@@ -233,7 +233,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
-        "isoDate": "2026-10-25T14:30:00.000Z",
+        "isoDate": "2026-10-25T16:30:00.000Z",
         "date": "dimanche 25 octobre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
         "away": "CHARLEVILLE MEZIERES",
@@ -254,14 +254,36 @@
     },
     {
         "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
+        "isoDate": "2026-10-27T17:30:00.000Z",
+        "date": "mardi 27 octobre 2026",
+        "home": "SAINT QUENTIN BASKET BALL",
+        "away": "S.I. GRAFFENSTADEN",
+        "competition": "ESPOIRS",
+        "round": "J10",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
-        "isoDate": "2026-10-27T19:00:00.000Z",
+        "isoDate": "2026-10-27T21:00:00.000Z",
         "date": "mardi 27 octobre 2026",
         "home": "SAINT QUENTIN BASKET BALL",
         "away": "SIG STRASBOURG",
         "competition": "BETCLICE",
         "round": "J13",
         "location": "N/A"
+    },
+    {
+        "sport": "handball",
+        "sourceUrl": "https://ehfcl.eurohandball.com/men/2026-27/clubs/details/hputODilVqNbBbAttPlUww/ParisSaintGermain/",
+        "isoDate": "2026-10-28T19:45:00.000Z",
+        "date": "mercredi 28 octobre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "Aalborg Håndbold",
+        "competition": "EHF Champions League",
+        "round": "Group Phase",
+        "location": "Paris (FRA)"
     },
     {
         "sport": "football",
@@ -277,23 +299,12 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334745",
-        "isoDate": "2026-10-30T16:00:00.000Z",
+        "isoDate": "2026-10-30T18:00:00.000Z",
         "date": "vendredi 30 octobre 2026",
         "home": "POLE FRANCE BASKET",
         "away": "NICE",
         "competition": "LF2",
         "round": "J6",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
-        "isoDate": "2026-10-30T19:00:00.000Z",
-        "date": "vendredi 30 octobre 2026",
-        "home": "ALM EVREUX BASKET",
-        "away": "SAINT THOMAS BASKET LE HAVRE",
-        "competition": "ÉLIT2",
-        "round": "J7",
         "location": "N/A"
     },
     {
@@ -327,6 +338,17 @@
         "away": "BILLERE HANDBALL PAU PYRENEES",
         "competition": "PROLIGUE 2026-27",
         "round": "JOURNÉE 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
+        "isoDate": "2026-10-30T21:00:00.000Z",
+        "date": "vendredi 30 octobre 2026",
+        "home": "ALM EVREUX BASKET",
+        "away": "SAINT THOMAS BASKET LE HAVRE",
+        "competition": "ÉLIT2",
+        "round": "J7",
         "location": "N/A"
     },
     {
@@ -396,17 +418,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
-        "isoDate": "2026-10-31T14:30:00.000Z",
-        "date": "samedi 31 octobre 2026",
-        "home": "SAINT QUENTIN BASKET BALL",
-        "away": "ASVEL BASKET (SAS)",
-        "competition": "ESPOIRS",
-        "round": "J6",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/527078-aubervilliers-fcm/equipe/2026_11270_SEM_2/saison",
         "isoDate": "2026-10-31T15:00:00.000Z",
@@ -415,6 +426,17 @@
         "away": "US IVRY FOOTBALL",
         "competition": "N2 - Senior",
         "round": "Journée 6",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
+        "isoDate": "2026-10-31T16:30:00.000Z",
+        "date": "samedi 31 octobre 2026",
+        "home": "SAINT QUENTIN BASKET BALL",
+        "away": "ASVEL BASKET (SAS)",
+        "competition": "ESPOIRS",
+        "round": "J6",
         "location": "N/A"
     },
     {
@@ -508,10 +530,10 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
-        "isoDate": "2026-10-31T18:00:00.000Z",
+        "isoDate": "2026-10-31T20:00:00.000Z",
         "date": "samedi 31 octobre 2026",
         "home": "PARIS BASKETBALL",
-        "away": "SEM ELAN CHALON",
+        "away": "ELAN CHALON",
         "competition": "ESPOIRS",
         "round": "J6",
         "location": "N/A"
@@ -671,17 +693,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
-        "isoDate": "2026-11-01T14:00:00.000Z",
-        "date": "dimanche 1 novembre 2026",
-        "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "BLMA",
-        "competition": "LBWL",
-        "round": "J7",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/508884-neuilly-marne-s-f-c/equipe/2026_3359_SEM_1/saison",
         "isoDate": "2026-11-01T14:00:00.000Z",
@@ -716,13 +727,13 @@
     },
     {
         "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
-        "isoDate": "2026-11-01T15:30:00.000Z",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
+        "isoDate": "2026-11-01T16:00:00.000Z",
         "date": "dimanche 1 novembre 2026",
-        "home": "SAINT QUENTIN BASKET BALL",
-        "away": "ASVEL BASKET (SAS)",
-        "competition": "BETCLICE",
-        "round": "J6",
+        "home": "C'CHARTRES METROPOLE BASKET",
+        "away": "BLMA",
+        "competition": "LBWL",
+        "round": "J7",
         "location": "N/A"
     },
     {
@@ -738,8 +749,19 @@
     },
     {
         "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
+        "isoDate": "2026-11-01T17:30:00.000Z",
+        "date": "dimanche 1 novembre 2026",
+        "home": "SAINT QUENTIN BASKET BALL",
+        "away": "ASVEL BASKET (SAS)",
+        "competition": "BETCLICE",
+        "round": "J6",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246",
-        "isoDate": "2026-11-01T18:00:00.000Z",
+        "isoDate": "2026-11-01T20:00:00.000Z",
         "date": "dimanche 1 novembre 2026",
         "home": "PARIS BASKETBALL",
         "away": "SEM ELAN CHALON",
@@ -750,7 +772,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
-        "isoDate": "2026-11-03T19:30:00.000Z",
+        "isoDate": "2026-11-03T21:30:00.000Z",
         "date": "mardi 3 novembre 2026",
         "home": "LEVALLOIS METROPOLITANS",
         "away": "CEP POITIERS",
@@ -792,39 +814,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
-        "isoDate": "2026-11-06T19:00:00.000Z",
-        "date": "vendredi 6 novembre 2026",
-        "home": "VAL DE SEINE BASKET",
-        "away": "CHARLEVILLE-MEZIERES",
-        "competition": "NM1",
-        "round": "J10",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
-        "isoDate": "2026-11-06T19:30:00.000Z",
-        "date": "vendredi 6 novembre 2026",
-        "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "AURORE VITRE BASKET BRETAGNE",
-        "competition": "NM1",
-        "round": "J10",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
-        "isoDate": "2026-11-06T19:30:00.000Z",
-        "date": "vendredi 6 novembre 2026",
-        "home": "LEVALLOIS METROPOLITANS",
-        "away": "BYERS",
-        "competition": "ÉLIT2",
-        "round": "J8",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_SEF_3/saison",
         "isoDate": "2026-11-06T20:00:00.000Z",
@@ -837,24 +826,35 @@
     },
     {
         "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
-        "isoDate": "2026-11-07T13:00:00.000Z",
-        "date": "samedi 7 novembre 2026",
-        "home": "PARIS BASKETBALL",
-        "away": "JEUNESSE LAIQUE BOURG EN BRESSE",
-        "competition": "ESPOIRS",
-        "round": "J7",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
+        "isoDate": "2026-11-06T21:00:00.000Z",
+        "date": "vendredi 6 novembre 2026",
+        "home": "VAL DE SEINE BASKET",
+        "away": "CHARLEVILLE-MEZIERES",
+        "competition": "NM1",
+        "round": "J10",
         "location": "N/A"
     },
     {
         "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
-        "isoDate": "2026-11-07T13:30:00.000Z",
-        "date": "samedi 7 novembre 2026",
-        "home": "NANTERRE 92",
-        "away": "ELAN CHALON",
-        "competition": "ESPOIRS",
-        "round": "J7",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
+        "isoDate": "2026-11-06T21:30:00.000Z",
+        "date": "vendredi 6 novembre 2026",
+        "home": "C'CHARTRES METROPOLE BASKET",
+        "away": "AURORE VITRE BASKET BRETAGNE",
+        "competition": "NM1",
+        "round": "J10",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
+        "isoDate": "2026-11-06T21:30:00.000Z",
+        "date": "vendredi 6 novembre 2026",
+        "home": "LEVALLOIS METROPOLITANS",
+        "away": "BYERS",
+        "competition": "ÉLIT2",
+        "round": "J8",
         "location": "N/A"
     },
     {
@@ -887,6 +887,39 @@
         "home": "PARIS SAINT-GERMAIN",
         "away": "STADE RENNAIS FC",
         "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 7",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
+        "isoDate": "2026-11-07T15:00:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "PARIS BASKETBALL",
+        "away": "JEUNESSE LAIQUE BOURG EN BRESSE",
+        "competition": "ESPOIRS",
+        "round": "J7",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
+        "isoDate": "2026-11-07T15:30:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "NANTERRE 92",
+        "away": "ELAN CHALON",
+        "competition": "ESPOIRS",
+        "round": "J7",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc-2/equipe/2026_616_SEM_4/saison",
+        "isoDate": "2026-11-07T16:00:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "PARIS FC",
+        "away": "US ORLEANS 45 2",
+        "competition": "N2 - Senior",
         "round": "Journée 7",
         "location": "N/A"
     },
@@ -1001,17 +1034,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
-        "isoDate": "2026-11-07T17:30:00.000Z",
-        "date": "samedi 7 novembre 2026",
-        "home": "NANTERRE 92",
-        "away": "SEM ELAN CHALON",
-        "competition": "BETCLICE",
-        "round": "J7",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/560836-le-pays-du-valois-us/equipe/2026_199020_SEM_1/saison",
         "isoDate": "2026-11-07T17:30:00.000Z",
@@ -1020,6 +1042,17 @@
         "away": "EPINAL SAS",
         "competition": "N1 - Senior",
         "round": "Journée 9",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
+        "isoDate": "2026-11-07T19:30:00.000Z",
+        "date": "samedi 7 novembre 2026",
+        "home": "NANTERRE 92",
+        "away": "SEM ELAN CHALON",
+        "competition": "BETCLICE",
+        "round": "J7",
         "location": "N/A"
     },
     {
@@ -1041,6 +1074,17 @@
         "home": "PARIS FC",
         "away": "FC D'ANNECY",
         "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
+        "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-11-08T12:30:00.000Z",
+        "date": "dimanche 8 novembre 2026",
+        "home": "NANTERRE ES",
+        "away": "MONTFERMEIL FC",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
         "round": "Journée 10",
         "location": "N/A"
     },
@@ -1074,17 +1118,6 @@
         "home": "RACING CLUB FRANCE",
         "away": "PARIS FC",
         "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
-        "round": "Journée 10",
-        "location": "N/A"
-    },
-    {
-        "sport": "football",
-        "sourceUrl": "https://epreuves.fff.fr/competition/club/531562-quevilly-rm/equipe/2026_14293_U19_4/saison",
-        "isoDate": "2026-11-08T13:30:00.000Z",
-        "date": "dimanche 8 novembre 2026",
-        "home": "QUEVILLY ROUEN METROPOLE",
-        "away": "RC LENS",
-        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
         "round": "Journée 10",
         "location": "N/A"
     },
@@ -1245,7 +1278,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246",
-        "isoDate": "2026-11-08T15:30:00.000Z",
+        "isoDate": "2026-11-08T17:30:00.000Z",
         "date": "dimanche 8 novembre 2026",
         "home": "PARIS BASKETBALL",
         "away": "J.L. BOURG BASKET",
@@ -1262,17 +1295,6 @@
         "away": "CHANTILLY US",
         "competition": "N1 - Senior",
         "round": "Journée 7",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
-        "isoDate": "2026-11-13T19:00:00.000Z",
-        "date": "vendredi 13 novembre 2026",
-        "home": "ALM EVREUX BASKET",
-        "away": "ORLEANS LOIRET BASKET ASSOCIATION",
-        "competition": "ÉLIT2",
-        "round": "J9",
         "location": "N/A"
     },
     {
@@ -1321,8 +1343,19 @@
     },
     {
         "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
+        "isoDate": "2026-11-13T21:00:00.000Z",
+        "date": "vendredi 13 novembre 2026",
+        "home": "ALM EVREUX BASKET",
+        "away": "ORLEANS LOIRET BASKET ASSOCIATION",
+        "competition": "ÉLIT2",
+        "round": "J9",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
-        "isoDate": "2026-11-14T13:00:00.000Z",
+        "isoDate": "2026-11-14T15:00:00.000Z",
         "date": "samedi 14 novembre 2026",
         "home": "SAINT QUENTIN BASKET BALL",
         "away": "CHOLET BASKET",
@@ -1339,17 +1372,6 @@
         "away": "CHAUMONT EN VEXIN CS",
         "competition": "U17 Régional 2 - U17 - U16",
         "round": "Journée 9",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
-        "isoDate": "2026-11-14T17:00:00.000Z",
-        "date": "samedi 14 novembre 2026",
-        "home": "SAINT QUENTIN BASKET BALL",
-        "away": "CHOLET BASKET",
-        "competition": "BETCLICE",
-        "round": "J8",
         "location": "N/A"
     },
     {
@@ -1372,6 +1394,17 @@
         "away": "ANGERS SCO HANDBALL",
         "competition": "NATIONALE 1 MASCULINE 2026-2027",
         "round": "JOURNÉE 8",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
+        "isoDate": "2026-11-14T19:00:00.000Z",
+        "date": "samedi 14 novembre 2026",
+        "home": "SAINT QUENTIN BASKET BALL",
+        "away": "CHOLET BASKET",
+        "competition": "BETCLICE",
+        "round": "J8",
         "location": "N/A"
     },
     {
@@ -1460,6 +1493,17 @@
         "away": "RC LENS",
         "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
         "round": "Journée 11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc/equipe/2026_616_U18F_5/saison",
+        "isoDate": "2026-11-15T13:30:00.000Z",
+        "date": "dimanche 15 novembre 2026",
+        "home": "PARIS FC",
+        "away": "LE MANS FC",
+        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
+        "round": "Journée 8",
         "location": "N/A"
     },
     {
@@ -1564,7 +1608,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
-        "isoDate": "2026-11-17T19:00:00.000Z",
+        "isoDate": "2026-11-17T21:00:00.000Z",
         "date": "mardi 17 novembre 2026",
         "home": "VAL DE SEINE BASKET",
         "away": "SAINT-VALLIER BASKET DRÔME",
@@ -1575,7 +1619,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
-        "isoDate": "2026-11-17T19:00:00.000Z",
+        "isoDate": "2026-11-17T21:00:00.000Z",
         "date": "mardi 17 novembre 2026",
         "home": "ALM EVREUX BASKET",
         "away": "ASC DENAIN VOLTAIRE PORTE DU HAINAUT",
@@ -1586,7 +1630,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
-        "isoDate": "2026-11-17T19:30:00.000Z",
+        "isoDate": "2026-11-17T21:30:00.000Z",
         "date": "mardi 17 novembre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
         "away": "LAVAL",
@@ -1727,28 +1771,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
-        "isoDate": "2026-11-21T16:00:00.000Z",
-        "date": "samedi 21 novembre 2026",
-        "home": "NANTERRE 92",
-        "away": "S.I. GRAFFENSTADEN",
-        "competition": "ESPOIRS",
-        "round": "J9",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
-        "isoDate": "2026-11-21T16:00:00.000Z",
-        "date": "samedi 21 novembre 2026",
-        "home": "PARIS BASKETBALL",
-        "away": "BASKET CLUB MARITIME GRAVELINES - GRAND FORT PHILIPPE",
-        "competition": "ESPOIRS",
-        "round": "J9",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500689-creteil-f/equipe/2026_667_SEM_2/saison",
         "isoDate": "2026-11-21T17:00:00.000Z",
@@ -1815,14 +1837,25 @@
         "location": "N/A"
     },
     {
-        "sport": "football",
-        "sourceUrl": "https://epreuves.fff.fr/competition/club/531562-quevilly-rm/equipe/2026_14293_U19_4/saison",
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
         "isoDate": "2026-11-21T18:00:00.000Z",
         "date": "samedi 21 novembre 2026",
-        "home": "QUEVILLY ROUEN METROPOLE",
-        "away": "PARIS SAINT-GERMAIN",
-        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
-        "round": "Journée 12",
+        "home": "NANTERRE 92",
+        "away": "S.I. GRAFFENSTADEN",
+        "competition": "ESPOIRS",
+        "round": "J9",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
+        "isoDate": "2026-11-21T18:00:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "PARIS BASKETBALL",
+        "away": "BASKET CLUB MARITIME GRAVELINES - GRAND FORT PHILIPPE",
+        "competition": "ESPOIRS",
+        "round": "J9",
         "location": "N/A"
     },
     {
@@ -1834,17 +1867,6 @@
         "away": "SC BASTIA 2",
         "competition": "N2 - Senior",
         "round": "Journée 8",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
-        "isoDate": "2026-11-21T19:30:00.000Z",
-        "date": "samedi 21 novembre 2026",
-        "home": "NANTERRE 92",
-        "away": "SIG STRASBOURG",
-        "competition": "BETCLICE",
-        "round": "J9",
         "location": "N/A"
     },
     {
@@ -1867,6 +1889,17 @@
         "away": "US SAINT MALO",
         "competition": "ARKEMA PREMIERE LIGUE - Senior F",
         "round": "Journée 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
+        "isoDate": "2026-11-21T21:30:00.000Z",
+        "date": "samedi 21 novembre 2026",
+        "home": "NANTERRE 92",
+        "away": "SIG STRASBOURG",
+        "competition": "BETCLICE",
+        "round": "J9",
         "location": "N/A"
     },
     {
@@ -2025,6 +2058,17 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-11-22T13:30:00.000Z",
+        "date": "dimanche 22 novembre 2026",
+        "home": "NANTERRE ES",
+        "away": "FC METZ",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/541471-thionville-lusitanos/equipe/2026_21305_U17_4/saison",
         "isoDate": "2026-11-22T13:30:00.000Z",
         "date": "dimanche 22 novembre 2026",
@@ -2070,7 +2114,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
-        "isoDate": "2026-11-22T14:30:00.000Z",
+        "isoDate": "2026-11-22T16:30:00.000Z",
         "date": "dimanche 22 novembre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
         "away": "BASKET LANDES SASP",
@@ -2081,7 +2125,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334745",
-        "isoDate": "2026-11-22T14:30:00.000Z",
+        "isoDate": "2026-11-22T16:30:00.000Z",
         "date": "dimanche 22 novembre 2026",
         "home": "POLE FRANCE BASKET",
         "away": "PAYS VOIRONNAIS",
@@ -2092,7 +2136,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246",
-        "isoDate": "2026-11-22T15:30:00.000Z",
+        "isoDate": "2026-11-22T17:30:00.000Z",
         "date": "dimanche 22 novembre 2026",
         "home": "PARIS BASKETBALL",
         "away": "BASKET CLUB MARITIME GRAVELINES - GRAND FORT PHILIPPE",
@@ -2103,12 +2147,23 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
-        "isoDate": "2026-11-22T17:00:00.000Z",
+        "isoDate": "2026-11-22T19:00:00.000Z",
         "date": "dimanche 22 novembre 2026",
         "home": "LEVALLOIS METROPOLITANS",
         "away": "ROUEN MÉTROPOLE BASKET - ASSOCIATION 1893",
         "competition": "ÉLIT2",
         "round": "J11",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
+        "sourceUrl": "https://fr.uefa.com/uefachampionsleague/clubs/52747--paris/matches/",
+        "isoDate": "2026-11-25T20:00:00.000Z",
+        "date": "mercredi 25 novembre 2026",
+        "home": "PARIS SAINT-GERMAIN",
+        "away": "Roma",
+        "competition": "Ligue des Champions",
+        "round": "N/A",
         "location": "N/A"
     },
     {
@@ -2167,28 +2222,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
-        "isoDate": "2026-11-28T16:00:00.000Z",
-        "date": "samedi 28 novembre 2026",
-        "home": "NANTERRE 92",
-        "away": "LE MANS SARTHE BASKET",
-        "competition": "ESPOIRS",
-        "round": "J10",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
-        "isoDate": "2026-11-28T16:00:00.000Z",
-        "date": "samedi 28 novembre 2026",
-        "home": "SAINT QUENTIN BASKET BALL",
-        "away": "SIG STRASBOURG",
-        "competition": "ESPOIRS",
-        "round": "J10",
-        "location": "N/A"
-    },
-    {
         "sport": "handball",
         "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121445/",
         "isoDate": "2026-11-28T17:00:00.000Z",
@@ -2197,6 +2230,17 @@
         "away": "AC BOULOGNE-BILLANCOURT",
         "competition": "NATIONALE 1 MASCULINE 2026-2027",
         "round": "JOURNÉE 10",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
+        "isoDate": "2026-11-28T18:00:00.000Z",
+        "date": "samedi 28 novembre 2026",
+        "home": "NANTERRE 92",
+        "away": "LE MANS SARTHE BASKET",
+        "competition": "ESPOIRS",
+        "round": "J10",
         "location": "N/A"
     },
     {
@@ -2411,23 +2455,12 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
-        "isoDate": "2026-12-03T18:00:00.000Z",
+        "isoDate": "2026-12-03T20:00:00.000Z",
         "date": "jeudi 3 décembre 2026",
         "home": "ALM EVREUX BASKET",
         "away": "CAEN BASKET CALVADOS",
         "competition": "ÉLIT2",
         "round": "J12",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
-        "isoDate": "2026-12-04T19:30:00.000Z",
-        "date": "vendredi 4 décembre 2026",
-        "home": "C'CHARTRES METROPOLE BASKET",
-        "away": "LES SABLES D'OLONNE",
-        "competition": "NM1",
-        "round": "J14",
         "location": "N/A"
     },
     {
@@ -2454,13 +2487,13 @@
     },
     {
         "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
-        "isoDate": "2026-12-05T13:00:00.000Z",
-        "date": "samedi 5 décembre 2026",
-        "home": "SAINT QUENTIN BASKET BALL",
-        "away": "JSF NANTERRE",
-        "competition": "ESPOIRS",
-        "round": "J11",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028004/equipes/200000005334526",
+        "isoDate": "2026-12-04T21:30:00.000Z",
+        "date": "vendredi 4 décembre 2026",
+        "home": "C'CHARTRES METROPOLE BASKET",
+        "away": "LES SABLES D'OLONNE",
+        "competition": "NM1",
+        "round": "J14",
         "location": "N/A"
     },
     {
@@ -2497,6 +2530,17 @@
         "location": "N/A"
     },
     {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005367096",
+        "isoDate": "2026-12-05T15:00:00.000Z",
+        "date": "samedi 5 décembre 2026",
+        "home": "SAINT QUENTIN BASKET BALL",
+        "away": "JSF NANTERRE",
+        "competition": "ESPOIRS",
+        "round": "J11",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/542781-a-f-c-compiegne/equipe/2026_22206_U17_5/saison",
         "isoDate": "2026-12-05T15:30:00.000Z",
@@ -2508,25 +2552,14 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334745",
-        "isoDate": "2026-12-05T17:00:00.000Z",
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500568-paris-fc-2/equipe/2026_616_SEM_4/saison",
+        "isoDate": "2026-12-05T15:30:00.000Z",
         "date": "samedi 5 décembre 2026",
-        "home": "POLE FRANCE BASKET",
-        "away": "ROCHE VENDEE",
-        "competition": "LF2",
-        "round": "J10",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
-        "isoDate": "2026-12-05T17:00:00.000Z",
-        "date": "samedi 5 décembre 2026",
-        "home": "SAINT QUENTIN BASKET BALL",
-        "away": "JSF NANTERRE",
-        "competition": "BETCLICE",
-        "round": "J10",
+        "home": "PARIS FC",
+        "away": "LINAS MONTLHERY ESA",
+        "competition": "N2 - Senior",
+        "round": "Journée 9",
         "location": "N/A"
     },
     {
@@ -2673,6 +2706,28 @@
         "location": "N/A"
     },
     {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334745",
+        "isoDate": "2026-12-05T19:00:00.000Z",
+        "date": "samedi 5 décembre 2026",
+        "home": "POLE FRANCE BASKET",
+        "away": "ROCHE VENDEE",
+        "competition": "LF2",
+        "round": "J10",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/hdf/comites/0002/clubs/hdf0002018/equipes/200000005368249",
+        "isoDate": "2026-12-05T19:00:00.000Z",
+        "date": "samedi 5 décembre 2026",
+        "home": "SAINT QUENTIN BASKET BALL",
+        "away": "JSF NANTERRE",
+        "competition": "BETCLICE",
+        "round": "J10",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500650-versailles-78-fc/equipe/2026_656_U17_3/saison",
         "isoDate": "2026-12-06T13:30:00.000Z",
@@ -2690,17 +2745,6 @@
         "date": "dimanche 6 décembre 2026",
         "home": "RACING CLUB FRANCE",
         "away": "SM CAEN",
-        "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
-        "round": "Journée 14",
-        "location": "N/A"
-    },
-    {
-        "sport": "football",
-        "sourceUrl": "https://epreuves.fff.fr/competition/club/531562-quevilly-rm/equipe/2026_14293_U19_4/saison",
-        "isoDate": "2026-12-06T13:30:00.000Z",
-        "date": "dimanche 6 décembre 2026",
-        "home": "QUEVILLY ROUEN METROPOLE",
-        "away": "AMIENS SC",
         "competition": "CHAMPIONNAT NATIONAL U19 - U19 - U18",
         "round": "Journée 14",
         "location": "N/A"
@@ -2762,17 +2806,6 @@
     },
     {
         "sport": "football",
-        "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U18F_4/saison",
-        "isoDate": "2026-12-06T13:30:00.000Z",
-        "date": "dimanche 6 décembre 2026",
-        "home": "PARIS SAINT-GERMAIN",
-        "away": "FCE MERIGNAC ARLAC",
-        "competition": "CHAMPIONNAT NATIONAL FÉMININ U19 - U18 F - U17 F - U16 F",
-        "round": "Journée 10",
-        "location": "N/A"
-    },
-    {
-        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain/equipe/2026_364_U17_5/saison",
         "isoDate": "2026-12-06T13:30:00.000Z",
         "date": "dimanche 6 décembre 2026",
@@ -2817,6 +2850,17 @@
     },
     {
         "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-12-06T13:30:00.000Z",
+        "date": "dimanche 6 décembre 2026",
+        "home": "NANTERRE ES",
+        "away": "USL DUNKERQUE",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 14",
+        "location": "N/A"
+    },
+    {
+        "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/541471-thionville-lusitanos/equipe/2026_21305_U17_4/saison",
         "isoDate": "2026-12-06T13:30:00.000Z",
         "date": "dimanche 6 décembre 2026",
@@ -2840,7 +2884,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
-        "isoDate": "2026-12-06T14:15:00.000Z",
+        "isoDate": "2026-12-06T16:15:00.000Z",
         "date": "dimanche 6 décembre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
         "away": "TOULOUSE METROPOLE BASKET SAS",
@@ -2884,7 +2928,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
-        "isoDate": "2026-12-09T19:00:00.000Z",
+        "isoDate": "2026-12-09T21:00:00.000Z",
         "date": "mercredi 9 décembre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
         "away": "LA TRONCHE MEYLAN",
@@ -2901,28 +2945,6 @@
         "away": "SM CAEN",
         "competition": "L3 - Senior",
         "round": "Journée 15",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
-        "isoDate": "2026-12-11T19:00:00.000Z",
-        "date": "vendredi 11 décembre 2026",
-        "home": "VAL DE SEINE BASKET",
-        "away": "BESANCON",
-        "competition": "NM1",
-        "round": "J15",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
-        "isoDate": "2026-12-11T19:00:00.000Z",
-        "date": "vendredi 11 décembre 2026",
-        "home": "ALM EVREUX BASKET",
-        "away": "ROUEN MÉTROPOLE BASKET - ASSOCIATION 1893",
-        "competition": "ÉLIT2",
-        "round": "J14",
         "location": "N/A"
     },
     {
@@ -2959,6 +2981,28 @@
         "location": "N/A"
     },
     {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
+        "isoDate": "2026-12-11T21:00:00.000Z",
+        "date": "vendredi 11 décembre 2026",
+        "home": "VAL DE SEINE BASKET",
+        "away": "BESANCON",
+        "competition": "NM1",
+        "round": "J15",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/nor/comites/0027/clubs/nor0027002/equipes/200000005368356",
+        "isoDate": "2026-12-11T21:00:00.000Z",
+        "date": "vendredi 11 décembre 2026",
+        "home": "ALM EVREUX BASKET",
+        "away": "ROUEN MÉTROPOLE BASKET - ASSOCIATION 1893",
+        "competition": "ÉLIT2",
+        "round": "J14",
+        "location": "N/A"
+    },
+    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500650-versailles-78-fc/equipe/2026_656_SEM_2/saison",
         "isoDate": "2026-12-12T13:45:00.000Z",
@@ -2992,17 +3036,6 @@
         "location": "N/A"
     },
     {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
-        "isoDate": "2026-12-12T16:00:00.000Z",
-        "date": "samedi 12 décembre 2026",
-        "home": "NANTERRE 92",
-        "away": "LIMOGES CSP",
-        "competition": "ESPOIRS",
-        "round": "J12",
-        "location": "N/A"
-    },
-    {
         "sport": "football",
         "sourceUrl": "https://epreuves.fff.fr/competition/club/500247-paris-saint-germain-fc/equipe/2026_364_SEM_2/saison",
         "isoDate": "2026-12-12T16:15:00.000Z",
@@ -3011,17 +3044,6 @@
         "away": "PARIS FC",
         "competition": "L1 - Senior",
         "round": "Journée 14",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334745",
-        "isoDate": "2026-12-12T17:00:00.000Z",
-        "date": "samedi 12 décembre 2026",
-        "home": "POLE FRANCE BASKET",
-        "away": "CHAMPAGNE BASKET FEMININ",
-        "competition": "LF2",
-        "round": "J12",
         "location": "N/A"
     },
     {
@@ -3135,6 +3157,17 @@
         "location": "N/A"
     },
     {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005367092",
+        "isoDate": "2026-12-12T18:00:00.000Z",
+        "date": "samedi 12 décembre 2026",
+        "home": "NANTERRE 92",
+        "away": "LIMOGES CSP",
+        "competition": "ESPOIRS",
+        "round": "J12",
+        "location": "N/A"
+    },
+    {
         "sport": "handball",
         "sourceUrl": "https://www.ffhandball.fr/competitions/saison-2026-2027-22/national/nationale-1-masculine-2026-2027-32469/equipe-2121439/",
         "isoDate": "2026-12-12T18:00:00.000Z",
@@ -3143,6 +3176,17 @@
         "away": "ANGERS SCO HANDBALL",
         "competition": "NATIONALE 1 MASCULINE 2026-2027",
         "round": "JOURNÉE 12",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075083/equipes/200000005334745",
+        "isoDate": "2026-12-12T19:00:00.000Z",
+        "date": "samedi 12 décembre 2026",
+        "home": "POLE FRANCE BASKET",
+        "away": "CHAMPAGNE BASKET FEMININ",
+        "competition": "LF2",
+        "round": "J12",
         "location": "N/A"
     },
     {
@@ -3170,7 +3214,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
-        "isoDate": "2026-12-12T19:30:00.000Z",
+        "isoDate": "2026-12-12T21:30:00.000Z",
         "date": "samedi 12 décembre 2026",
         "home": "NANTERRE 92",
         "away": "LIMOGES CSP (SASP)",
@@ -3247,34 +3291,12 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092031/equipes/200000005368245",
-        "isoDate": "2026-12-17T19:00:00.000Z",
+        "isoDate": "2026-12-17T21:00:00.000Z",
         "date": "jeudi 17 décembre 2026",
         "home": "NANTERRE 92",
         "away": "LE MANS SCM",
         "competition": "BETCLICE",
         "round": "J13",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
-        "isoDate": "2026-12-18T19:00:00.000Z",
-        "date": "vendredi 18 décembre 2026",
-        "home": "VAL DE SEINE BASKET",
-        "away": "BERCK",
-        "competition": "NM1",
-        "round": "J17",
-        "location": "N/A"
-    },
-    {
-        "sport": "basketball",
-        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
-        "isoDate": "2026-12-18T19:30:00.000Z",
-        "date": "vendredi 18 décembre 2026",
-        "home": "LEVALLOIS METROPOLITANS",
-        "away": "HYERES TOULON VAR BASKET",
-        "competition": "ÉLIT2",
-        "round": "J15",
         "location": "N/A"
     },
     {
@@ -3319,6 +3341,28 @@
         "away": "GRAND BESANCON DOUBS HANDBALL",
         "competition": "PROLIGUE 2026-27",
         "round": "JOURNÉE 15",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092056/equipes/200000005334545",
+        "isoDate": "2026-12-18T21:00:00.000Z",
+        "date": "vendredi 18 décembre 2026",
+        "home": "VAL DE SEINE BASKET",
+        "away": "BERCK",
+        "competition": "NM1",
+        "round": "J17",
+        "location": "N/A"
+    },
+    {
+        "sport": "basketball",
+        "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0092/clubs/idf0092051/equipes/200000005368362",
+        "isoDate": "2026-12-18T21:30:00.000Z",
+        "date": "vendredi 18 décembre 2026",
+        "home": "LEVALLOIS METROPOLITANS",
+        "away": "HYERES TOULON VAR BASKET",
+        "competition": "ÉLIT2",
+        "round": "J15",
         "location": "N/A"
     },
     {
@@ -3476,9 +3520,20 @@
         "location": "N/A"
     },
     {
+        "sport": "football",
+        "sourceUrl": "https://epreuves.fff.fr/competition/club/500561-nanterre-es/equipe/2026_612_U17_2/saison",
+        "isoDate": "2026-12-20T13:30:00.000Z",
+        "date": "dimanche 20 décembre 2026",
+        "home": "NANTERRE ES",
+        "away": "AAS SARCELLES",
+        "competition": "CHAMPIONNAT NATIONAL U17 - U17 - U16",
+        "round": "Journée 15",
+        "location": "N/A"
+    },
+    {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005367093",
-        "isoDate": "2026-12-20T14:00:00.000Z",
+        "isoDate": "2026-12-20T16:00:00.000Z",
         "date": "dimanche 20 décembre 2026",
         "home": "PARIS BASKETBALL",
         "away": "JDA DIJON BOURGOGNE",
@@ -3489,7 +3544,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/cvl/comites/0028/clubs/cvl0028005/equipes/200000005334729",
-        "isoDate": "2026-12-20T14:30:00.000Z",
+        "isoDate": "2026-12-20T16:30:00.000Z",
         "date": "dimanche 20 décembre 2026",
         "home": "C'CHARTRES METROPOLE BASKET",
         "away": "BOURGES BASKET",
@@ -3500,7 +3555,7 @@
     {
         "sport": "basketball",
         "sourceUrl": "https://competitions.ffbb.com/ligues/idf/comites/0075/clubs/idf0075077/equipes/200000005368246",
-        "isoDate": "2026-12-20T18:00:00.000Z",
+        "isoDate": "2026-12-20T20:00:00.000Z",
         "date": "dimanche 20 décembre 2026",
         "home": "PARIS BASKETBALL",
         "away": "SASP JDA DIJON BASKET",

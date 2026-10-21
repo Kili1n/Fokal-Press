@@ -26,9 +26,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 3. Installer les dépendances (Puppeteer Stealth)
-        # On installe Puppeteer classique + la surcouche furtive
-        run: npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+      - name: 3. Installer les dépendances
+        # On installe Puppeteer (nécessaire pour votre script update_matchs.js)
+        run: npm install puppeteer
 
       - name: 4. Lancer le script de scraping
         run: node script/update_matchs.js

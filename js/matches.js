@@ -308,6 +308,11 @@ const formatCompetition = (rawName, sport) => {
     
     let level = "AUTRE", age = "SENIOR";
 
+    // --- NIVEAU EUROPE (NOUVEAU) ---
+    if (name.includes("LIGUE DES CHAMPIONS") || name.includes("CHAMPIONS LEAGUE")) { 
+        level = "LDC"; 
+    }
+
     // --- NIVEAU L1 ---<
     if (name.includes("BETCLIC") || name.includes("STARLIGUE") || name.includes("LIGUE 1") || name.includes("L1")) { level = "L1"; }
     else if (name.includes("BUTAGAZ") || name.includes("LBWL")) { level = "L1"; age = "SENIOR F"; }
@@ -368,6 +373,10 @@ const getCompFilterGroup = (compFormatted) => {
         if (level === "COUPE" || level === "AMICAL") {
             return `${sportLabel} - ${level}`; // Retourne "FOOT - COUPE"
         }
+        if (level === "LDC") {
+            return `${sportLabel} - LDC`; 
+        }
+        
     }
     return compFormatted;
 };
